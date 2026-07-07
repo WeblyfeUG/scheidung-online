@@ -1591,7 +1591,7 @@ img { max-width: 100%; display: block; }
   .process-step h3 { margin-top: 11px; }
   .kpi-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
   .suitability-grid { grid-template-columns: 1fr; }
-  .cost-card { grid-template-columns: 1fr; padding: 24px; gap: 24px; }
+  .cost-card { grid-template-columns: minmax(0, 1fr); padding: 24px; gap: 24px; }
   .security-grid { grid-template-columns: 1fr; gap: 28px; }
   .security-visual { max-width: 460px; margin: 0 auto; aspect-ratio: auto; padding: 32px; }
   .footer-grid { grid-template-columns: 1fr 1fr; gap: 28px; }
@@ -1637,10 +1637,7 @@ img { max-width: 100%; display: block; }
   .hero-cta-group .btn { width: 100%; }
   .hero-rating { width: 100%; justify-content: center; }
   .hero-trust { grid-template-columns: 1fr 1fr; gap: 0; margin-top: 22px; }
-  .hero-floating-card.rating,
-  .hero-floating-card.time,
-  .hero-floating-card.dsgvo { display: none; }
-  .hero-visual { max-width: 340px; }
+  .hero-visual { max-width: 380px; }
   .hero-promo-badge { width: 78px; height: 78px; font-size: 10px; top: -8px; right: 8px; }
   .hero-promo-badge strong { font-size: 17px; }
 
@@ -1789,6 +1786,74 @@ img { max-width: 100%; display: block; }
   .entry-card h3 { font-size: 20px; }
   .entry-badge { font-size: 11.5px; padding: 6px 12px; }
   .entry-footnote { font-size: 14px; }
+}
+
+/* ============================================================
+   Mobile-Politur — komfortable Tap-Targets & Lesbarkeit
+   (≤ 720px: Touch-Geräte)
+   ============================================================ */
+@media (max-width: 720px) {
+  /* Footer-Links: vollwertige Tap-Flächen (Apple-Minimum ~44px) */
+  .footer-list { gap: 2px; }
+  .footer-list a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 3px 2px;
+    font-size: 15.5px;
+  }
+  .footer-h { font-size: 14px; margin-bottom: 8px; }
+  .footer-contact-item { font-size: 15px; gap: 12px; }
+  .footer-contact-item a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+  }
+  .footer-bottom-links {
+    flex-wrap: wrap;
+    gap: 4px 22px;
+  }
+  .footer-bottom-links a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    font-size: 14.5px;
+  }
+  .footer-bottom > div:first-child { line-height: 1.5; }
+
+  /* Ablauf-Slider: größere, gut treffbare Pagination-Punkte
+     (Punkt bleibt klein, Trefferfläche wächst über transparentes Padding) */
+  .process-dot {
+    height: 8px;
+    padding: 13px 7px;
+    box-sizing: content-box;
+    background-clip: content-box;
+  }
+  .process-dots { gap: 2px; margin-top: 16px; }
+
+  /* Trust-Stamps minimal lesbarer */
+  .security-stamp { font-size: 11.5px; }
+  /* DSGVO-Pill im Hero etwas größer */
+  .hero-dsgvo-pill { font-size: 13.5px; }
+
+  /* Grid-Blowout vermeiden: Tracks dürfen schmaler werden als ihr Inhalt
+     (sonst Überlauf auf sehr schmalen Geräten ≤ 360px) */
+  .hero-grid { grid-template-columns: minmax(0, 1fr); }
+  .hero-text, .hero-visual { min-width: 0; }
+
+  /* Lange In-Content-CTA darf umbrechen statt überzulaufen */
+  .cost-card .btn {
+    width: 100%;
+    white-space: normal;
+    text-align: center;
+    justify-content: center;
+    line-height: 1.3;
+  }
+
+  /* 2-Spalten-Grids auch auf sehr schmalen Geräten überlauffrei */
+  .hero-trust { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .hero-trust-item, .kpi { min-width: 0; }
 }
 
 /* ============================================================
@@ -2172,10 +2237,54 @@ body.nav-open .nav-drawer {
 }
 .hero-dsgvo-pill svg { color: var(--c-brand-orange); flex-shrink: 0; }
 
-/* Ab Tablet/Phone (einspaltig): Visual aus, kompakte Karte an, Trust 2×2 mit Trennlinien */
+/* Ab Tablet/Phone (einspaltig): Porträt bleibt, Trust-Chips wandern in die Bildecken */
 @media (max-width: 980px) {
-  .hero-visual { display: none; }
-  .hero-mobilecard { display: block; margin-top: 30px; }
+  /* Porträt sichtbar lassen — die separate Kompaktkarte entfällt */
+  .hero-mobilecard { display: none; }
+  .hero-visual {
+    display: block;
+    width: 100%;
+    max-width: 440px;
+    margin: 4px auto 0;
+  }
+  .hero-image { border-width: 5px; box-shadow: 0 18px 44px rgba(31,61,87,0.16); }
+
+  /* Floating-Chips: in die Ecken, ohne Überlauf, kompakter */
+  .hero-floating-card {
+    padding: 10px 13px;
+    border-radius: 13px;
+    gap: 10px;
+    box-shadow: 0 10px 26px rgba(31,61,87,0.18);
+  }
+  .hero-floating-card.rating {
+    top: 14px;
+    left: 14px;
+    right: auto;
+    bottom: auto;
+    gap: 11px;
+  }
+  .hero-floating-card.rating .num { font-size: 27px; }
+  .hero-floating-card.rating .stars { font-size: 13px; letter-spacing: 0.5px; }
+  .hero-floating-card.rating .lbl { font-size: 12px; }
+  .hero-floating-card.time {
+    top: 14px;
+    right: 14px;
+    left: auto;
+    bottom: auto;
+  }
+  .hero-floating-card.time .num { font-size: 17px; white-space: nowrap; }
+  .hero-floating-card.time .time-head { white-space: nowrap; }
+  .hero-floating-card.time .lbl { font-size: 12px; }
+  .hero-floating-card.dsgvo {
+    left: 14px;
+    right: 14px;
+    bottom: 14px;
+    top: auto;
+    justify-content: center;
+    padding: 11px 14px;
+    font-size: 13.5px;
+    gap: 9px;
+  }
 
   .hero-trust {
     grid-template-columns: 1fr 1fr;
@@ -2203,10 +2312,14 @@ body.nav-open .nav-drawer {
 }
 
 @media (max-width: 420px) {
-  .hero-reviewcard { gap: 14px; padding: 16px; }
-  .hero-rc-photo { width: 84px; height: 84px; }
-  .hero-rc-name { font-size: 17px; }
-  .hero-rc-rating { gap: 12px; }
-  .hero-rc-score { font-size: 28px; }
-  .hero-dsgvo-pill { font-size: 14px; padding: 13px 16px; gap: 10px; }
+  .hero-visual { max-width: 340px; }
+  .hero-floating-card { padding: 8px 11px; gap: 8px; }
+  .hero-floating-card.rating { top: 10px; left: 10px; gap: 9px; }
+  .hero-floating-card.rating .num { font-size: 23px; }
+  .hero-floating-card.rating .stars { font-size: 12px; }
+  .hero-floating-card.rating .lbl { font-size: 11px; }
+  .hero-floating-card.time { top: 10px; right: 10px; padding: 7px 10px; }
+  .hero-floating-card.time .num { font-size: 15.5px; }
+  .hero-floating-card.time .lbl { font-size: 11px; }
+  .hero-floating-card.dsgvo { left: 10px; right: 10px; bottom: 10px; font-size: 12.5px; padding: 10px 12px; }
 }

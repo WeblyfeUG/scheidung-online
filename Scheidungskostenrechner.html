@@ -167,7 +167,8 @@
 
       /* Kostenzeilen: Label darf schrumpfen/umbrechen, Betrag bleibt ganz */
       .calc-line { gap: 12px; }
-      .calc-line-label { min-width: 0; font-size: 15px; }
+      .calc-line-label { min-width: 0; font-size: 15px; hyphens: auto; overflow-wrap: break-word; }
+      .calc-line-label > span { min-width: 0; }
       .calc-line-val { flex-shrink: 0; }
       .calc-line-ico { width: 34px; height: 34px; }
       .calc-line.total { padding: 16px 15px; }

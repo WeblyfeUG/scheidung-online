@@ -1636,7 +1636,9 @@ img { max-width: 100%; display: block; }
   .hero-cta-group { gap: 10px; margin-top: 20px; }
   .hero-cta-group .btn { width: 100%; }
   .hero-rating { width: 100%; justify-content: center; }
-  .hero-trust { grid-template-columns: 1fr 1fr; gap: 0; margin-top: 22px; }
+  .hero-trust { grid-template-columns: 1fr 1fr; gap: 0 12px; margin-top: 22px; }
+  .hero-trust-item { font-size: 14px; min-width: 0; hyphens: auto; overflow-wrap: break-word; }
+  .hero-trust-item > span, .hero-trust-item > div { min-width: 0; }
   .hero-visual { max-width: 380px; }
   .hero-promo-badge { width: 78px; height: 78px; font-size: 10px; top: -8px; right: 8px; }
   .hero-promo-badge strong { font-size: 17px; }

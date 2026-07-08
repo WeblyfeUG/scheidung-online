@@ -1,0 +1,720 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Online-Scheidung vorbereiten — Mobile</title>
+  <meta name="description" content="Bereiten Sie Ihre Scheidung in wenigen Minuten online vor. Wir erstellen die Grundlage für Ihren Scheidungsantrag und prüfen Ihre Angaben persönlich." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="mobile.css?v=1" />
+</head>
+<body class="has-wznav">
+<div class="m-page">
+
+  <!-- ============ Header (schlank, conversion-fokussiert) ============ -->
+  <header class="m-header" data-screen-label="Header">
+    <div class="m-header-inner">
+      <a href="mobil-startseite.html" class="m-brand" aria-label="Janine D. Wagner — zur Startseite">
+        <span class="m-brand-mark" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 9.5 12 4l9 5.5"></path>
+            <line x1="4" y1="9.8" x2="20" y2="9.8"></line>
+            <line x1="6" y1="10.5" x2="6" y2="17"></line>
+            <line x1="10" y1="10.5" x2="10" y2="17"></line>
+            <line x1="14" y1="10.5" x2="14" y2="17"></line>
+            <line x1="18" y1="10.5" x2="18" y2="17"></line>
+            <line x1="3.5" y1="20" x2="20.5" y2="20"></line>
+          </svg>
+        </span>
+        <span class="m-brand-text">
+          <strong>Janine D. Wagner</strong>
+          <small>Fachanwältin für Familienrecht</small>
+        </span>
+      </a>
+      <div class="m-header-actions">
+        <a href="tel:+4951154368383" class="m-iconbtn call" aria-label="Fragen? Anrufen: 0511 54 36 83 83">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.72 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.35 1.85.59 2.81.72A2 2 0 0 1 22 16.92z"></path></svg>
+        </a>
+      </div>
+    </div>
+  </header>
+  <div class="m-header-spacer"></div>
+
+  <!-- ============ Hero ============ -->
+  <section class="wz-hero" data-screen-label="Hero">
+    <div class="m-container">
+      <span class="wz-eyebrow"><span class="dot"></span> Persönlich anwaltlich geprüft</span>
+      <h1>Bereiten Sie Ihre Scheidung online in wenigen Minuten vor</h1>
+      <p class="wz-sub">
+        Beantworten Sie ein paar einfache Fragen in Ruhe. Wir erstellen die
+        Grundlage für Ihren Scheidungsantrag und prüfen Ihre Angaben persönlich.
+      </p>
+      <div class="wz-hero-trust">
+        <span class="wz-hero-trust-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          Anwaltliche Prüfung
+        </span>
+        <span class="wz-hero-trust-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          Sichere Übertragung
+        </span>
+        <span class="wz-hero-trust-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          Jederzeit pausierbar
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Wizard ============ -->
+  <section class="wz-section" id="antrag" data-screen-label="Antrag">
+    <div class="m-container">
+
+      <div class="wz-card">
+        <!-- Fortschritt -->
+        <div class="wz-progress" id="progress-wrap">
+          <div class="wz-progress-top">
+            <div class="wz-step-label">Schritt <span id="cur-step">1</span> <span>von 6</span></div>
+            <div class="wz-pct"><span id="pct">17</span> % abgeschlossen</div>
+          </div>
+          <div class="wz-bar"><div class="wz-bar-fill" id="bar"></div></div>
+          <div class="wz-dots" id="dots" aria-hidden="true"></div>
+        </div>
+
+        <!-- Schritte -->
+        <form id="wz-form" novalidate>
+          <div class="wz-body">
+            <div class="wz-feedback" id="feedback">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span id="feedback-text"></span>
+            </div>
+
+            <!-- Schritt 1 — Kontakt -->
+            <div class="wz-step active" data-step="1">
+              <div class="wz-step-head">
+                <div class="wz-step-num">Schritt 1 · Kontakt</div>
+                <h2>Wie können wir Sie erreichen?</h2>
+                <p class="wz-step-desc">Wir melden uns persönlich bei Ihnen und begleiten Sie durch den gesamten Ablauf.</p>
+              </div>
+              <div class="wz-fields">
+                <div class="wz-field">
+                  <label class="wz-label" for="a_vorname">Vorname <span class="req">*</span></label>
+                  <input class="wz-input" id="a_vorname" name="a_vorname" type="text" autocomplete="given-name" required />
+                  <span class="wz-err">Bitte geben Sie Ihren Vornamen an.</span>
+                </div>
+                <div class="wz-field">
+                  <label class="wz-label" for="a_nachname">Nachname <span class="req">*</span></label>
+                  <input class="wz-input" id="a_nachname" name="a_nachname" type="text" autocomplete="family-name" required />
+                  <span class="wz-err">Bitte geben Sie Ihren Nachnamen an.</span>
+                </div>
+                <div class="wz-field">
+                  <label class="wz-label" for="a_email">E-Mail-Adresse <span class="req">*</span></label>
+                  <input class="wz-input" id="a_email" name="a_email" type="email" autocomplete="email" required />
+                  <span class="wz-err">Bitte geben Sie eine gültige E-Mail-Adresse an.</span>
+                </div>
+                <div class="wz-field">
+                  <label class="wz-label" for="a_telefon">Telefonnummer <span class="req">*</span></label>
+                  <input class="wz-input" id="a_telefon" name="a_telefon" type="tel" inputmode="tel" autocomplete="tel" required />
+                  <span class="wz-err">Bitte geben Sie eine Telefonnummer an.</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Schritt 2 — Situation -->
+            <div class="wz-step" data-step="2">
+              <div class="wz-step-head">
+                <div class="wz-step-num">Schritt 2 · Ihre Situation</div>
+                <h2>Ein paar Angaben zu Ihrer Situation</h2>
+                <p class="wz-step-desc">Diese Eckdaten brauchen wir, um Ihren Antrag vorzubereiten. Eine ungefähre Angabe genügt.</p>
+              </div>
+              <div class="wz-fields">
+                <div class="wz-field full">
+                  <label class="wz-label">Sind Sie bereits mindestens ein Jahr getrennt? <span class="req">*</span></label>
+                  <div class="wz-choice grid2">
+                    <label class="wz-opt">
+                      <input type="radio" name="t_jahr_getrennt" value="Ja" required />
+                      <span class="tick"></span><span>Ja</span>
+                    </label>
+                    <label class="wz-opt">
+                      <input type="radio" name="t_jahr_getrennt" value="Nein" />
+                      <span class="tick"></span><span>Nein</span>
+                    </label>
+                  </div>
+                  <span class="wz-err">Bitte wählen Sie eine Option.</span>
+                </div>
+                <div class="wz-field">
+                  <label class="wz-label" for="e_datum">Wann haben Sie geheiratet? <span class="req">*</span></label>
+                  <input class="wz-input" id="e_datum" name="e_datum" type="date" required />
+                  <span class="wz-err">Bitte geben Sie das Datum an.</span>
+                </div>
+                <div class="wz-field">
+                  <label class="wz-label" for="t_beginn">Wann begann die Trennung? <span class="req">*</span></label>
+                  <input class="wz-input" id="t_beginn" name="t_beginn" type="date" required />
+                  <span class="wz-err">Bitte geben Sie das Datum an.</span>
+                </div>
+                <div class="wz-field full">
+                  <label class="wz-label" for="t_bundesland">In welchem Bundesland haben Sie zuletzt gemeinsam gewohnt? <span class="req">*</span></label>
+                  <select class="wz-select" id="t_bundesland" name="t_bundesland" required>
+                    <option value="" disabled selected>Bitte wählen …</option>
+                    <option>Baden-Württemberg</option>
+                    <option>Bayern</option>
+                    <option>Berlin</option>
+                    <option>Brandenburg</option>
+                    <option>Bremen</option>
+                    <option>Hamburg</option>
+                    <option>Hessen</option>
+                    <option>Mecklenburg-Vorpommern</option>
+                    <option>Niedersachsen</option>
+                    <option>Nordrhein-Westfalen</option>
+                    <option>Rheinland-Pfalz</option>
+                    <option>Saarland</option>
+                    <option>Sachsen</option>
+                    <option>Sachsen-Anhalt</option>
+                    <option>Schleswig-Holstein</option>
+                    <option>Thüringen</option>
+                  </select>
+                  <span class="wz-err">Bitte wählen Sie ein Bundesland.</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Schritt 3 — Ehepartner -->
+            <div class="wz-step" data-step="3">
+              <div class="wz-step-head">
+                <div class="wz-step-num">Schritt 3 · Ehepartner</div>
+                <h2>Angaben zum Ehepartner</h2>
+                <p class="wz-step-desc">Auch der andere Ehegatte muss im Antrag genannt werden. Geben Sie an, was Sie wissen.</p>
+              </div>
+              <div class="wz-fields">
+                <div class="wz-field full">
+                  <label class="wz-label" for="p_name">Vor- und Nachname <span class="req">*</span></label>
+                  <input class="wz-input" id="p_name" name="p_name" type="text" placeholder="z. B. Maria Wagner" required />
+                  <span class="wz-err">Bitte geben Sie den Namen an.</span>
+                </div>
+                <div class="wz-field full">
+                  <label class="wz-label" for="p_anschrift">Anschrift <span class="req">*</span></label>
+                  <input class="wz-input" id="p_anschrift" name="p_anschrift" type="text" placeholder="Straße, PLZ, Ort" required />
+                  <span class="wz-err">Bitte geben Sie die Anschrift an.</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Schritt 4 — Kinder -->
+            <div class="wz-step" data-step="4">
+              <div class="wz-step-head">
+                <div class="wz-step-num">Schritt 4 · Kinder</div>
+                <h2>Gemeinsame Kinder</h2>
+                <p class="wz-step-desc">Gemeint sind gemeinsame minderjährige Kinder. Falls nicht, überspringen wir diesen Teil.</p>
+              </div>
+              <div class="wz-fields">
+                <div class="wz-field full">
+                  <label class="wz-label">Gibt es gemeinsame minderjährige Kinder? <span class="req">*</span></label>
+                  <div class="wz-choice grid2">
+                    <label class="wz-opt">
+                      <input type="radio" name="k_vorhanden" value="Nein" required />
+                      <span class="tick"></span><span>Nein</span>
+                    </label>
+                    <label class="wz-opt">
+                      <input type="radio" name="k_vorhanden" value="Ja" />
+                      <span class="tick"></span><span>Ja</span>
+                    </label>
+                  </div>
+                  <span class="wz-err">Bitte wählen Sie eine Option.</span>
+                </div>
+              </div>
+
+              <div class="wz-conditional" id="children-block">
+                <div class="wz-fields">
+                  <div class="wz-field full">
+                    <label class="wz-label" for="k_anzahl">Wie viele Kinder? <span class="req">*</span></label>
+                    <input class="wz-input" id="k_anzahl" name="k_anzahl" type="number" inputmode="numeric" min="1" max="12" step="1" placeholder="z. B. 2" />
+                    <span class="wz-err">Bitte geben Sie die Anzahl an.</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Schritt 5 — Einvernehmlichkeit -->
+            <div class="wz-step" data-step="5">
+              <div class="wz-step-head">
+                <div class="wz-step-num">Schritt 5 · Ihre Scheidung</div>
+                <h2>Ihre Scheidung</h2>
+                <p class="wz-step-desc">Kein Problem, wenn Sie sich noch nicht sicher sind — wir besprechen alles persönlich mit Ihnen.</p>
+              </div>
+              <div class="wz-fields">
+                <div class="wz-field full">
+                  <label class="wz-label">Ist die Scheidung einvernehmlich? <span class="req">*</span></label>
+                  <div class="wz-choice">
+                    <label class="wz-opt">
+                      <input type="radio" name="s_einvernehmlich" value="Ja" required />
+                      <span class="tick"></span><span>Ja</span>
+                    </label>
+                    <label class="wz-opt">
+                      <input type="radio" name="s_einvernehmlich" value="Nein" />
+                      <span class="tick"></span><span>Nein</span>
+                    </label>
+                    <label class="wz-opt">
+                      <input type="radio" name="s_einvernehmlich" value="Noch nicht sicher" />
+                      <span class="tick"></span><span>Noch nicht sicher</span>
+                    </label>
+                  </div>
+                  <span class="wz-err">Bitte wählen Sie eine Option.</span>
+                </div>
+                <div class="wz-field full">
+                  <label class="wz-label">Soll Frau Wagner Sie vertreten? <span class="req">*</span></label>
+                  <div class="wz-choice">
+                    <label class="wz-opt">
+                      <input type="radio" name="s_vertretung" value="Ja" required />
+                      <span class="tick"></span><span>Ja</span>
+                    </label>
+                    <label class="wz-opt">
+                      <input type="radio" name="s_vertretung" value="Nein" />
+                      <span class="tick"></span><span>Nein</span>
+                    </label>
+                    <label class="wz-opt">
+                      <input type="radio" name="s_vertretung" value="Weiß ich noch nicht" />
+                      <span class="tick"></span><span>Weiß ich noch nicht</span>
+                    </label>
+                  </div>
+                  <span class="wz-err">Bitte wählen Sie eine Option.</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Schritt 6 — Abschluss -->
+            <div class="wz-step" data-step="6">
+              <div class="wz-step-head">
+                <div class="wz-step-num">Schritt 6 · Abschluss</div>
+                <h2>Fast geschafft</h2>
+                <p class="wz-step-desc">Möchten Sie uns noch etwas mitteilen? Danach können Sie Ihre Anfrage absenden.</p>
+              </div>
+              <div class="wz-fields">
+                <div class="wz-field full">
+                  <label class="wz-label" for="m_nachricht">Gibt es etwas Wichtiges, das wir wissen sollten? <span class="opt">(optional)</span></label>
+                  <textarea class="wz-textarea" id="m_nachricht" name="m_nachricht" maxlength="500" placeholder="Hier können Sie uns Besonderheiten zu Ihrer Situation mitteilen."></textarea>
+                  <span class="wz-charcount" id="msg-count">0 / 500</span>
+                </div>
+                <div class="wz-field full">
+                  <label class="wz-consent" id="consent">
+                    <input type="checkbox" id="dsgvo" name="dsgvo" required />
+                    <span class="wz-consent-box">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    </span>
+                    <span class="wz-consent-text">Ich habe die <a href="#" target="_blank" rel="noopener">Datenschutzerklärung</a> gelesen und willige ein, dass meine Angaben zur Bearbeitung meiner Anfrage gespeichert und verarbeitet werden.</span>
+                  </label>
+                  <span class="wz-err" id="dsgvo-err">Bitte stimmen Sie der Datenschutzerklärung zu.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Submit-Fehler -->
+          <div class="wz-submit-error" id="submit-error">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+            <div>
+              Die Übertragung hat leider nicht geklappt. Bitte prüfen Sie Ihre Internetverbindung und
+              <button type="button" id="retry-submit">versuchen Sie es erneut</button>.
+            </div>
+          </div>
+
+          <!-- Sticky Navigation -->
+          <div class="wz-nav">
+            <button type="button" class="wz-back" id="btn-back" disabled>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+              Zurück
+            </button>
+            <button type="button" class="btn btn-primary wz-next" id="btn-next">
+              <span class="label">Weiter</span>
+              <span class="spinner"></span>
+            </button>
+          </div>
+        </form>
+
+        <!-- Erfolgsseite -->
+        <div class="wz-success" id="success">
+          <div class="wz-success-check">
+            <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          </div>
+          <h2>Vielen Dank für Ihre Angaben.</h2>
+          <p>
+            Ihre Informationen wurden erfolgreich übermittelt. Wir prüfen Ihre
+            Angaben persönlich und melden uns zeitnah bei Ihnen.
+          </p>
+          <div class="wz-success-next">
+            <span class="chip">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+              Rückmeldung i. d. R. innerhalb von 24 Std.
+            </span>
+            <span class="chip">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+              Bestätigung per E-Mail
+            </span>
+          </div>
+          <div class="wz-success-actions">
+            <a href="mobil-startseite.html" class="btn btn-secondary btn-block">Zurück zur Startseite</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Nebeninfos -->
+      <div class="wz-side" data-screen-label="Infos">
+        <div class="wz-side-card">
+          <h3>Was passiert als Nächstes?</h3>
+          <ol class="wz-next-steps">
+            <li>
+              <span class="wz-ns-num">1</span>
+              <span class="wz-ns-text"><strong>Formular absenden</strong><p>Sie schließen Ihre Angaben in wenigen Minuten ab.</p></span>
+            </li>
+            <li>
+              <span class="wz-ns-num">2</span>
+              <span class="wz-ns-text"><strong>Anwaltliche Prüfung</strong><p>Wir prüfen Ihre Angaben persönlich — nicht automatisiert.</p></span>
+            </li>
+            <li>
+              <span class="wz-ns-num">3</span>
+              <span class="wz-ns-text"><strong>Rückmeldung durch die Kanzlei</strong><p>Sie hören von uns, offene Punkte klären wir gemeinsam.</p></span>
+            </li>
+            <li>
+              <span class="wz-ns-num">4</span>
+              <span class="wz-ns-text"><strong>Einreichung des Scheidungsantrags</strong><p>Wir bereiten den Antrag vor und reichen ihn bei Gericht ein.</p></span>
+            </li>
+          </ol>
+        </div>
+
+        <div class="wz-trustbox">
+          <div class="wz-trustbox-head">
+            <span class="wz-trustbox-shield">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><polyline points="9 12 11 14 15 10"></polyline></svg>
+            </span>
+            <strong>Ihre Daten sind sicher</strong>
+          </div>
+          <p>Alle Daten werden verschlüsselt übertragen und ausschließlich zur Bearbeitung Ihrer Anfrage verwendet.</p>
+          <div class="wz-trustbox-stamps">
+            <span>DSGVO</span>
+            <span>SSL / TLS</span>
+            <span>Hosting DE</span>
+          </div>
+        </div>
+
+        <div class="wz-help-card">
+          <span class="ava">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+          </span>
+          <span class="t">
+            <strong>Fragen? Wir sind da.</strong>
+            Rufen Sie an: <a href="tel:+4951154368383">0511 54 36 83 83</a>
+          </span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ Footer ============ -->
+  <footer class="m-footer" data-screen-label="Footer">
+    <div class="m-container">
+      <div class="m-footer-links" style="margin-top:0;padding-top:0;border-top:0;">
+        <a href="#">Impressum</a>
+        <a href="#">Datenschutz</a>
+        <a href="#">AGB</a>
+        <a href="mobil-startseite.html">Startseite</a>
+      </div>
+      <p class="m-footer-copy">© 2026 Janine D. Wagner · Rechtsanwältin · Fachanwältin für Familienrecht</p>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  const MAKE_WEBHOOK_URL = "https://hook.eu2.make.com/hmcq774kcatsemp4w1f7bsu7jswh9luw";
+
+  const TOTAL = 6;
+  const STORAGE_KEY = "scheidung-wizard-v2";
+
+  const form         = document.getElementById('wz-form');
+  const steps        = Array.from(document.querySelectorAll('.wz-step'));
+  const bar          = document.getElementById('bar');
+  const pctEl        = document.getElementById('pct');
+  const curStepEl    = document.getElementById('cur-step');
+  const btnBack      = document.getElementById('btn-back');
+  const btnNext      = document.getElementById('btn-next');
+  const feedback     = document.getElementById('feedback');
+  const feedbackTxt  = document.getElementById('feedback-text');
+  const successEl    = document.getElementById('success');
+  const progressWrap = document.getElementById('progress-wrap');
+  const submitError  = document.getElementById('submit-error');
+  const childrenBlock= document.getElementById('children-block');
+  const wzNav        = document.querySelector('.wz-nav');
+
+  let current = 1;
+
+  const FEEDBACK = {
+    1: "Danke — so können wir Sie persönlich erreichen.",
+    2: "Perfekt. Das hilft uns, Ihre Situation einzuschätzen.",
+    3: "Gut gemacht. Die wichtigsten Personen sind erfasst.",
+    4: "Vielen Dank. Wir sind fast fertig.",
+    5: "Nur noch ein letzter Schritt."
+  };
+
+  function updateProgress() {
+    const pct = Math.round((current / TOTAL) * 100);
+    bar.style.width = pct + '%';
+    pctEl.textContent = pct;
+    curStepEl.textContent = current;
+  }
+
+  function showStep(n, dir) {
+    steps.forEach(s => s.classList.toggle('active', Number(s.dataset.step) === n));
+    current = n;
+    updateProgress();
+    btnBack.disabled = (n === 1);
+    btnNext.querySelector('.label').textContent = (n === TOTAL) ? 'Scheidung jetzt starten' : 'Weiter';
+    const top = progressWrap.getBoundingClientRect().top + window.pageYOffset - 76;
+    if (window.pageYOffset > top + 40 || dir === 'back') {
+      window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+    }
+  }
+
+  function showFeedback(forStep) {
+    const msg = FEEDBACK[forStep];
+    if (!msg) { feedback.classList.remove('show'); return; }
+    feedbackTxt.textContent = msg;
+    feedback.classList.remove('show');
+    void feedback.offsetWidth;
+    feedback.classList.add('show');
+  }
+
+  function setErr(field, on) {
+    const wrap = field.closest('.wz-field');
+    if (!wrap) return;
+    field.classList.toggle('invalid', on);
+    const err = wrap.querySelector('.wz-err');
+    if (err) err.classList.toggle('show', on);
+  }
+
+  function validateStep(n) {
+    const stepEl = steps.find(s => Number(s.dataset.step) === n);
+    let firstBad = null;
+
+    stepEl.querySelectorAll('input:not([type=radio]):not([type=file]):not([type=checkbox]), select, textarea').forEach(inp => {
+      if (!inp.required) { setErr(inp, false); return; }
+      if (inp.id === 'k_anzahl') return;
+      let bad = !inp.value.trim();
+      if (!bad && inp.type === 'email') bad = !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(inp.value.trim());
+      setErr(inp, bad);
+      if (bad && !firstBad) firstBad = inp;
+    });
+
+    const radioGroups = {};
+    stepEl.querySelectorAll('input[type=radio]').forEach(r => {
+      (radioGroups[r.name] = radioGroups[r.name] || []).push(r);
+    });
+    Object.values(radioGroups).forEach(group => {
+      const required = group.some(r => r.required);
+      if (!required) return;
+      const checked = group.some(r => r.checked);
+      const wrap = group[0].closest('.wz-field');
+      const err = wrap && wrap.querySelector('.wz-err');
+      if (err) err.classList.toggle('show', !checked);
+      if (!checked && !firstBad) firstBad = group[0];
+    });
+
+    if (n === 4 && document.querySelector('input[name=k_vorhanden]:checked')?.value === 'Ja') {
+      const inp = document.getElementById('k_anzahl');
+      const bad = !inp.value.trim() || Number(inp.value) < 1;
+      setErr(inp, bad);
+      if (bad && !firstBad) firstBad = inp;
+    }
+
+    if (n === 6) {
+      const cb = document.getElementById('dsgvo');
+      const consent = document.getElementById('consent');
+      const err = document.getElementById('dsgvo-err');
+      const bad = !cb.checked;
+      consent.classList.toggle('invalid', bad);
+      if (err) err.classList.toggle('show', bad);
+      if (bad && !firstBad) firstBad = cb;
+    }
+
+    if (firstBad) {
+      const target = firstBad.closest('.wz-field') || firstBad;
+      const top = target.getBoundingClientRect().top + window.pageYOffset - 120;
+      window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+      if (firstBad.focus) setTimeout(() => firstBad.focus({ preventScroll: true }), 300);
+    }
+    return !firstBad;
+  }
+
+  form.addEventListener('input', e => {
+    if (e.target.classList && e.target.classList.contains('invalid')) setErr(e.target, false);
+  });
+  form.addEventListener('change', e => {
+    if (e.target.type === 'radio') {
+      const wrap = e.target.closest('.wz-field');
+      const err = wrap && wrap.querySelector('.wz-err');
+      if (err) err.classList.remove('show');
+    }
+    if (e.target.id === 'dsgvo' && e.target.checked) {
+      document.getElementById('consent').classList.remove('invalid');
+      document.getElementById('dsgvo-err').classList.remove('show');
+    }
+    save();
+  });
+
+  form.addEventListener('change', e => {
+    if (e.target.name === 'k_vorhanden') {
+      childrenBlock.classList.toggle('show', e.target.value === 'Ja');
+    }
+  });
+
+  const msgEl = document.getElementById('m_nachricht');
+  const msgCount = document.getElementById('msg-count');
+  if (msgEl && msgCount) {
+    const updCount = () => { msgCount.textContent = msgEl.value.length + ' / 500'; };
+    msgEl.addEventListener('input', updCount);
+    updCount();
+  }
+
+  function collectScalar() {
+    const data = {};
+    form.querySelectorAll('input:not([type=file]):not([type=radio]):not([type=checkbox]), select, textarea').forEach(inp => {
+      if (inp.name) data[inp.name] = inp.value;
+    });
+    form.querySelectorAll('input[type=radio]:checked').forEach(r => { data[r.name] = r.value; });
+    return data;
+  }
+  let saveTimer;
+  function save() {
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(() => {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({ step: current, scalar: collectScalar() }));
+      } catch (e) {}
+    }, 300);
+  }
+  form.addEventListener('input', save);
+
+  function restore() {
+    let saved;
+    try { saved = JSON.parse(localStorage.getItem(STORAGE_KEY)); } catch (e) {}
+    if (!saved) return;
+    const s = saved.scalar || {};
+    Object.keys(s).forEach(name => {
+      const radios = form.querySelectorAll('input[type=radio][name="' + name + '"]');
+      if (radios.length) {
+        radios.forEach(r => { if (r.value === s[name]) r.checked = true; });
+      } else {
+        const f = form.querySelector('[name="' + name + '"]');
+        if (f) f.value = s[name];
+      }
+    });
+    if (s.k_vorhanden === 'Ja') childrenBlock.classList.add('show');
+    if (msgEl && msgCount) msgCount.textContent = (msgEl.value || '').length + ' / 500';
+  }
+
+  btnNext.addEventListener('click', () => {
+    if (!validateStep(current)) return;
+    if (current === TOTAL) { submit(); return; }
+    const completed = current;
+    showStep(current + 1, 'next');
+    showFeedback(completed);
+    save();
+  });
+  btnBack.addEventListener('click', () => {
+    if (current === 1) return;
+    feedback.classList.remove('show');
+    showStep(current - 1, 'back');
+    save();
+  });
+
+  function buildPayload() {
+    const s = collectScalar();
+    return {
+      meta: {
+        quelle: "Online-Scheidung Formular (Mobile)",
+        gesendet_am: new Date().toISOString(),
+        seite: location.href
+      },
+      kontakt: {
+        vorname: s.a_vorname, nachname: s.a_nachname,
+        email: s.a_email, telefon: s.a_telefon
+      },
+      situation: {
+        mindestens_ein_jahr_getrennt: s.t_jahr_getrennt,
+        heiratsdatum: s.e_datum,
+        trennung_beginn: s.t_beginn,
+        bundesland: s.t_bundesland
+      },
+      ehepartner: {
+        name: s.p_name,
+        anschrift: s.p_anschrift
+      },
+      kinder: {
+        vorhanden: s.k_vorhanden || 'Nein',
+        anzahl: s.k_vorhanden === 'Ja' ? (s.k_anzahl || '') : 0
+      },
+      scheidung: {
+        einvernehmlich: s.s_einvernehmlich,
+        vertretung_wagner: s.s_vertretung
+      },
+      nachricht: s.m_nachricht || '',
+      dsgvo_zugestimmt: document.getElementById('dsgvo').checked
+    };
+  }
+
+  async function submit() {
+    submitError.classList.remove('show');
+    btnNext.classList.add('loading');
+    btnNext.disabled = true;
+    btnBack.disabled = true;
+
+    const payload = buildPayload();
+    try {
+      if (MAKE_WEBHOOK_URL && MAKE_WEBHOOK_URL !== "YOUR_WEBHOOK_HERE") {
+        const res = await fetch(MAKE_WEBHOOK_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+      } else {
+        await new Promise(r => setTimeout(r, 1100));
+      }
+      onSuccess();
+    } catch (err) {
+      console.error('Übertragung fehlgeschlagen:', err);
+      btnNext.classList.remove('loading');
+      btnNext.disabled = false;
+      btnBack.disabled = false;
+      submitError.classList.add('show');
+      const top = submitError.getBoundingClientRect().top + window.pageYOffset - 120;
+      window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+    }
+  }
+
+  function onSuccess() {
+    try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+    form.style.display = 'none';
+    progressWrap.style.display = 'none';
+    if (wzNav) wzNav.style.display = 'none';
+    document.body.classList.remove('has-wznav');
+    successEl.classList.add('show');
+    const top = successEl.getBoundingClientRect().top + window.pageYOffset - 90;
+    window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+  }
+
+  document.getElementById('retry-submit').addEventListener('click', submit);
+
+  restore();
+  updateProgress();
+  showStep(1);
+})();
+</script>
+</body>
+</html>

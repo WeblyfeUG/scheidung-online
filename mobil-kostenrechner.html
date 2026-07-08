@@ -1,0 +1,599 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Scheidungskosten berechnen — Mobile</title>
+  <meta name="description" content="Berechnen Sie in wenigen Schritten eine unverbindliche Schätzung Ihrer Scheidungskosten. Anwaltlich begleitet, transparent und kostenlos." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="mobile.css?v=1" />
+</head>
+<body class="has-wznav">
+<div class="m-page">
+
+  <!-- ============ Header ============ -->
+  <header class="m-header" data-screen-label="Header">
+    <div class="m-header-inner">
+      <a href="mobil-startseite.html" class="m-brand" aria-label="Janine D. Wagner — zur Startseite">
+        <span class="m-brand-mark" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 9.5 12 4l9 5.5"></path>
+            <line x1="4" y1="9.8" x2="20" y2="9.8"></line>
+            <line x1="6" y1="10.5" x2="6" y2="17"></line>
+            <line x1="10" y1="10.5" x2="10" y2="17"></line>
+            <line x1="14" y1="10.5" x2="14" y2="17"></line>
+            <line x1="18" y1="10.5" x2="18" y2="17"></line>
+            <line x1="3.5" y1="20" x2="20.5" y2="20"></line>
+          </svg>
+        </span>
+        <span class="m-brand-text">
+          <strong>Janine D. Wagner</strong>
+          <small>Fachanwältin für Familienrecht</small>
+        </span>
+      </a>
+      <div class="m-header-actions">
+        <a href="tel:+4951154368383" class="m-iconbtn call" aria-label="Fragen? Anrufen: 0511 54 36 83 83">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.72 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.35 1.85.59 2.81.72A2 2 0 0 1 22 16.92z"></path></svg>
+        </a>
+      </div>
+    </div>
+  </header>
+  <div class="m-header-spacer"></div>
+
+  <!-- ============ Hero ============ -->
+  <section class="wz-hero" data-screen-label="Hero">
+    <div class="m-container">
+      <span class="wz-eyebrow"><span class="dot"></span> Unverbindlich · Kostenlos · In 1 Minute</span>
+      <h1>Was kostet Ihre Scheidung?</h1>
+      <p class="wz-sub">
+        Beantworten Sie vier kurze Fragen und erhalten Sie sofort eine
+        unverbindliche Einschätzung Ihrer Scheidungskosten.
+      </p>
+      <div class="wz-hero-trust">
+        <span class="wz-hero-trust-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          Nach gesetzlichen Gebühren
+        </span>
+        <span class="wz-hero-trust-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          Keine versteckten Kosten
+        </span>
+        <span class="wz-hero-trust-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          Persönlich geprüft
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Rechner ============ -->
+  <section class="wz-section" id="rechner" data-screen-label="Rechner">
+    <div class="m-container">
+      <div class="wz-card">
+
+        <!-- Fortschritt -->
+        <div class="wz-progress" id="progress-wrap">
+          <div class="wz-progress-top">
+            <div class="wz-step-label">Schritt <span id="cur-step">1</span> <span>von 4</span></div>
+            <div class="wz-pct"><span id="pct">25</span> % abgeschlossen</div>
+          </div>
+          <div class="wz-bar"><div class="wz-bar-fill" id="bar"></div></div>
+        </div>
+
+        <!-- Schritte -->
+        <form id="calc-form" novalidate>
+          <div class="wz-body">
+
+            <!-- Schritt 1 — Eigenes Einkommen -->
+            <div class="wz-step active" data-step="1">
+              <div class="wz-step-head">
+                <div class="wz-step-num">Einkommen</div>
+                <h2>Wie hoch ist Ihr monatliches Nettoeinkommen?</h2>
+                <p class="wz-step-desc">Ihr durchschnittliches Netto pro Monat genügt — gerundet ist völlig in Ordnung.</p>
+              </div>
+              <div class="wz-fields">
+                <div class="wz-field full">
+                  <label class="wz-label" for="netto_eigen">Ihr Nettoeinkommen / Monat <span class="req">*</span></label>
+                  <div class="calc-money">
+                    <input class="wz-input" id="netto_eigen" name="netto_eigen" type="text" inputmode="numeric" autocomplete="off" placeholder="z. B. 2.500" required />
+                    <span class="calc-suffix">€ / Monat</span>
+                  </div>
+                  <span class="wz-err">Bitte geben Sie Ihr Nettoeinkommen an.</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Schritt 2 — Einkommen Ehepartner -->
+            <div class="wz-step" data-step="2">
+              <div class="wz-step-head">
+                <div class="wz-step-num">Ehepartner</div>
+                <h2>Wie hoch ist das Nettoeinkommen Ihres Ehepartners?</h2>
+                <p class="wz-step-desc">Falls Sie es nicht genau wissen, schätzen Sie bitte. Verdient Ihr Ehepartner nichts, geben Sie 0 ein.</p>
+              </div>
+              <div class="wz-fields">
+                <div class="wz-field full">
+                  <label class="wz-label" for="netto_partner">Nettoeinkommen Ehepartner / Monat <span class="req">*</span></label>
+                  <div class="calc-money">
+                    <input class="wz-input" id="netto_partner" name="netto_partner" type="text" inputmode="numeric" autocomplete="off" placeholder="z. B. 2.000" required />
+                    <span class="calc-suffix">€ / Monat</span>
+                  </div>
+                  <span class="wz-err">Bitte geben Sie einen Betrag an (notfalls 0).</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Schritt 3 — Kinder -->
+            <div class="wz-step" data-step="3">
+              <div class="wz-step-head">
+                <div class="wz-step-num">Kinder</div>
+                <h2>Gibt es gemeinsame minderjährige Kinder?</h2>
+                <p class="wz-step-desc">Kinder können den Verfahrenswert im Einzelfall reduzieren.</p>
+              </div>
+              <div class="wz-fields">
+                <div class="wz-field full">
+                  <div class="wz-choice grid2">
+                    <label class="wz-opt">
+                      <input type="radio" name="kinder" value="0" required />
+                      <span class="tick"></span><span>Nein</span>
+                    </label>
+                    <label class="wz-opt">
+                      <input type="radio" name="kinder" value="1" />
+                      <span class="tick"></span><span>1 Kind</span>
+                    </label>
+                    <label class="wz-opt">
+                      <input type="radio" name="kinder" value="2" />
+                      <span class="tick"></span><span>2 Kinder</span>
+                    </label>
+                    <label class="wz-opt">
+                      <input type="radio" name="kinder" value="3+" />
+                      <span class="tick"></span><span>3 oder mehr</span>
+                    </label>
+                  </div>
+                  <span class="wz-err">Bitte wählen Sie eine Option.</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Schritt 4 — Einvernehmlich -->
+            <div class="wz-step" data-step="4">
+              <div class="wz-step-head">
+                <div class="wz-step-num">Ihre Scheidung</div>
+                <h2>Ist die Scheidung einvernehmlich?</h2>
+                <p class="wz-step-desc">Bei einer einvernehmlichen Scheidung wird häufig nur ein Anwalt benötigt — das kann die Kosten senken.</p>
+              </div>
+              <div class="wz-fields">
+                <div class="wz-field full">
+                  <div class="wz-choice">
+                    <label class="wz-opt">
+                      <input type="radio" name="einvernehmlich" value="Ja" required />
+                      <span class="tick"></span>
+                      <span class="opt-main"><span>Ja</span><span class="opt-desc">Wir sind uns grundsätzlich einig</span></span>
+                    </label>
+                    <label class="wz-opt">
+                      <input type="radio" name="einvernehmlich" value="Nein" />
+                      <span class="tick"></span>
+                      <span class="opt-main"><span>Nein</span><span class="opt-desc">Es gibt noch Streitpunkte</span></span>
+                    </label>
+                    <label class="wz-opt">
+                      <input type="radio" name="einvernehmlich" value="Noch nicht sicher" />
+                      <span class="tick"></span>
+                      <span class="opt-main"><span>Noch nicht sicher</span><span class="opt-desc">Das klären wir gemeinsam</span></span>
+                    </label>
+                  </div>
+                  <span class="wz-err">Bitte wählen Sie eine Option.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sticky Navigation -->
+          <div class="wz-nav" id="calc-nav">
+            <button type="button" class="wz-back" id="btn-back" disabled>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+              Zurück
+            </button>
+            <button type="button" class="btn btn-primary wz-next" id="btn-next">
+              <span class="label">Weiter</span>
+              <span class="spinner"></span>
+            </button>
+          </div>
+        </form>
+
+        <!-- ============ Ergebnis ============ -->
+        <div class="calc-result" id="result">
+          <div class="calc-result-head">
+            <span class="calc-result-eyebrow">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              Ihr Ergebnis
+            </span>
+            <h2>Ihre unverbindliche Kostenschätzung</h2>
+          </div>
+
+          <div class="calc-vw">
+            <div class="calc-vw-label">Geschätzter Verfahrenswert</div>
+            <div class="calc-vw-num" id="res-vw">—</div>
+            <div class="calc-vw-sub">Grundlage für Anwalts- und Gerichtskosten</div>
+          </div>
+
+          <div class="calc-lines">
+            <div class="calc-line">
+              <span class="calc-line-label">
+                <span class="calc-line-ico"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"></path><path d="M5 21V10l7-5 7 5v11"></path><path d="M9 21v-6h6v6"></path></svg></span>
+                Voraussichtliche Gerichtskosten
+              </span>
+              <span class="calc-line-val" id="res-court">—</span>
+            </div>
+            <div class="calc-line">
+              <span class="calc-line-label">
+                <span class="calc-line-ico"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"></path><path d="M5 7h14"></path><path d="m5 7-2 6a4 4 0 0 0 8 0z"></path><path d="m19 7 2 6a4 4 0 0 1-8 0z"></path></svg></span>
+                Voraussichtliche Anwaltskosten
+              </span>
+              <span class="calc-line-val" id="res-lawyer">—</span>
+            </div>
+            <div class="calc-line total">
+              <span class="calc-line-label">
+                <span class="calc-line-ico"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg></span>
+                Gesamtschätzung
+              </span>
+              <span class="calc-line-val" id="res-total">—</span>
+            </div>
+          </div>
+
+          <div class="calc-context">
+            <div class="calc-context-item" id="ctx-kinder">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+              <span>Gemeinsame Kinder können den Verfahrenswert im Einzelfall reduzieren. Die genaue Berechnung prüfen wir persönlich.</span>
+            </div>
+            <div class="calc-context-item" id="ctx-streitig">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+              <span>Ist die Scheidung nicht einvernehmlich, kann ein zweiter Anwalt nötig werden — das kann die Gesamtkosten erhöhen.</span>
+            </div>
+          </div>
+
+          <p class="calc-disclaimer">
+            Diese Berechnung ist eine unverbindliche Ersteinschätzung. Die tatsächlichen
+            Kosten können je nach Einkommen, Versorgungsausgleich, Kindern und weiteren
+            Umständen abweichen. Die Kanzlei prüft Ihre Angaben persönlich.
+          </p>
+
+          <div class="calc-actions">
+            <a href="mobil-scheidung-vorbereiten.html" class="btn btn-primary btn-arrow">Scheidungsantrag online starten</a>
+            <a href="tel:+4951154368383" class="btn btn-secondary">Kostenlose Erstberatung anrufen</a>
+          </div>
+
+          <div class="calc-email">
+            <div class="calc-email-head">
+              <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"></rect><polyline points="3.5 6.5 12 12.5 20.5 6.5"></polyline></svg>
+              Kostenaufstellung per E-Mail erhalten
+            </div>
+            <div class="calc-email-sub">Wir senden Ihnen Ihre persönliche Schätzung zu — unverbindlich und kostenlos.</div>
+            <div class="calc-email-row">
+              <input class="wz-input" id="res-email" type="email" placeholder="Ihre E-Mail-Adresse" autocomplete="email" />
+              <button type="button" class="btn btn-primary" id="res-email-btn">Senden</button>
+            </div>
+            <span class="wz-err" id="res-email-err">Bitte geben Sie eine gültige E-Mail-Adresse an.</span>
+            <div class="calc-email-ok" id="res-email-ok">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              Vielen Dank — Ihre Kostenaufstellung ist unterwegs.
+            </div>
+          </div>
+
+          <div class="calc-restart">
+            <button type="button" id="btn-restart">Neue Berechnung starten</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Vertrauenszeile -->
+      <p style="text-align:center;font-size:13px;color:var(--c-text-soft);margin:18px 0 0;line-height:1.6;">
+        Berechnung auf Basis gesetzlicher Gebühren (RVG &amp; GKG). Endgültige Kosten nach persönlicher Prüfung.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ Footer ============ -->
+  <footer class="m-footer" data-screen-label="Footer">
+    <div class="m-container">
+      <div class="m-footer-links" style="margin-top:0;padding-top:0;border-top:0;">
+        <a href="#">Impressum</a>
+        <a href="#">Datenschutz</a>
+        <a href="#">AGB</a>
+        <a href="mobil-startseite.html">Startseite</a>
+      </div>
+      <p class="m-footer-copy">© 2026 Janine D. Wagner · Rechtsanwältin · Fachanwältin für Familienrecht</p>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  const MAKE_WEBHOOK_URL = "https://hook.eu2.make.com/hmcq774kcatsemp4w1f7bsu7jswh9luw";
+
+  const costTable = [
+    { min: 0,     max: 5000,  court: 292, lawyer: 925 },
+    { min: 5001,  max: 10000, court: 438, lawyer: 1470 },
+    { min: 10001, max: 15000, court: 586, lawyer: 1950 },
+    { min: 15001, max: 20000, court: 690, lawyer: 2380 },
+    { min: 20001, max: 25000, court: 788, lawyer: 2780 },
+    { min: 25001, max: 30000, court: 886, lawyer: 3180 }
+  ];
+  const VERFAHRENSWERT_FAKTOR = 3;
+
+  const TOTAL = 4;
+  const STORAGE_KEY = "scheidung-rechner-v1";
+
+  const form        = document.getElementById('calc-form');
+  const steps       = Array.from(document.querySelectorAll('.wz-step'));
+  const bar         = document.getElementById('bar');
+  const pctEl       = document.getElementById('pct');
+  const curStepEl   = document.getElementById('cur-step');
+  const btnBack     = document.getElementById('btn-back');
+  const btnNext     = document.getElementById('btn-next');
+  const resultEl    = document.getElementById('result');
+  const progressWrap= document.getElementById('progress-wrap');
+  const calcNav     = document.getElementById('calc-nav');
+
+  let current = 1;
+
+  function updateProgress() {
+    const pct = Math.round((current / TOTAL) * 100);
+    bar.style.width = pct + '%';
+    pctEl.textContent = pct;
+    curStepEl.textContent = current;
+  }
+
+  function showStep(n, dir) {
+    steps.forEach(s => s.classList.toggle('active', Number(s.dataset.step) === n));
+    current = n;
+    updateProgress();
+    btnBack.disabled = (n === 1);
+    btnNext.querySelector('.label').textContent = (n === TOTAL) ? 'Kosten berechnen' : 'Weiter';
+    const top = progressWrap.getBoundingClientRect().top + window.pageYOffset - 76;
+    if (window.pageYOffset > top + 40 || dir === 'back') {
+      window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+    }
+  }
+
+  function parseMoney(v) {
+    const digits = (v || '').replace(/[^\d]/g, '');
+    return digits === '' ? null : parseInt(digits, 10);
+  }
+  function formatThousands(n) {
+    return n.toLocaleString('de-DE');
+  }
+  function formatEuro(n) {
+    return n.toLocaleString('de-DE') + ' €';
+  }
+  ['netto_eigen', 'netto_partner'].forEach(id => {
+    const el = document.getElementById(id);
+    el.addEventListener('input', () => {
+      const n = parseMoney(el.value);
+      el.value = (n === null) ? '' : formatThousands(n);
+      if (el.classList.contains('invalid')) setErr(el, false);
+      save();
+    });
+  });
+
+  function setErr(field, on) {
+    const wrap = field.closest('.wz-field');
+    if (!wrap) return;
+    field.classList.toggle('invalid', on);
+    const err = wrap.querySelector('.wz-err');
+    if (err) err.classList.toggle('show', on);
+  }
+
+  function validateStep(n) {
+    let firstBad = null;
+    if (n === 1) {
+      const el = document.getElementById('netto_eigen');
+      const v = parseMoney(el.value);
+      const bad = (v === null || v <= 0);
+      setErr(el, bad);
+      if (bad) firstBad = el;
+    } else if (n === 2) {
+      const el = document.getElementById('netto_partner');
+      const v = parseMoney(el.value);
+      const bad = (v === null);
+      setErr(el, bad);
+      if (bad) firstBad = el;
+    } else if (n === 3 || n === 4) {
+      const name = (n === 3) ? 'kinder' : 'einvernehmlich';
+      const checked = form.querySelector('input[name="' + name + '"]:checked');
+      const wrap = form.querySelector('input[name="' + name + '"]').closest('.wz-field');
+      const err = wrap && wrap.querySelector('.wz-err');
+      if (err) err.classList.toggle('show', !checked);
+      if (!checked) firstBad = wrap;
+    }
+    if (firstBad) {
+      const top = firstBad.getBoundingClientRect().top + window.pageYOffset - 130;
+      window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+      const inp = firstBad.querySelector ? (firstBad.querySelector('input') || firstBad) : firstBad;
+      if (inp.focus) setTimeout(() => inp.focus({ preventScroll: true }), 280);
+      return false;
+    }
+    return true;
+  }
+
+  form.addEventListener('change', e => {
+    if (e.target.type === 'radio') {
+      const wrap = e.target.closest('.wz-field');
+      const err = wrap && wrap.querySelector('.wz-err');
+      if (err) err.classList.remove('show');
+      save();
+    }
+  });
+
+  function findBracket(vw) {
+    for (const b of costTable) {
+      if (vw >= b.min && vw <= b.max) return b;
+    }
+    return costTable[costTable.length - 1];
+  }
+
+  function compute() {
+    const n1 = parseMoney(document.getElementById('netto_eigen').value) || 0;
+    const n2 = parseMoney(document.getElementById('netto_partner').value) || 0;
+    const kinder = (form.querySelector('input[name=kinder]:checked') || {}).value || '0';
+    const einvern = (form.querySelector('input[name=einvernehmlich]:checked') || {}).value || '';
+
+    const vw = (n1 + n2) * VERFAHRENSWERT_FAKTOR;
+    const b = findBracket(vw);
+    const aboveTable = vw > costTable[costTable.length - 1].max;
+
+    const court = b.court;
+    const lawyer = b.lawyer;
+    const total = court + lawyer;
+
+    return {
+      eigenes_nettoeinkommen: n1,
+      partner_nettoeinkommen: n2,
+      kinder_anzahl: kinder,
+      scheidung_einvernehmlich: einvern,
+      berechneter_verfahrenswert: vw,
+      geschaetzte_gerichtskosten: court,
+      geschaetzte_anwaltskosten: lawyer,
+      geschaetzte_gesamtkosten: total,
+      aboveTable
+    };
+  }
+
+  let lastResult = null;
+
+  function renderResult(r) {
+    const pfx = r.aboveTable ? 'ab ca. ' : 'ca. ';
+    document.getElementById('res-vw').textContent = (r.aboveTable ? 'ab ' : '') + formatEuro(r.berechneter_verfahrenswert);
+    document.getElementById('res-court').textContent = pfx + formatEuro(r.geschaetzte_gerichtskosten);
+    document.getElementById('res-lawyer').textContent = pfx + formatEuro(r.geschaetzte_anwaltskosten);
+    document.getElementById('res-total').textContent = pfx + formatEuro(r.geschaetzte_gesamtkosten);
+
+    document.getElementById('ctx-kinder').classList.toggle('show', r.kinder_anzahl !== '0');
+    document.getElementById('ctx-streitig').classList.toggle('show', r.scheidung_einvernehmlich !== 'Ja');
+
+    Object.keys(r).forEach(k => { if (k !== 'aboveTable') resultEl.dataset[k] = r[k]; });
+  }
+
+  function showResult() {
+    lastResult = compute();
+    renderResult(lastResult);
+    form.style.display = 'none';
+    progressWrap.style.display = 'none';
+    if (calcNav) calcNav.style.display = 'none';
+    document.body.classList.remove('has-wznav');
+    resultEl.classList.add('show');
+    document.getElementById('res-email-ok').classList.remove('show');
+    const top = resultEl.getBoundingClientRect().top + window.pageYOffset - 76;
+    window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+    save();
+  }
+
+  btnNext.addEventListener('click', () => {
+    if (!validateStep(current)) return;
+    if (current === TOTAL) { showResult(); return; }
+    showStep(current + 1, 'next');
+    save();
+  });
+  btnBack.addEventListener('click', () => {
+    if (current === 1) return;
+    showStep(current - 1, 'back');
+    save();
+  });
+
+  document.getElementById('btn-restart').addEventListener('click', () => {
+    resultEl.classList.remove('show');
+    form.style.display = '';
+    progressWrap.style.display = '';
+    if (calcNav) calcNav.style.display = '';
+    document.body.classList.add('has-wznav');
+    form.reset();
+    ['netto_eigen', 'netto_partner'].forEach(id => { document.getElementById(id).value = ''; });
+    try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+    showStep(1, 'back');
+  });
+
+  const emailBtn = document.getElementById('res-email-btn');
+  const emailInp = document.getElementById('res-email');
+  const emailErr = document.getElementById('res-email-err');
+  const emailOk  = document.getElementById('res-email-ok');
+
+  emailBtn.addEventListener('click', async () => {
+    const val = (emailInp.value || '').trim();
+    const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
+    emailErr.classList.toggle('show', !valid);
+    emailInp.classList.toggle('invalid', !valid);
+    if (!valid) { emailInp.focus(); return; }
+
+    emailBtn.disabled = true;
+    emailBtn.textContent = 'Senden …';
+    const payload = Object.assign({
+      meta: { quelle: 'Scheidungskostenrechner (Mobile)', gesendet_am: new Date().toISOString(), seite: location.href },
+      email: val
+    }, lastResult || compute());
+    delete payload.aboveTable;
+
+    try {
+      if (MAKE_WEBHOOK_URL && MAKE_WEBHOOK_URL !== 'YOUR_WEBHOOK_HERE') {
+        const res = await fetch(MAKE_WEBHOOK_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+      } else {
+        await new Promise(r => setTimeout(r, 800));
+      }
+      emailOk.classList.add('show');
+      emailInp.value = '';
+    } catch (err) {
+      console.error('E-Mail-Versand fehlgeschlagen:', err);
+      emailErr.textContent = 'Das hat leider nicht geklappt. Bitte versuchen Sie es erneut.';
+      emailErr.classList.add('show');
+    } finally {
+      emailBtn.disabled = false;
+      emailBtn.textContent = 'Senden';
+    }
+  });
+  emailInp.addEventListener('input', () => {
+    emailErr.classList.remove('show');
+    emailInp.classList.remove('invalid');
+  });
+
+  let saveTimer;
+  function collect() {
+    return {
+      netto_eigen: document.getElementById('netto_eigen').value,
+      netto_partner: document.getElementById('netto_partner').value,
+      kinder: (form.querySelector('input[name=kinder]:checked') || {}).value || '',
+      einvernehmlich: (form.querySelector('input[name=einvernehmlich]:checked') || {}).value || ''
+    };
+  }
+  function save() {
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(() => {
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(collect())); } catch (e) {}
+    }, 250);
+  }
+  function restore() {
+    let s;
+    try { s = JSON.parse(localStorage.getItem(STORAGE_KEY)); } catch (e) {}
+    if (!s) return;
+    if (s.netto_eigen) document.getElementById('netto_eigen').value = s.netto_eigen;
+    if (s.netto_partner) document.getElementById('netto_partner').value = s.netto_partner;
+    if (s.kinder) { const r = form.querySelector('input[name=kinder][value="' + s.kinder + '"]'); if (r) r.checked = true; }
+    if (s.einvernehmlich) { const r = form.querySelector('input[name=einvernehmlich][value="' + s.einvernehmlich + '"]'); if (r) r.checked = true; }
+  }
+
+  restore();
+  updateProgress();
+  showStep(1);
+})();
+</script>
+</body>
+</html>

@@ -55,10 +55,36 @@ module.exports = async (req, res) => {
   }
 
   const nonBlank = (v, max) => typeof v === 'string' && v.trim().length > 0 && v.length <= max;
+  const RUECKRUF_ZEITEN = ['', 'Vormittag', 'Nachmittag', 'Abend'];
+  const validZeit = (v) => v === undefined || (typeof v === 'string' && RUECKRUF_ZEITEN.includes(v));
 
   // Grundvalidierung + DSGVO-Einwilligung je Formulartyp (Consent-Flag muss
   // zum tatsächlich angehakten Feld des jeweiligen Formulars gehören)
-  if (b.type === 'kostenrahmen') {
+  if (b.type === 'checkliste_pdf') {
+    // Checklisten-Versand: E-Mail + Einwilligung
+    if (b.dsgvo_zugestimmt !== true) {
+      res.status(400).json({ ok: false, error: 'consent_required' });
+      return;
+    }
+    if (!isEmail(b.email)) {
+      res.status(400).json({ ok: false, error: 'invalid_email' });
+      return;
+    }
+  } else if (b.type === 'rueckruf') {
+    // Rückruf-Baustein: Name + Telefon + Wunschzeit
+    if (b.dsgvo_zugestimmt !== true) {
+      res.status(400).json({ ok: false, error: 'consent_required' });
+      return;
+    }
+    if (!nonBlank(b.name, 160) || !nonBlank(b.telefon, 60)) {
+      res.status(400).json({ ok: false, error: 'missing_fields' });
+      return;
+    }
+    if (!validZeit(b.rueckruf_zeit)) {
+      res.status(400).json({ ok: false, error: 'invalid_rueckruf_zeit' });
+      return;
+    }
+  } else if (b.type === 'kostenrahmen') {
     if (b.cost_dsgvo !== true) {
       res.status(400).json({ ok: false, error: 'consent_required' });
       return;
@@ -73,6 +99,10 @@ module.exports = async (req, res) => {
     }
     if (b.c_nachricht && !str(b.c_nachricht, 2000)) {
       res.status(400).json({ ok: false, error: 'message_too_long' });
+      return;
+    }
+    if (!validZeit(b.rueckruf_zeit)) {
+      res.status(400).json({ ok: false, error: 'invalid_rueckruf_zeit' });
       return;
     }
   } else {

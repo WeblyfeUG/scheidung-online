@@ -1,8 +1,8 @@
 /* ============================================================
-   Adaptive Auslieferung (v2): kleine Viewports (<768px) erhalten
-   die dedizierte Mobile-App-Ansicht (mobil.html), der Hash
-   (#start / #vorbereiten / #rechner) bleibt erhalten.
-   Override: ?desktop=1 erzwingt Desktop für die Sitzung.
+   Adaptive Auslieferung (v2.1): kleine Viewports (<768px) erhalten
+   die dedizierte Mobile-Ansicht der jeweiligen Seite, der Hash
+   bleibt erhalten. Override: ?desktop=1 erzwingt Desktop (Sitzung).
+   Funktioniert mit und ohne .html in der URL (Clean URLs).
    ============================================================ */
 (function () {
   'use strict';
@@ -14,8 +14,17 @@
   } catch (e) { /* Storage gesperrt → expliziter Parameter zählt trotzdem */ }
   if (wantDesktop) return;
   if (window.innerWidth >= 768) return;
-  var file = decodeURIComponent(location.pathname.split('/').pop());
-  if (file === '' || file === 'index.html' || file === 'Startseite.html') {
-    location.replace('mobil.html' + location.hash);
-  }
+
+  var MAP = {
+    '': 'mobil.html',
+    'index': 'mobil.html',
+    'Startseite': 'mobil.html',
+    'scheidungsunterlagen': 'scheidungsunterlagen-mobil.html',
+    'scheidung-ohne-anwalt': 'scheidung-ohne-anwalt-mobil.html',
+    'scheidungskosten': 'scheidungskosten-mobil.html',
+    'anwaeltin-hannover': 'anwaeltin-hannover-mobil.html'
+  };
+  var file = decodeURIComponent(location.pathname.split('/').pop()).replace(/\.html$/, '');
+  var target = MAP[file];
+  if (target) location.replace(target + location.hash);
 })();

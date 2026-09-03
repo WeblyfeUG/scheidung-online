@@ -433,6 +433,7 @@ var __RM = window.matchMedia && window.matchMedia('(prefers-reduced-motion: redu
   }
   function routeFromHash(){
     var h = (location.hash || '').slice(1);
+    if (h === 'kosten') h = 'rechner'; /* Alt-Deeplink: Kosten-Sektion entfernt */
     if (h === 'vorbereiten' || h === 'rechner' || h === 'start' || !h) {
       setActiveView(h || 'start');
       window.scrollTo(0,0);

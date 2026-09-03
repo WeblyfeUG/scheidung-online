@@ -21,7 +21,7 @@ function build(){
   d=document.createElement('div');
   d.className='consent-sheet';d.id='consent-sheet';
   d.setAttribute('role','dialog');d.setAttribute('aria-label','Einwilligung in Messdienste');
-  d.innerHTML='<p>Wir verwenden Messdienste, um zu verstehen, wie unsere Seite genutzt wird. <a href="rechtsseiten.html#datenschutz">Details in der Datenschutzerkl\u00e4rung</a>.</p>'+
+  d.innerHTML='<p>Wir verwenden Messdienste, um zu verstehen, wie unsere Seite genutzt wird. <a href="datenschutz.html">Details in der Datenschutzerkl\u00e4rung</a>.</p>'+
     '<div class="consent-btns"><button type="button" class="c-decline" data-consent="declined">Ablehnen</button><button type="button" class="c-accept" data-consent="accepted">Akzeptieren</button></div>';
   document.body.appendChild(d);
   Array.prototype.forEach.call(d.querySelectorAll('[data-consent]'),function(b){

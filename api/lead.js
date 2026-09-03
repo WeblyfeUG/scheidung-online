@@ -55,8 +55,6 @@ module.exports = async (req, res) => {
   }
 
   const nonBlank = (v, max) => typeof v === 'string' && v.trim().length > 0 && v.length <= max;
-  const RUECKRUF_ZEITEN = ['', 'Vormittag', 'Nachmittag', 'Abend'];
-  const validZeit = (v) => v === undefined || (typeof v === 'string' && RUECKRUF_ZEITEN.includes(v));
 
   // Grundvalidierung + DSGVO-Einwilligung je Formulartyp (Consent-Flag muss
   // zum tatsächlich angehakten Feld des jeweiligen Formulars gehören)
@@ -70,39 +68,33 @@ module.exports = async (req, res) => {
       res.status(400).json({ ok: false, error: 'invalid_email' });
       return;
     }
-  } else if (b.type === 'rueckruf') {
-    // Rückruf-Baustein: Name + Telefon + Wunschzeit
+  } else if (b.type === 'nachricht') {
+    // Kontakt-Baustein: Name + E-Mail, Antwort per E-Mail (kein Rückruf-Versprechen)
     if (b.dsgvo_zugestimmt !== true) {
       res.status(400).json({ ok: false, error: 'consent_required' });
       return;
     }
-    if (!nonBlank(b.name, 160) || !nonBlank(b.telefon, 60)) {
+    if (!nonBlank(b.name, 160) || !isEmail(b.email)) {
       res.status(400).json({ ok: false, error: 'missing_fields' });
       return;
     }
-    if (!validZeit(b.rueckruf_zeit)) {
-      res.status(400).json({ ok: false, error: 'invalid_rueckruf_zeit' });
-      return;
-    }
   } else if (b.type === 'kostenrahmen') {
+    // Stand 03.09.2026: E-Mail Pflicht (schriftliche Einschätzung binnen 24 h),
+    // Telefon optional, keine Rückruf-Zeiten mehr
     if (b.cost_dsgvo !== true) {
       res.status(400).json({ ok: false, error: 'consent_required' });
       return;
     }
-    if (!nonBlank(b.c_vorname, 120) || !nonBlank(b.c_nachname, 120) || !nonBlank(b.c_telefon, 60)) {
+    if (!nonBlank(b.c_vorname, 120) || !nonBlank(b.c_nachname, 120) || !isEmail(b.c_email)) {
       res.status(400).json({ ok: false, error: 'missing_fields' });
       return;
     }
-    if (b.c_email && !isEmail(b.c_email)) {
-      res.status(400).json({ ok: false, error: 'invalid_email' });
+    if (b.c_telefon && !str(b.c_telefon, 60)) {
+      res.status(400).json({ ok: false, error: 'invalid_phone' });
       return;
     }
     if (b.c_nachricht && !str(b.c_nachricht, 2000)) {
       res.status(400).json({ ok: false, error: 'message_too_long' });
-      return;
-    }
-    if (!validZeit(b.rueckruf_zeit)) {
-      res.status(400).json({ ok: false, error: 'invalid_rueckruf_zeit' });
       return;
     }
   } else {

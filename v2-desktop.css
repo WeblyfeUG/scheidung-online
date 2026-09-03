@@ -20,7 +20,7 @@
 
   /* Text + Flächen */
   --c-text: #172332;
-  --c-text-soft: #5E6A76;
+  --c-text-soft: #49545F;
   --c-bg: #FBFAF7;
   --c-bg-alt: #EBEFF5;
   --c-bg-white: #FFFFFF;
@@ -3578,4 +3578,28 @@ body.nav-open .nav-drawer {
   .wz-success-check svg,
   .wz-success svg path,
   .wz-success svg circle { animation: none !important; transition: none !important; }
+}
+
+/* ============================================================
+   Fix C4 (Kundenfeedback 03.09.2026): Der Block "Was passiert als
+   Nächstes?" stand auf Desktop rechts neben dem Formular und wirkte
+   wie dessen Fortsetzung, während der Weiter-Button unterhalb des
+   sichtbaren Bereichs lag. Umsetzung der im Feedback genannten
+   Option: Die Sidebar rückt UNTER den Weiter-Button (identisch zum
+   bewährten Muster unter 921px); die Formularkarte bleibt fokussiert
+   zentriert. Reine CSS-Änderung, kein Markup-Eingriff.
+   ============================================================ */
+@media (min-width: 921px) {
+  #view-vorbereiten .wz-grid {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+  }
+  #view-vorbereiten .wz-grid > * {
+    width: 100%;
+    max-width: 780px;
+  }
+  #view-vorbereiten .wz-side {
+    position: static;
+    order: 2;
+  }
 }

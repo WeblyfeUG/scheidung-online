@@ -10,7 +10,7 @@ function buildConsent(){
   d=document.createElement('div');
   d.className='consent-sheet';d.id='consent-sheet';
   d.setAttribute('role','dialog');d.setAttribute('aria-label','Einwilligung in Messdienste');
-  d.innerHTML='<p>Wir verwenden Messdienste, um zu verstehen, wie unsere Seite genutzt wird. <a href="rechtsseiten.html#datenschutz">Details in der Datenschutzerkl\u00e4rung</a>.</p>'+
+  d.innerHTML='<p>Wir verwenden Messdienste, um zu verstehen, wie unsere Seite genutzt wird. <a href="datenschutz.html">Details in der Datenschutzerkl\u00e4rung</a>.</p>'+
     '<div class="consent-btns"><button type="button" class="btn btn-line" data-consent="declined">Ablehnen</button><button type="button" class="btn btn-navy" data-consent="accepted">Akzeptieren</button></div>';
   document.body.appendChild(d);
   qsa('[data-consent]',d).forEach(function(b){b.addEventListener('click',function(){
@@ -36,14 +36,13 @@ function cbState(){
 }
 function chipsHtml(){return '<div class="chips" data-chips><button type="button" data-v="Vormittag">Vormittag</button><button type="button" data-v="Nachmittag">Nachmittag</button><button type="button" data-v="Abend">Abend</button></div>';}
 function cbFormHtml(i){
-  return '<form data-demo novalidate>'+chipsHtml()+
-  '<input type="hidden" name="rueckruf_zeit" value="" data-chip-value>'+
-  '<div class="fld"><label for="cb-name-'+i+'">Ihr Name</label><input id="cb-name-'+i+'" name="name" type="text" autocomplete="name" data-req><span class="err">Bitte geben Sie Ihren Namen an.</span></div>'+
-  '<div class="fld"><label for="cb-tel-'+i+'">Telefonnummer</label><input id="cb-tel-'+i+'" name="telefon" type="tel" inputmode="tel" autocomplete="tel" data-req><span class="err">Bitte geben Sie eine Telefonnummer an.</span></div>'+
-  '<div class="fld"><label class="consent"><input type="checkbox" data-req-check><span class="cbox"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span>Ich habe die <a href="rechtsseiten.html#datenschutz">Datenschutzerkl\u00e4rung</a> gelesen und willige ein, dass meine Angaben zur Bearbeitung meiner Anfrage gespeichert und verarbeitet werden.</span></label><span class="err">Bitte stimmen Sie der Datenschutzerkl\u00e4rung zu.</span></div>'+
-  '<button type="submit" class="btn '+(cbState()==='closed'?'btn-gold':'btn-line')+' btn-block">R\u00fcckruf anfragen</button>'+
+  return '<form data-demo novalidate>'+
+    '<div class="fld"><label for="cb-name-'+i+'">Ihr Name</label><input id="cb-name-'+i+'" name="name" type="text" autocomplete="name" data-req><span class="err">Bitte geben Sie Ihren Namen an.</span></div>'+
+  '<div class="fld"><label for="cb-mail-'+i+'">E-Mail-Adresse</label><input id="cb-mail-'+i+'" name="email" type="email" inputmode="email" autocomplete="email" data-req><span class="err">Bitte geben Sie Ihre E-Mail-Adresse an.</span></div>'+
+  '<div class="fld"><label class="consent"><input type="checkbox" data-req-check><span class="cbox"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span>Ich habe die <a href="datenschutz.html">Datenschutzerkl\u00e4rung</a> gelesen und willige ein, dass meine Angaben zur Bearbeitung meiner Anfrage gespeichert und verarbeitet werden.</span></label><span class="err">Bitte stimmen Sie der Datenschutzerkl\u00e4rung zu.</span></div>'+
+  '<button type="submit" class="btn '+(cbState()==='closed'?'btn-gold':'btn-line')+' btn-block">Nachricht senden</button>'+
   '</form>'+
-  '<div class="form-success"><div class="fs-check"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div><h3>Vielen Dank.</h3><p>Wir rufen Sie wie gew\u00fcnscht zur\u00fcck.</p></div>';
+  '<div class="form-success"><div class="fs-check"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div><h3>Vielen Dank.</h3><p>Wir antworten Ihnen per E-Mail \u2014 in der Regel innerhalb von 24 Stunden.</p></div>';
 }
 function initCallback(){
   var st=cbState();
@@ -55,14 +54,14 @@ function initCallback(){
       '<h3>Sprechen wir kurz \u2014 wir h\u00f6ren zu.</h3>'+
       '<p class="cb-sub">Kein Verkaufsgespr\u00e4ch: Sie schildern kurz Ihre Situation, wir sagen ehrlich, was der n\u00e4chste Schritt w\u00e4re.</p>'+
       '<a class="btn btn-gold btn-block" href="tel:'+TEL+'">'+TELTXT+' anrufen</a>'+
-      '<div class="cb-or">oder R\u00fcckruf vereinbaren</div>';
+      '<div class="cb-or">oder schreiben Sie uns kurz</div>';
     }else{
       head='<span class="cb-status"><span class="cb-dot"></span>Mo\u2013Fr 8\u201318 Uhr \u00b7 gerade geschlossen</span>'+
-      '<h3>Gerade geschlossen \u2014 wir rufen Sie morgen zur\u00fcck.</h3>'+
-      '<p class="cb-sub">F\u00fcllen Sie in Ruhe aus, wir melden uns. Wann passt es Ihnen am besten?</p>';
+      '<h3>Gerade geschlossen \u2014 schreiben Sie uns, wir antworten Ihnen.</h3>'+
+      '<p class="cb-sub">Schildern Sie kurz Ihr Anliegen \u2014 Sie erhalten unsere Antwort per E-Mail, in der Regel innerhalb von 24 Stunden. Ein pers\u00f6nliches Gespr\u00e4ch vereinbaren wir bei Bedarf im Rahmen der Erstberatung.</p>';
     }
     el.innerHTML=head+cbFormHtml(i)+(st==='closed'?'<p class="cb-tel-min">Lieber selbst anrufen? Morgen ab 8 Uhr: <a href="tel:'+TEL+'">'+TELTXT+'</a></p>':'');
-    var ch=el.querySelector('[data-chips]'),hid=el.querySelector('[data-chip-value]');
+    var ch=null,hid=null;
     if(ch){qsa('button',ch).forEach(function(b){b.addEventListener('click',function(){
       var on=b.classList.contains('on');
       qsa('button',ch).forEach(function(x){x.classList.remove('on');});
@@ -77,9 +76,9 @@ function buildPayload(form){
   var p={meta:{gesendet_am:new Date().toISOString(),seite:location.href}};
   var val=function(sel){var el=form.querySelector(sel);return el?el.value.trim():'';};
   if(form.closest('[data-callback]')){
-    p.type='rueckruf';p.meta.quelle='Rückruf-Baustein';
-    p.name=val('[name=name]');p.telefon=val('[name=telefon]');
-    p.rueckruf_zeit=val('[data-chip-value]');p.dsgvo_zugestimmt=true;
+    p.type='nachricht';p.meta.quelle='Kontakt-Baustein';
+    p.name=val('[name=name]');p.email=val('[name=email]');
+    p.dsgvo_zugestimmt=true;
   }else if(form.querySelector('#dl-email')){
     p.type='checkliste_pdf';p.meta.quelle='Scheidungsunterlagen-Checkliste';
     p.email=val('#dl-email');p.dsgvo_zugestimmt=true;
@@ -87,7 +86,7 @@ function buildPayload(form){
     p.type='kostenrahmen';p.meta.quelle='Kostenorientierung (Landingpage)';
     p.c_vorname=val('#k-vorname');p.c_nachname=val('#k-nachname');
     p.c_telefon=val('#k-tel');p.c_email=val('#k-email');
-    p.c_nachricht=val('#k-msg');p.rueckruf_zeit=val('[data-chip-value]');
+    p.c_nachricht=val('#k-msg');
     p.cost_dsgvo=true;
   }
   return p;

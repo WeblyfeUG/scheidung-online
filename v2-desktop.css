@@ -2024,7 +2024,7 @@ img { max-width: 100%; display: block; }
 .topnav-burger:hover { background: var(--c-primary-light); }
 
 /* ---- Responsive ---- */
-@media (max-width: 1240px) {
+@media (max-width: 1279px) {
   .topnav-menu { display: none; }
   .topnav-brand { border-right: 0; flex: 1; margin-right: 0; }
   .topnav-burger { display: flex; }
@@ -2169,8 +2169,8 @@ body.nav-open .nav-drawer {
   .nav-drawer { top: 84px; }
   .nav-drawer-inner { max-height: calc(100vh - 100px); }
 }
-/* Über 1240px existiert die Desktop-Navigation — Drawer/Scrim nie sichtbar */
-@media (min-width: 1241px) {
+/* Über 1279px existiert die Desktop-Navigation — Drawer/Scrim nie sichtbar */
+@media (min-width: 1280px) {
   body.nav-open .nav-drawer,
   body.nav-open .nav-scrim { opacity: 0; visibility: hidden; pointer-events: none; }
 }
@@ -3603,3 +3603,69 @@ body.nav-open .nav-drawer {
     order: 2;
   }
 }
+
+/* ============================================================
+   Feedback 12.10.2026
+   ============================================================ */
+/* Eignung: Trennlinien beider Karten auf einer Höhe,
+   Farbfelder = Farbe des jeweiligen Buttons */
+.suitability-grid { align-items: stretch; }
+.suit-card { display: flex; flex-direction: column; }
+.suit-head { min-height: 70px; }
+.suit-list { flex: 1 1 auto; }
+.suit-footer { margin-top: auto; }
+.suit-card .suit-list + .suit-footer { margin-top: 24px; }
+.suit-icon.ok { background: var(--c-action); }
+.suit-list.ok li svg { color: var(--c-action); }
+.btn-accent {
+  background: var(--c-accent);
+  color: var(--c-primary-deep);
+  border: 1px solid var(--c-accent);
+  box-shadow: 0 2px 8px rgba(169,123,61,0.22);
+}
+.btn-accent:hover {
+  background: #BB8C45;
+  border-color: #BB8C45;
+  color: var(--c-primary-deep);
+  transform: translateY(-1px);
+}
+
+/* Einstiege: „Den Rest übernehmen wir." nicht allein in der zweiten Zeile */
+.lead-oneline { text-wrap: balance; }
+@media (min-width: 960px) {
+  .lead-oneline { white-space: nowrap; }
+}
+
+/* Orientierung: Weg zurück zur Startseite in Antrag und Kosten */
+.wz-home-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 16px;
+  padding: 7px 14px 7px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--c-border);
+  background: rgba(255,255,255,0.75);
+  color: var(--c-primary);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 140ms ease, border-color 140ms ease;
+}
+.wz-home-link:hover { color: var(--c-brand-orange); border-color: var(--c-brand-orange); }
+.topnav-brand { border-radius: 10px; transition: opacity 140ms ease; }
+.topnav-brand:hover { opacity: 0.8; }
+.topnav-cta.is-current { box-shadow: 0 0 0 3px rgba(201,154,81,0.45); }
+
+/* Menü: gleichmäßige Abstände (Feedback 12.10.) — die Icons über
+   unterschiedlich langen Wörtern ließen die Abstände ungleich wirken.
+   Reine Textpunkte mit identischem Innenabstand wirken ruhiger. */
+.topnav-menu { gap: 6px; align-items: center; }
+.topnav-item { flex-direction: row; gap: 0; padding: 10px 13px; border-radius: 10px; min-height: 44px; }
+.topnav-item svg { display: none; }
+.topnav-item.active { background: #FBF3E3; }
+.topnav-item.active::after { left: 13px; right: 13px; bottom: 4px; }
+/* Kinder: „Bei wem leben die Kinder?" volle Breite, zwei Spalten */
+#children-block .wz-field.full.wz-kids-home { max-width: none; }
+#children-block .wz-kids-home .wz-choice.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); grid-auto-flow: row; gap: 12px; }
+@media (max-width: 560px) { #children-block .wz-kids-home .wz-choice.grid2 { grid-template-columns: 1fr; } }

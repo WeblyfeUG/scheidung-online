@@ -38,7 +38,7 @@ var __RM = window.matchMedia && window.matchMedia('(prefers-reduced-motion: redu
   });
 
   // Beim Wechsel auf Desktop-Breite Menü sicher schließen
-  var mq = window.matchMedia('(min-width: 1241px)');
+  var mq = window.matchMedia('(min-width: 1280px)');
   (mq.addEventListener ? mq.addEventListener.bind(mq, 'change') : mq.addListener.bind(mq))(function (ev) {
     if (ev.matches) close();
   });
@@ -168,6 +168,13 @@ var __RM = window.matchMedia && window.matchMedia('(prefers-reduced-motion: redu
         if (inp.id === 'k_anzahl') return;
         let bad = !inp.value.trim();
         if (!bad && inp.type === 'email') bad = !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(inp.value.trim());
+        /* Plausibilität (Feedback 12.10.): keine Fantasie-Eingaben */
+        const err = inp.closest('.wz-field') && inp.closest('.wz-field').querySelector('.wz-err');
+        if (err && !err.dataset.empty) err.dataset.empty = err.textContent;
+        let msg = '';
+        if (!bad && inp.dataset.check && window.SOGuard) msg = SOGuard.check(inp.dataset.check, inp.value);
+        if (err) err.textContent = msg || err.dataset.empty;
+        if (msg) bad = true;
         setErr(inp, bad);
         if (bad && !firstBad) firstBad = inp;
       });
@@ -193,6 +200,11 @@ var __RM = window.matchMedia && window.matchMedia('(prefers-reduced-motion: redu
         const bad = !inp.value.trim() || Number(inp.value) < 1;
         setErr(inp, bad);
         if (bad && !firstBad) firstBad = inp;
+        /* Bei wem leben die Kinder? (bestimmt die Zuständigkeit) */
+        const wo = document.querySelector('input[name=k_wohnort]:checked');
+        const woErr = document.getElementById('k_wohnort-err');
+        if (woErr) woErr.classList.toggle('show', !wo);
+        if (!wo && !firstBad) firstBad = document.querySelector('input[name=k_wohnort]');
       }
 
       /* DSGVO-Einwilligung (Schritt 6) */
@@ -325,7 +337,8 @@ var __RM = window.matchMedia && window.matchMedia('(prefers-reduced-motion: redu
         meta: {
           quelle: "Online-Scheidung Formular",
           gesendet_am: new Date().toISOString(),
-          seite: location.href
+          seite: location.href,
+          guard: window.SOGuard ? SOGuard.meta(form) : null
         },
         kontakt: {
           vorname: s.a_vorname, nachname: s.a_nachname,
@@ -335,7 +348,8 @@ var __RM = window.matchMedia && window.matchMedia('(prefers-reduced-motion: redu
           mindestens_ein_jahr_getrennt: s.t_jahr_getrennt,
           heiratsdatum: s.e_datum,
           trennung_beginn: s.t_beginn,
-          bundesland: s.t_bundesland
+          ehewohnung_plz: s.t_plz,
+          ehewohnung_ort: s.t_ort
         },
         ehepartner: {
           name: s.p_name,
@@ -343,11 +357,11 @@ var __RM = window.matchMedia && window.matchMedia('(prefers-reduced-motion: redu
         },
         kinder: {
           vorhanden: s.k_vorhanden || 'Nein',
-          anzahl: s.k_vorhanden === 'Ja' ? (s.k_anzahl || '') : 0
+          anzahl: s.k_vorhanden === 'Ja' ? (s.k_anzahl || '') : 0,
+          wohnort: s.k_vorhanden === 'Ja' ? (s.k_wohnort || '') : ''
         },
         scheidung: {
-          einvernehmlich: s.s_einvernehmlich,
-          vertretung_wagner: s.s_vertretung
+          einvernehmlich: s.s_einvernehmlich
         },
         nachricht: s.m_nachricht || '',
         dsgvo_zugestimmt: document.getElementById('dsgvo').checked
@@ -396,6 +410,7 @@ var __RM = window.matchMedia && window.matchMedia('(prefers-reduced-motion: redu
     document.getElementById('retry-submit').addEventListener('click', submit);
 
     /* ---- init ---- */
+    if (window.SOGuard) SOGuard.protect(form);
     restore();
     updateProgress();
     showStep(1);
@@ -406,6 +421,7 @@ var __RM = window.matchMedia && window.matchMedia('(prefers-reduced-motion: redu
   'use strict';
   var form = document.getElementById('cost-contact-form');
   if (!form) return;
+  if (window.SOGuard) SOGuard.protect(form);
   var submitBtn = document.getElementById('cost-submit-btn');
   var successEl = document.getElementById('cost-success');
 
@@ -420,8 +436,12 @@ var __RM = window.matchMedia && window.matchMedia('(prefers-reduced-motion: redu
   form.addEventListener('submit', function (e) {
     e.preventDefault();
     var firstBad = null;
-    form.querySelectorAll('input[required]:not([type=checkbox]), textarea[required]').forEach(function (inp) {
-      var bad = !inp.value.trim();
+    form.querySelectorAll('input[required]:not([type=checkbox]), textarea[required], input[data-check]').forEach(function (inp) {
+      var err = inp.closest('.wz-field') && inp.closest('.wz-field').querySelector('.wz-err');
+      if (err && !err.dataset.empty) err.dataset.empty = err.textContent;
+      var msg = (inp.value.trim() && inp.dataset.check && window.SOGuard) ? SOGuard.check(inp.dataset.check, inp.value) : '';
+      var bad = (inp.required && !inp.value.trim()) || !!msg;
+      if (err) err.textContent = msg || err.dataset.empty;
       setErr(inp, bad);
       if (bad && !firstBad) firstBad = inp;
     });
@@ -436,7 +456,7 @@ var __RM = window.matchMedia && window.matchMedia('(prefers-reduced-motion: redu
 
     submitBtn.classList.add('loading');
     submitBtn.disabled = true;
-    var payload = { meta: { quelle: 'Kostenorientierung', gesendet_am: new Date().toISOString(), seite: location.href }, type: 'kostenrahmen' };
+    var payload = { meta: { quelle: 'Kostenorientierung', gesendet_am: new Date().toISOString(), seite: location.href, guard: window.SOGuard ? SOGuard.meta(form) : null }, type: 'kostenrahmen' };
     form.querySelectorAll('input[name], textarea[name]').forEach(function (el) {
       if (el.type === 'checkbox') { payload[el.name] = el.checked; }
       else { payload[el.name] = el.value.trim(); }
@@ -499,6 +519,34 @@ var __RM = window.matchMedia && window.matchMedia('(prefers-reduced-motion: redu
   }
   window.addEventListener('hashchange', routeFromHash);
   routeFromHash();
+
+  /* Orientierung (Feedback 12.10.): aktiver Menüpunkt folgt Ansicht + Scrollposition */
+  var navLinks = document.querySelectorAll('[data-nav]');
+  function currentNav(){
+    var vis = function(id){ var el = document.getElementById(id); return el && el.offsetParent !== null ? el : null; };
+    if (vis('view-rechner')) return 'rechner';
+    if (vis('view-vorbereiten')) return 'vorbereiten';
+    var cur = 'start';
+    ['ablauf','geeignet','faq'].forEach(function(id){
+      var el = vis(id);
+      if (el && el.getBoundingClientRect().top < window.innerHeight * 0.4) cur = id;
+    });
+    return cur;
+  }
+  var navT = null;
+  function syncNav(){
+    var cur = currentNav();
+    navLinks.forEach(function(a){
+      var on = a.getAttribute('data-nav') === cur;
+      a.classList.toggle('active', on);
+      if (on) a.setAttribute('aria-current', 'location'); else a.removeAttribute('aria-current');
+    });
+    var cta = document.querySelector('.topnav-cta');
+    if (cta) cta.classList.toggle('is-current', cur === 'vorbereiten');
+  }
+  window.addEventListener('hashchange', function(){ setTimeout(syncNav, 450); });
+  window.addEventListener('scroll', function(){ if (navT) return; navT = setTimeout(function(){ navT = null; syncNav(); }, 120); }, { passive: true });
+  syncNav();
 })();
 
 (function(){var n=document.querySelector('.topnav');if(!n)return;var t=null;window.addEventListener('scroll',function(){if(t)return;t=setTimeout(function(){n.classList.toggle('scrolled',window.scrollY>40);t=null;},80);},{passive:true});})();
@@ -593,10 +641,6 @@ var __RM = window.matchMedia && window.matchMedia('(prefers-reduced-motion: redu
     syncTabs();
   }
 
-  /* Desktop-Nav: statisches (nie gepflegtes) aria-current entfernen */
-  document.querySelectorAll('.topnav a[aria-current], .topnav-links a[aria-current], #nav-drawer a[aria-current]').forEach(function (a) {
-    a.removeAttribute('aria-current');
-  });
 
   /* Fokus-Rückgabe beim Schließen von Sheet/Drawer */
   function focusReturn(openClass, containerSel, triggerSel) {

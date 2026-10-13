@@ -139,8 +139,15 @@ var __RM = window.matchMedia && window.matchMedia('(prefers-reduced-motion: redu
       if (!inp.required) { setErr(inp, false); return; }
       if (inp.id === 'k_anzahl') return;
       let bad = !inp.value.trim();
-      if (!bad && inp.type === 'email') bad = !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(inp.value.trim());
-      setErr(inp, bad);
+        if (!bad && inp.type === 'email') bad = !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(inp.value.trim());
+        /* Plausibilität (Feedback 12.10.): keine Fantasie-Eingaben */
+        const err = inp.closest('.wz-field') && inp.closest('.wz-field').querySelector('.wz-err');
+        if (err && !err.dataset.empty) err.dataset.empty = err.textContent;
+        let msg = '';
+        if (!bad && inp.dataset.check && window.SOGuard) msg = SOGuard.check(inp.dataset.check, inp.value);
+        if (err) err.textContent = msg || err.dataset.empty;
+        if (msg) bad = true;
+        setErr(inp, bad);
       if (bad && !firstBad) firstBad = inp;
     });
 
@@ -159,11 +166,16 @@ var __RM = window.matchMedia && window.matchMedia('(prefers-reduced-motion: redu
     });
 
     if (n === 4 && document.querySelector('input[name=k_vorhanden]:checked')?.value === 'Ja') {
-      const inp = document.getElementById('k_anzahl');
-      const bad = !inp.value.trim() || Number(inp.value) < 1;
-      setErr(inp, bad);
-      if (bad && !firstBad) firstBad = inp;
-    }
+        const inp = document.getElementById('k_anzahl');
+        const bad = !inp.value.trim() || Number(inp.value) < 1;
+        setErr(inp, bad);
+        if (bad && !firstBad) firstBad = inp;
+        /* Bei wem leben die Kinder? (bestimmt die Zuständigkeit) */
+        const wo = document.querySelector('input[name=k_wohnort]:checked');
+        const woErr = document.getElementById('k_wohnort-err');
+        if (woErr) woErr.classList.toggle('show', !wo);
+        if (!wo && !firstBad) firstBad = document.querySelector('input[name=k_wohnort]');
+      }
 
     if (n === 6) {
       const cb = document.getElementById('dsgvo');
@@ -272,9 +284,10 @@ var __RM = window.matchMedia && window.matchMedia('(prefers-reduced-motion: redu
       meta: {
         quelle: "Online-Scheidung Formular (Mobile)",
         gesendet_am: new Date().toISOString(),
-        seite: location.href
-      },
-      kontakt: {
+        seite: location.href,
+          guard: window.SOGuard ? SOGuard.meta(form) : null
+        },
+        kontakt: {
         vorname: s.a_vorname, nachname: s.a_nachname,
         email: s.a_email, telefon: s.a_telefon
       },
@@ -282,7 +295,8 @@ var __RM = window.matchMedia && window.matchMedia('(prefers-reduced-motion: redu
         mindestens_ein_jahr_getrennt: s.t_jahr_getrennt,
         heiratsdatum: s.e_datum,
         trennung_beginn: s.t_beginn,
-        bundesland: s.t_bundesland
+        ehewohnung_plz: s.t_plz,
+          ehewohnung_ort: s.t_ort
       },
       ehepartner: {
         name: s.p_name,
@@ -290,11 +304,11 @@ var __RM = window.matchMedia && window.matchMedia('(prefers-reduced-motion: redu
       },
       kinder: {
         vorhanden: s.k_vorhanden || 'Nein',
-        anzahl: s.k_vorhanden === 'Ja' ? (s.k_anzahl || '') : 0
+        anzahl: s.k_vorhanden === 'Ja' ? (s.k_anzahl || '') : 0,
+          wohnort: s.k_vorhanden === 'Ja' ? (s.k_wohnort || '') : ''
       },
       scheidung: {
-        einvernehmlich: s.s_einvernehmlich,
-        vertretung_wagner: s.s_vertretung
+        einvernehmlich: s.s_einvernehmlich
       },
       nachricht: s.m_nachricht || '',
       dsgvo_zugestimmt: document.getElementById('dsgvo').checked
@@ -344,6 +358,7 @@ var __RM = window.matchMedia && window.matchMedia('(prefers-reduced-motion: redu
 
   document.getElementById('retry-submit').addEventListener('click', submit);
 
+  if (window.SOGuard) SOGuard.protect(form);
   restore();
   updateProgress();
   showStep(1);
@@ -355,6 +370,7 @@ var __RM = window.matchMedia && window.matchMedia('(prefers-reduced-motion: redu
   'use strict';
   var form = document.getElementById('cost-contact-form');
   if (form) {
+    if (window.SOGuard) SOGuard.protect(form);
     var submitBtn = document.getElementById('cost-submit-btn');
     var successEl = document.getElementById('cost-success');
     function setErr(field, on) {
@@ -367,11 +383,15 @@ var __RM = window.matchMedia && window.matchMedia('(prefers-reduced-motion: redu
     form.addEventListener('submit', function (e) {
       e.preventDefault();
       var firstBad = null;
-      form.querySelectorAll('input[required]:not([type=checkbox]), textarea[required]').forEach(function (inp) {
-        var bad = !inp.value.trim();
-        setErr(inp, bad);
-        if (bad && !firstBad) firstBad = inp;
-      });
+      form.querySelectorAll('input[required]:not([type=checkbox]), textarea[required], input[data-check]').forEach(function (inp) {
+      var err = inp.closest('.wz-field') && inp.closest('.wz-field').querySelector('.wz-err');
+      if (err && !err.dataset.empty) err.dataset.empty = err.textContent;
+      var msg = (inp.value.trim() && inp.dataset.check && window.SOGuard) ? SOGuard.check(inp.dataset.check, inp.value) : '';
+      var bad = (inp.required && !inp.value.trim()) || !!msg;
+      if (err) err.textContent = msg || err.dataset.empty;
+      setErr(inp, bad);
+      if (bad && !firstBad) firstBad = inp;
+    });
       var cb = document.getElementById('cost-dsgvo');
       var consent = document.getElementById('cost-consent');
       var dsgvoErr = document.getElementById('cost-dsgvo-err');
@@ -382,7 +402,7 @@ var __RM = window.matchMedia && window.matchMedia('(prefers-reduced-motion: redu
       if (firstBad) { firstBad.focus(); return; }
       submitBtn.classList.add('loading');
       submitBtn.disabled = true;
-      var payload = { meta: { quelle: 'Kostenorientierung', gesendet_am: new Date().toISOString(), seite: location.href }, type: 'kostenrahmen' };
+      var payload = { meta: { quelle: 'Kostenorientierung', gesendet_am: new Date().toISOString(), seite: location.href, guard: window.SOGuard ? SOGuard.meta(form) : null }, type: 'kostenrahmen' };
     form.querySelectorAll('input[name], textarea[name]').forEach(function (el) {
       if (el.type === 'checkbox') { payload[el.name] = el.checked; }
       else { payload[el.name] = el.value.trim(); }

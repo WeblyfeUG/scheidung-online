@@ -27,22 +27,42 @@ function initConsent(){
   });});
 }
 /* R\u00fcckruf-Baustein — Zustand offen/geschlossen */
+var HOURS='Mo\u2013Do 8\u201317 Uhr \u00b7 Fr 8\u201314 Uhr';
+/* Uhrzeit in Hannover (unabhängig von der Zeitzone des Besuchers) */
+function berlinNow(){
+  try{
+    var parts=new Intl.DateTimeFormat('de-DE',{timeZone:'Europe/Berlin',weekday:'short',hour:'numeric',hour12:false}).formatToParts(new Date());
+    var wd={'Mo':1,'Di':2,'Mi':3,'Do':4,'Fr':5,'Sa':6,'So':0},o={};
+    parts.forEach(function(x){o[x.type]=x.value;});
+    return {d:wd[o.weekday.replace('.','')],h:parseInt(o.hour,10)%24};
+  }catch(e){var n=new Date();return {d:n.getDay(),h:n.getHours()};}
+}
 function cbState(){
   var p=new URLSearchParams(location.search).get('rueckruf');
   if(p==='geschlossen')return 'closed';
   if(p==='offen')return 'open';
-  var n=new Date(),d=n.getDay(),h=n.getHours();
-  return (d>=1&&d<=5&&h>=8&&h<18)?'open':'closed';
+  var t=berlinNow();
+  if(t.d>=1&&t.d<=4)return (t.h>=8&&t.h<17)?'open':'closed';
+  if(t.d===5)return (t.h>=8&&t.h<14)?'open':'closed';
+  return 'closed';
+}
+/* Wann ist das Sekretariat wieder erreichbar? */
+function nextOpen(){
+  var t=berlinNow();
+  if(t.d>=1&&t.d<=5&&t.h<8)return 'Heute ab 8 Uhr';
+  if(t.d>=1&&t.d<=3)return 'Morgen ab 8 Uhr';
+  return 'Montag ab 8 Uhr';
 }
 function chipsHtml(){return '<div class="chips" data-chips><button type="button" data-v="Vormittag">Vormittag</button><button type="button" data-v="Nachmittag">Nachmittag</button><button type="button" data-v="Abend">Abend</button></div>';}
 function cbFormHtml(i){
   return '<form data-demo novalidate>'+
-    '<div class="fld"><label for="cb-name-'+i+'">Ihr Name</label><input id="cb-name-'+i+'" name="name" type="text" autocomplete="name" data-req><span class="err">Bitte geben Sie Ihren Namen an.</span></div>'+
-  '<div class="fld"><label for="cb-mail-'+i+'">E-Mail-Adresse</label><input id="cb-mail-'+i+'" name="email" type="email" inputmode="email" autocomplete="email" data-req><span class="err">Bitte geben Sie Ihre E-Mail-Adresse an.</span></div>'+
+    '<div class="fld"><label for="cb-name-'+i+'">Ihr Name</label><input id="cb-name-'+i+'" name="name" type="text" autocomplete="name" data-req data-check="name"><span class="err">Bitte geben Sie Ihren Namen an.</span></div>'+
+  '<div class="fld"><label for="cb-mail-'+i+'">E-Mail-Adresse</label><input id="cb-mail-'+i+'" name="email" type="email" inputmode="email" autocomplete="email" data-req data-check="email"><span class="err">Bitte geben Sie Ihre E-Mail-Adresse an.</span></div>'+
+  '<div class="fld"><label for="cb-msg-'+i+'">Ihre Nachricht</label><textarea id="cb-msg-'+i+'" name="nachricht" maxlength="1000" rows="4" placeholder="Schildern Sie kurz Ihr Anliegen \u2014 z. B. Trennung seit wann, Kinder, einvernehmlich?" data-req></textarea><span class="err">Bitte schreiben Sie uns kurz Ihr Anliegen.</span></div>'+
   '<div class="fld"><label class="consent"><input type="checkbox" data-req-check><span class="cbox"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span>Ich habe die <a href="datenschutz.html">Datenschutzerkl\u00e4rung</a> gelesen und willige ein, dass meine Angaben zur Bearbeitung meiner Anfrage gespeichert und verarbeitet werden.</span></label><span class="err">Bitte stimmen Sie der Datenschutzerkl\u00e4rung zu.</span></div>'+
   '<button type="submit" class="btn '+(cbState()==='closed'?'btn-gold':'btn-line')+' btn-block">Nachricht senden</button>'+
   '</form>'+
-  '<div class="form-success"><div class="fs-check"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div><h3>Vielen Dank.</h3><p>Wir antworten Ihnen per E-Mail \u2014 in der Regel innerhalb von 24 Stunden.</p></div>';
+  '<div class="form-success"><div class="fs-check"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div><h3>Vielen Dank.</h3><p>Wir antworten Ihnen per E-Mail \u2014 in der Regel innerhalb von 48 Stunden.</p></div>';
 }
 function initCallback(){
   var st=cbState();
@@ -50,17 +70,17 @@ function initCallback(){
     el.className='cb '+st;
     var head;
     if(st==='open'){
-      head='<span class="cb-status"><span class="cb-dot"></span>Jetzt erreichbar \u00b7 Mo\u2013Fr 8\u201318 Uhr</span>'+
+      head='<span class="cb-status"><span class="cb-dot"></span>Jetzt erreichbar \u00b7 '+HOURS+'</span>'+
       '<h3>Sprechen wir kurz \u2014 wir h\u00f6ren zu.</h3>'+
       '<p class="cb-sub">Kein Verkaufsgespr\u00e4ch: Sie schildern kurz Ihre Situation, wir sagen ehrlich, was der n\u00e4chste Schritt w\u00e4re.</p>'+
-      '<a class="btn btn-gold btn-block" href="tel:'+TEL+'">'+TELTXT+' anrufen</a>'+
+      '<a class="btn btn-gold btn-block" href="tel:'+TEL+'">Rufen Sie uns gerne an: <span style="white-space:nowrap">'+TELTXT+'</span></a>'+
       '<div class="cb-or">oder schreiben Sie uns kurz</div>';
     }else{
-      head='<span class="cb-status"><span class="cb-dot"></span>Mo\u2013Fr 8\u201318 Uhr \u00b7 gerade geschlossen</span>'+
+      head='<span class="cb-status"><span class="cb-dot"></span>'+HOURS+' \u00b7 gerade geschlossen</span>'+
       '<h3>Gerade geschlossen \u2014 schreiben Sie uns, wir antworten Ihnen.</h3>'+
-      '<p class="cb-sub">Schildern Sie kurz Ihr Anliegen \u2014 Sie erhalten unsere Antwort per E-Mail, in der Regel innerhalb von 24 Stunden. Ein pers\u00f6nliches Gespr\u00e4ch vereinbaren wir bei Bedarf im Rahmen der Erstberatung.</p>';
+      '<p class="cb-sub">Schildern Sie kurz Ihr Anliegen \u2014 Sie erhalten unsere Antwort per E-Mail, in der Regel innerhalb von 48 Stunden. Ein pers\u00f6nliches Gespr\u00e4ch vereinbaren wir bei Bedarf im Rahmen der Erstberatung.</p>';
     }
-    el.innerHTML=head+cbFormHtml(i)+(st==='closed'?'<p class="cb-tel-min">Lieber selbst anrufen? Morgen ab 8 Uhr: <a href="tel:'+TEL+'">'+TELTXT+'</a></p>':'');
+    el.innerHTML=head+cbFormHtml(i)+(st==='closed'?'<p class="cb-tel-min">Lieber selbst anrufen? '+nextOpen()+': <a href="tel:'+TEL+'">'+TELTXT+'</a></p>':'');
     var ch=null,hid=null;
     if(ch){qsa('button',ch).forEach(function(b){b.addEventListener('click',function(){
       var on=b.classList.contains('on');
@@ -69,6 +89,11 @@ function initCallback(){
     });});}
     wireForm(el.querySelector('form'));
   });
+  /* „Nachricht schreiben" springt direkt ins Nachrichtenfeld */
+  qsa('a[href="#rueckruf"]').forEach(function(a){a.addEventListener('click',function(){
+    var t=document.querySelector('[data-callback] textarea');
+    if(t)setTimeout(function(){t.focus({preventScroll:true});},450);
+  });});
 }
 
 /* Payload für die serverseitige Same-Origin-Route /api/lead */
@@ -77,7 +102,7 @@ function buildPayload(form){
   var val=function(sel){var el=form.querySelector(sel);return el?el.value.trim():'';};
   if(form.closest('[data-callback]')){
     p.type='nachricht';p.meta.quelle='Kontakt-Baustein';
-    p.name=val('[name=name]');p.email=val('[name=email]');
+    p.name=val('[name=name]');p.email=val('[name=email]');p.nachricht=val('[name=nachricht]');
     p.dsgvo_zugestimmt=true;
   }else if(form.querySelector('#dl-email')){
     p.type='checkliste_pdf';p.meta.quelle='Scheidungsunterlagen-Checkliste';
@@ -89,18 +114,26 @@ function buildPayload(form){
     p.c_nachricht=val('#k-msg');
     p.cost_dsgvo=true;
   }
+  p.meta.guard=window.SOGuard?SOGuard.meta(form):null;
   return p;
 }
 /* Formulare -> serverseitige Route */
 function wireForm(form){
-  if(!form)return;
+  if(!form||form.__wired)return; /* Kontakt-Baustein wurde sonst doppelt verdrahtet → doppelte Anfrage */
+  form.__wired=true;
+  if(window.SOGuard)SOGuard.protect(form);
   form.addEventListener('submit',function(e){
     e.preventDefault();
     var bad=null;
-    qsa('[data-req]',form).forEach(function(inp){
-      var f=inp.closest('.fld'),empty=!inp.value.trim();
-      f.classList.toggle('bad',empty);
-      if(empty&&!bad)bad=inp;
+    qsa('[data-req], [data-check]',form).forEach(function(inp){
+      var f=inp.closest('.fld'),empty=inp.hasAttribute('data-req')&&!inp.value.trim();
+      var er=f.querySelector('.err');
+      if(er&&!er.getAttribute('data-empty'))er.setAttribute('data-empty',er.textContent);
+      var msg=(!empty&&inp.value.trim()&&inp.getAttribute('data-check')&&window.SOGuard)?SOGuard.check(inp.getAttribute('data-check'),inp.value):'';
+      if(er)er.textContent=msg||er.getAttribute('data-empty');
+      var isBad=empty||!!msg;
+      f.classList.toggle('bad',isBad);
+      if(isBad&&!bad)bad=inp;
     });
     qsa('[data-req-check]',form).forEach(function(cb){
       var f=cb.closest('.fld');

@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Prüfliste Scheidung-Online 12.10.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<style>
+  :root {
+    --paper: #FBFAF7; --card: #FFFFFF; --ink: #172332; --soft: #49545F;
+    --navy: #1F3D57; --navy-deep: #142D42; --gold: #A87B3D; --gold-strong: #C99A51;
+    --border: #DBE3E8; --border-soft: #E8EDF1;
+    --good-bg: #E8F0EB; --good-ink: #34604A;
+    --warn-bg: #FCF8F1; --warn-border: #EADAC7; --warn-ink: #765C4A;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #0E1B27; --card: #16283A; --ink: #E9EEF3; --soft: #9FAEBC;
+      --navy: #C4D5E4; --navy-deep: #DCE7F0; --gold: #D9B47A; --gold-strong: #D9B47A;
+      --border: #2A3F53; --border-soft: #223549;
+      --good-bg: #1B3227; --good-ink: #9CC7AD;
+      --warn-bg: #2E2519; --warn-border: #4A3B26; --warn-ink: #D9BC93;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #0E1B27; --card: #16283A; --ink: #E9EEF3; --soft: #9FAEBC;
+    --navy: #C4D5E4; --navy-deep: #DCE7F0; --gold: #D9B47A; --gold-strong: #D9B47A;
+    --border: #2A3F53; --border-soft: #223549;
+    --good-bg: #1B3227; --good-ink: #9CC7AD;
+    --warn-bg: #2E2519; --warn-border: #4A3B26; --warn-ink: #D9BC93;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--paper); color: var(--ink);
+    font-family: 'Inter', system-ui, -apple-system, Arial, sans-serif;
+    font-size: 16px; line-height: 1.6;
+  }
+  .wrap { max-width: 820px; margin: 0 auto; padding: 44px 20px 80px; }
+  h1, h2 { color: var(--navy); letter-spacing: -0.02em; line-height: 1.18; text-wrap: balance; margin: 0; }
+  h1 { font-size: clamp(26px, 4.2vw, 36px); font-weight: 800; }
+  h2 { font-size: 19px; font-weight: 700; }
+  p { margin: 0 0 12px; max-width: 72ch; }
+  a { color: var(--navy); }
+  .eyebrow {
+    display: block; font-size: 12px; font-weight: 700; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--gold); margin-bottom: 8px;
+  }
+  .meta { color: var(--soft); font-size: 14px; }
+
+  .progress {
+    position: sticky; top: 0; z-index: 10;
+    background: var(--paper); padding: 12px 0 10px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 8px;
+  }
+  .progress b { color: var(--navy); font-variant-numeric: tabular-nums; }
+  .bar { height: 6px; background: var(--border-soft); border-radius: 999px; margin-top: 8px; overflow: hidden; }
+  .bar i { display: block; height: 100%; width: 0; background: var(--gold-strong); border-radius: 999px; transition: width .25s ease; }
+
+  section.grp { margin-top: 34px; }
+  .grp-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+  .grp-head a.page {
+    font-size: 13px; font-weight: 600; color: var(--gold);
+    border: 1px solid var(--warn-border); background: var(--warn-bg);
+    border-radius: 999px; padding: 3px 12px; text-decoration: none; white-space: nowrap;
+  }
+  .item {
+    display: flex; gap: 12px; align-items: flex-start;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 13px 16px; margin-bottom: 8px;
+    cursor: pointer;
+  }
+  .item:hover { border-color: var(--gold-strong); }
+  .box {
+    flex: 0 0 auto; width: 22px; height: 22px; margin-top: 2px;
+    border: 2px solid var(--border); border-radius: 6px;
+    display: grid; place-items: center; color: transparent;
+    background: var(--card);
+  }
+  .item.done { background: var(--good-bg); border-color: var(--good-bg); }
+  .item.done .box { background: var(--good-ink); border-color: var(--good-ink); color: #fff; }
+  .item.done .t b { color: var(--good-ink); }
+  .t { font-size: 15px; }
+  .t b { color: var(--navy-deep); }
+  .t small { display: block; color: var(--soft); font-size: 13.5px; margin-top: 2px; }
+  .item.done .t small { color: var(--good-ink); opacity: .85; }
+
+  .note {
+    background: var(--warn-bg); border: 1px solid var(--warn-border); color: var(--warn-ink);
+    border-radius: 12px; padding: 14px 18px; font-size: 14.5px; margin: 26px 0 0;
+  }
+  .note b { color: inherit; }
+  .note ul { margin: 8px 0 0; padding-left: 20px; }
+  .note li { margin-bottom: 5px; }
+  .tools { margin-top: 26px; font-size: 13.5px; color: var(--soft); }
+  .tools button {
+    background: none; border: 1px solid var(--border); border-radius: 8px;
+    padding: 5px 12px; font: inherit; color: var(--soft); cursor: pointer;
+  }
+</style>
+
+<body>
+<div class="wrap">
+  <span class="eyebrow">Scheidung-Online · Umsetzung Ihres Feedbacks vom 12.10.2026</span>
+  <h1>Prüfliste: Das wurde geändert</h1>
+  <p class="meta" style="margin-top:10px;">Jeden Punkt auf der Live-Seite ansehen und hier abhaken — der Stand bleibt auf diesem Gerät gespeichert. Bitte einmal am Handy und einmal am Computer durchgehen; die Seite zeigt automatisch die passende Version.</p>
+
+  <div class="progress"><b id="done">0</b> von <b id="total">0</b> geprüft<div class="bar"><i id="fill"></i></div></div>
+
+  <section class="grp">
+    <div class="grp-head"><h2>Navigation &amp; Orientierung</h2><a class="page" href="https://scheidung-online.vercel.app/" target="_blank" rel="noopener">Startseite öffnen ↗</a></div>
+    <div class="item" data-id="n1"><span class="box">✓</span><span class="t"><b>Eigener Menüpunkt „Startseite"</b><small>Oben im Menü (am Computer) bzw. im Menü/Tab „Start" (am Handy) — von überall erreichbar. Das Logo führt ebenfalls zur Startseite.</small></span></div>
+    <div class="item" data-id="n2"><span class="box">✓</span><span class="t"><b>„← Zur Startseite" im Online-Antrag und in der Kosten-Ansicht</b><small>Gut sichtbarer Knopf ganz oben, damit man nicht mehr zufällig suchen muss.</small></span></div>
+    <div class="item" data-id="n3"><span class="box">✓</span><span class="t"><b>Aktueller Bereich ist im Menü markiert</b><small>Beim Scrollen wandert die Markierung mit (Startseite, Ablauf, Für wen geeignet?, Fragen; Kosten in der Kosten-Ansicht). Auf den Ratgeber-Seiten ist die aktuelle Seite unterstrichen.</small></span></div>
+    <div class="item" data-id="n4"><span class="box">✓</span><span class="t"><b>Menü mit gleichmäßigen Abständen</b><small>Die Symbole über unterschiedlich langen Wörtern ließen die Abstände ungleich wirken — die Menüpunkte sind jetzt reine Textpunkte mit identischen Abständen.</small></span></div>
+  </section>
+
+  <section class="grp">
+    <div class="grp-head"><h2>Startseite</h2><a class="page" href="https://scheidung-online.vercel.app/" target="_blank" rel="noopener">Seite öffnen ↗</a></div>
+    <div class="item" data-id="s1"><span class="box">✓</span><span class="t"><b>„Begleitet durch Ihre Fachanwältin für Familienrecht"</b><small>Statt „eine Fachanwältin".</small></span></div>
+    <div class="item" data-id="s2"><span class="box">✓</span><span class="t"><b>Weniger Wiederholung</b><small>„Vertraulich · anwaltliche Verschwiegenheit" auf dem Foto und die Viererreihe unter dem Hero (inkl. Sprechblase) sind entfernt — „Anwaltliche Verschwiegenheit" steht nur noch oben in der Leiste.</small></span></div>
+    <div class="item" data-id="s3"><span class="box">✓</span><span class="t"><b>„Den Rest übernehmen wir." steht mit in der Zeile</b><small>Am Computer in einer Zeile, am Handy bleibt der Satz zusammen.</small></span></div>
+    <div class="item" data-id="s4"><span class="box">✓</span><span class="t"><b>Ablauf Schritt 4</b><small>„Wir begleiten Sie nicht nur durch den Gerichtstermin, sondern während des gesamten Verfahrens …"</small></span></div>
+    <div class="item" data-id="s5"><span class="box">✓</span><span class="t"><b>„Passt der Online-Weg …": Sätze schließen an „wenn …" an</b><small>Inkl. „Ehe- oder Lebenspartner" und „… die Wohnung oder Ähnliches".</small></span></div>
+    <div class="item" data-id="s6"><span class="box">✓</span><span class="t"><b>Trennlinien auf einer Höhe, Farben passend</b><small>Häkchen-Feld = Farbe von „Online starten"; „Erstgespräch anfragen" = Farbe des Ausrufezeichens.</small></span></div>
+    <div class="item" data-id="s7"><span class="box">✓</span><span class="t"><b>Abschnitt „Niemand muss davon erfahren …" entfernt</b><small></small></span></div>
+    <div class="item" data-id="s8"><span class="box">✓</span><span class="t"><b>Zitat ergänzt (vorläufig)</b><small>„… Orientierung zu geben und Sie verlässlich zu begleiten — verständlich, ehrlich und direkt." — Sie wollten hier noch feilen; Ihr finaler Text wird 1:1 übernommen.</small></span></div>
+    <div class="item" data-id="s9"><span class="box">✓</span><span class="t"><b>Mandantenstimmen: Anführungszeichen nur noch einmal</b><small></small></span></div>
+    <div class="item" data-id="s10"><span class="box">✓</span><span class="t"><b>FAQ „Muss ich persönlich vor Gericht erscheinen?"</b><small>Neu und gesetzter formuliert; „meist einmalig …" und „größte Sorge" gestrichen. Jetzt auch in der Handy-Version.</small></span></div>
+    <div class="item" data-id="s11"><span class="box">✓</span><span class="t"><b>FAQ „Wie lange muss ich getrennt leben?"</b><small>„Nahezu ein Trennungsjahr … Antragstellung nach zehnmonatiger Trennung möglich"; Drei-Jahres-Satz gestrichen.</small></span></div>
+    <div class="item" data-id="s12"><span class="box">✓</span><span class="t"><b>„Rufen Sie uns gerne an" an allen Anruf-Knöpfen</b><small></small></span></div>
+  </section>
+
+  <section class="grp">
+    <div class="grp-head"><h2>Online-Antrag</h2><a class="page" href="https://scheidung-online.vercel.app/#vorbereiten" target="_blank" rel="noopener">Antrag öffnen ↗</a></div>
+    <div class="item" data-id="w1"><span class="box">✓</span><span class="t"><b>Letzte gemeinsame Ehewohnung statt Bundesland</b><small>Pflichtfelder PLZ und Ort; die genaue Anschrift wird nicht abgefragt.</small></span></div>
+    <div class="item" data-id="w2"><span class="box">✓</span><span class="t"><b>Neue Frage „Bei wem leben die Kinder überwiegend?"</b><small>Erscheint, wenn gemeinsame minderjährige Kinder angegeben werden (Pflicht).</small></span></div>
+    <div class="item" data-id="w3"><span class="box">✓</span><span class="t"><b>„Soll Frau Wagner Sie vertreten?" entfernt</b><small></small></span></div>
+    <div class="item" data-id="w4"><span class="box">✓</span><span class="t"><b>Schutz gegen Fantasie-Eingaben</b><small>Testen: „asdf" oder „test" als Name, „123" als Telefon oder eine 4-stellige PLZ werden freundlich abgelehnt. Zusätzlich unsichtbarer Spam-Schutz — ohne Captcha.</small></span></div>
+    <div class="item" data-id="w5"><span class="box">✓</span><span class="t"><b>„Haben Sie noch Fragen? Wir sind gerne für Sie da."</b><small>Seitenkasten neben dem Antrag, „Rufen Sie uns an unter …".</small></span></div>
+    <div class="item" data-id="w6"><span class="box">✓</span><span class="t"><b>Handy: „Weiter"-Knopf war von der Tab-Leiste verdeckt</b><small>Beim Testen gefunden und behoben — der Knopf sitzt jetzt sichtbar über der Leiste.</small></span></div>
+  </section>
+
+  <section class="grp">
+    <div class="grp-head"><h2>Kosten</h2><a class="page" href="https://scheidung-online.vercel.app/#rechner" target="_blank" rel="noopener">Kosten-Ansicht öffnen ↗</a></div>
+    <div class="item" data-id="k1"><span class="box">✓</span><span class="t"><b>Pille „Nach gesetzlichen Gebühren · RVG &amp; FamGKG" oben entfernt</b><small></small></span></div>
+    <div class="item" data-id="k2"><span class="box">✓</span><span class="t"><b>Überschrift „Die Kosten Ihrer Scheidung"</b><small></small></span></div>
+    <div class="item" data-id="k3"><span class="box">✓</span><span class="t"><b>„Die Kosten Ihrer Ehescheidung — Wir melden uns mit einer Kostenübersicht"</b><small>Button heißt jetzt „Kostenübersicht anfragen".</small></span></div>
+    <div class="item" data-id="k4"><span class="box">✓</span><span class="t"><b>„in der Regel innerhalb von zwei Werktagen"</b><small>Statt 24 Stunden — auch auf der Ratgeber-Seite <a href="https://scheidung-online.vercel.app/scheidungskosten" target="_blank" rel="noopener">Was kostet eine Scheidung?</a></small></span></div>
+  </section>
+
+  <section class="grp">
+    <div class="grp-head"><h2>Unterlagen-Seite</h2><a class="page" href="https://scheidung-online.vercel.app/scheidungsunterlagen" target="_blank" rel="noopener">Seite öffnen ↗</a></div>
+    <div class="item" data-id="u1"><span class="box">✓</span><span class="t"><b>Checkliste mit 3 Punkten</b><small>Heiratsurkunde, Geburtsurkunden minderjähriger Kinder, Ehevertrag/Scheidungsfolgenvereinbarung — Einkommensnachweise entfallen.</small></span></div>
+    <div class="item" data-id="u2"><span class="box">✓</span><span class="t"><b>Heiratsurkunde: „Es genügt uns zunächst ein Foto oder Scan"</b><small>Hinweis auf das Original nur noch bei Eheschließungen im Ausland; die FAQ ist angeglichen.</small></span></div>
+    <div class="item" data-id="u3"><span class="box">✓</span><span class="t"><b>Checklisten-PDF neu</b><small><a href="https://scheidung-online.vercel.app/downloads/scheidungsunterlagen-checkliste.pdf" target="_blank" rel="noopener">PDF ansehen</a> — 3 Punkte, neue Öffnungszeiten.</small></span></div>
+  </section>
+
+  <section class="grp">
+    <div class="grp-head"><h2>Kanzlei-Seite Hannover</h2><a class="page" href="https://scheidung-online.vercel.app/anwaeltin-hannover" target="_blank" rel="noopener">Seite öffnen ↗</a></div>
+    <div class="item" data-id="h1"><span class="box">✓</span><span class="t"><b>Nachrichtenfeld im Kontaktformular</b><small>Name, E-Mail und „Ihre Nachricht" — die Nachricht wird mitgeschickt. „Nachricht schreiben" springt direkt in das Feld. Beide Zustände testen: <a href="https://scheidung-online.vercel.app/anwaeltin-hannover?rueckruf=offen" target="_blank" rel="noopener">geöffnet</a> · <a href="https://scheidung-online.vercel.app/anwaeltin-hannover?rueckruf=geschlossen" target="_blank" rel="noopener">geschlossen</a></small></span></div>
+    <div class="item" data-id="h2"><span class="box">✓</span><span class="t"><b>Schild „… zugelassen seit 2011" über dem Foto entfernt</b><small></small></span></div>
+  </section>
+
+  <section class="grp">
+    <div class="grp-head"><h2>Übergreifend</h2></div>
+    <div class="item" data-id="q1"><span class="box">✓</span><span class="t"><b>Öffnungszeiten: Mo–Do 8–17 Uhr · Fr 8–14 Uhr</b><small>Überall angepasst; die Anzeige „Jetzt erreichbar / gerade geschlossen" richtet sich danach (deutsche Zeit).</small></span></div>
+    <div class="item" data-id="q2"><span class="box">✓</span><span class="t"><b>Antwort per E-Mail „in der Regel innerhalb von 48 Stunden"</b><small>Kontaktformular, Antrag, Fußzeile und FAQ. Für die Kostenübersicht gelten zwei Werktage.</small></span></div>
+  </section>
+
+  <div class="note">
+    <b>Noch offen bei Ihnen:</b>
+    <ul>
+      <li><b>Slogan</b> „Ihre Scheidung. Klar vorbereitet, menschlich begleitet." — Sie wollten sich etwas Neues überlegen; steht unverändert, bis Ihr Text da ist.</li>
+      <li><b>Zitat</b> der Ansprechpartnerin — vorläufige Fassung ist eingebaut.</li>
+      <li><b>F3:</b> Zulässigkeit „Deutschlandweite Vertretung möglich" — sobald geprüft, wird es überall einheitlich angepasst oder entfernt.</li>
+      <li><b>F1</b> Porträtfoto (3:4) · <b>F2</b> Texte Datenschutz/AGB · <b>F4</b> Freigabe Kosten-Wortlaut („rund 100 Euro").</li>
+    </ul>
+    <b style="display:block;margin-top:10px;">Bewusst (noch) nicht umgesetzt:</b>
+    <ul>
+      <li><b>Upload der Heiratsurkunde</b> im Antrag — wird selten genutzt und braucht einen DSGVO-konformen Speicher; gerne als eigener Schritt.</li>
+      <li><b>Download-Seite mit Formularen</b> und <b>WhatsApp/Chat</b> — Empfehlung: vorerst nicht (Werbekosten bzw. Datenschutz/Mandatsgeheimnis).</li>
+    </ul>
+  </div>
+
+  <p class="tools">Prüfstand wird nur auf diesem Gerät gespeichert. <button id="reset" type="button">Alle Häkchen zurücksetzen</button></p>
+</div>
+
+<script>
+(function () {
+  var KEY = 'pruefliste-1012';
+  var state = {};
+  try { state = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) { state = {}; }
+  var items = Array.prototype.slice.call(document.querySelectorAll('.item'));
+  var doneEl = document.getElementById('done'), totalEl = document.getElementById('total'), fill = document.getElementById('fill');
+  totalEl.textContent = items.length;
+  function upd() {
+    var n = items.filter(function (i) { return i.classList.contains('done'); }).length;
+    doneEl.textContent = n;
+    fill.style.width = (n / items.length * 100) + '%';
+  }
+  items.forEach(function (it) {
+    var id = it.getAttribute('data-id');
+    if (state[id]) it.classList.add('done');
+    it.addEventListener('click', function (e) {
+      if (e.target.closest('a')) return; /* Links normal öffnen */
+      it.classList.toggle('done');
+      state[id] = it.classList.contains('done');
+      try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (err) {}
+      upd();
+    });
+  });
+  document.getElementById('reset').addEventListener('click', function () {
+    items.forEach(function (i) { i.classList.remove('done'); });
+    state = {};
+    try { localStorage.removeItem(KEY); } catch (err) {}
+    upd();
+  });
+  upd();
+})();
+</script>
+</body>
+</html>

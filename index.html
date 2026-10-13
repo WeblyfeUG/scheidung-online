@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="v2-desktop.css?v=20260829a" />
+<link rel="stylesheet" href="v2-desktop.css?v=20261013a" />
 </head>
 <body>
 <a href="#start" class="skip-link">Zum Inhalt springen</a>
@@ -20,14 +20,14 @@
     <span class="service-bar-sep"></span>
     <span>Deutschlandweite Vertretung möglich</span>
     <span class="service-bar-sep"></span>
-    <a href="tel:+4951154368383"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.72 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.35 1.85.59 2.81.72A2 2 0 0 1 22 16.92z"/></svg> 0511 54 36 83 83</a>
+    <a href="tel:+4951154368383"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.72 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.35 1.85.59 2.81.72A2 2 0 0 1 22 16.92z"/></svg> Rufen Sie uns gerne an: 0511 54 36 83 83</a>
   </div>
 </div>
 <header class="topnav" data-screen-label="Header">
     <div class="container">
       <div class="topnav-card">
         <!-- Marke -->
-        <a href="#" class="topnav-brand" aria-label="Scheidung Online Direkt — Fachanwältin für Familienrecht">
+        <a href="#start" class="topnav-brand" aria-label="Zur Startseite — Scheidung Online Direkt" title="Zur Startseite">
           <img src="assets/logo-scheidung-online.png" alt="Scheidung Online Direkt · Fachanwältin für Familienrecht" class="topnav-logo" />
           <span class="topnav-mark" aria-hidden="true" style="display:none">
             <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
@@ -48,19 +48,23 @@
 
         <!-- Icon-Menü -->
         <nav class="topnav-menu" aria-label="Hauptnavigation">
-          <a href="#ablauf" class="topnav-item active" aria-current="page">
+          <a href="#start" class="topnav-item" data-nav="start">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20h14V9.5"/><path d="M10 20v-5.5h4V20"/></svg>
+            <span>Startseite</span>
+          </a>
+          <a href="#ablauf" class="topnav-item" data-nav="ablauf">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="2.4"/><circle cx="6" cy="12" r="2.4"/><circle cx="18" cy="19" r="2.4"/><line x1="8.1" y1="10.9" x2="15.9" y2="6.1"/><line x1="8.1" y1="13.1" x2="15.9" y2="17.9"/></svg>
             <span>Ablauf</span>
           </a>
-          <a href="#rechner" class="topnav-item">
+          <a href="#rechner" class="topnav-item" data-nav="rechner">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2.5" width="14" height="19" rx="2.2"/><rect x="8" y="5.5" width="8" height="3.4" rx="0.8"/><line x1="8.5" y1="12.5" x2="8.6" y2="12.5"/><line x1="12" y1="12.5" x2="12.1" y2="12.5"/><line x1="15.5" y1="12.5" x2="15.6" y2="12.5"/><line x1="8.5" y1="15.5" x2="8.6" y2="15.5"/><line x1="12" y1="15.5" x2="12.1" y2="15.5"/><line x1="15.5" y1="15.5" x2="15.6" y2="15.5"/><line x1="8.5" y1="18.5" x2="8.6" y2="18.5"/><line x1="12" y1="18.5" x2="12.1" y2="18.5"/><line x1="15.5" y1="18.5" x2="15.6" y2="18.5"/></svg>
             <span>Kosten</span>
           </a>
-          <a href="#geeignet" class="topnav-item">
+          <a href="#geeignet" class="topnav-item" data-nav="geeignet">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
             <span>Für wen geeignet?</span>
           </a>
-          <a href="#faq" class="topnav-item">
+          <a href="#faq" class="topnav-item" data-nav="faq">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.2"/><path d="M9.4 9.2a2.6 2.6 0 0 1 5 .9c0 1.7-2.5 2.6-2.5 2.6"/><line x1="12" y1="16.6" x2="12.01" y2="16.6"/></svg>
             <span>Fragen</span>
           </a>
@@ -73,14 +77,14 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.72 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.35 1.85.59 2.81.72A2 2 0 0 1 22 16.92z"/></svg>
             <span class="ph-text">
               <strong>0511 54 36 83 83</strong>
-              <small>Mo–Fr 8–18 Uhr</small>
+              <small>Mo–Do 8–17 Uhr · Fr 8–14 Uhr</small>
             </span>
           </a>
           <a href="#vorbereiten" class="topnav-cta">
             <span class="cta-label">Online starten</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
           </a>
-          <a href="tel:+4951154368383" class="topnav-callicon" aria-label="Anrufen: 0511 54 36 83 83">
+          <a href="tel:+4951154368383" class="topnav-callicon" aria-label="Rufen Sie uns gerne an: 0511 54 36 83 83" title="Rufen Sie uns gerne an">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.72 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.35 1.85.59 2.81.72A2 2 0 0 1 22 16.92z"/></svg>
           </a>
           <button id="nav-toggle" class="topnav-burger" aria-label="Menü öffnen" aria-expanded="false">
@@ -95,22 +99,27 @@
     <div class="nav-scrim" id="nav-scrim" hidden></div>
     <div class="nav-drawer" id="nav-drawer">
       <div class="nav-drawer-inner">
-        <a href="#ablauf" class="nav-drawer-item active">
+        <a href="#start" class="nav-drawer-item" data-nav="start">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20h14V9.5"/><path d="M10 20v-5.5h4V20"/></svg>
+          <span>Startseite</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+        </a>
+        <a href="#ablauf" class="nav-drawer-item" data-nav="ablauf">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="2.4"/><circle cx="6" cy="12" r="2.4"/><circle cx="18" cy="19" r="2.4"/><line x1="8.1" y1="10.9" x2="15.9" y2="6.1"/><line x1="8.1" y1="13.1" x2="15.9" y2="17.9"/></svg>
           <span>Ablauf</span>
           <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
         </a>
-        <a href="#rechner" class="nav-drawer-item">
+        <a href="#rechner" class="nav-drawer-item" data-nav="rechner">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2.5" width="14" height="19" rx="2.2"/><rect x="8" y="5.5" width="8" height="3.4" rx="0.8"/><line x1="8.5" y1="12.5" x2="8.6" y2="12.5"/><line x1="12" y1="12.5" x2="12.1" y2="12.5"/><line x1="15.5" y1="12.5" x2="15.6" y2="12.5"/><line x1="8.5" y1="15.5" x2="8.6" y2="15.5"/><line x1="12" y1="15.5" x2="12.1" y2="15.5"/><line x1="15.5" y1="15.5" x2="15.6" y2="15.5"/><line x1="8.5" y1="18.5" x2="8.6" y2="18.5"/><line x1="12" y1="18.5" x2="12.1" y2="18.5"/><line x1="15.5" y1="18.5" x2="15.6" y2="18.5"/></svg>
           <span>Kosten</span>
           <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
         </a>
-        <a href="#geeignet" class="nav-drawer-item">
+        <a href="#geeignet" class="nav-drawer-item" data-nav="geeignet">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
           <span>Für wen geeignet?</span>
           <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
         </a>
-        <a href="#faq" class="nav-drawer-item">
+        <a href="#faq" class="nav-drawer-item" data-nav="faq">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.2"/><path d="M9.4 9.2a2.6 2.6 0 0 1 5 .9c0 1.7-2.5 2.6-2.5 2.6"/><line x1="12" y1="16.6" x2="12.01" y2="16.6"/></svg>
           <span>Fragen</span>
           <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
@@ -118,7 +127,7 @@
         
         <a href="tel:+4951154368383" class="nav-drawer-phone">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.72 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.35 1.85.59 2.81.72A2 2 0 0 1 22 16.92z"/></svg>
-          <span class="pn"><strong>0511 54 36 83 83</strong><small>Mo–Fr 8–18 Uhr</small></span>
+          <span class="pn"><strong>0511 54 36 83 83</strong><small>Rufen Sie uns gerne an · Mo–Do 8–17 Uhr · Fr 8–14 Uhr</small></span>
         </a>
         <a href="#vorbereiten" class="nav-drawer-cta">
           Online starten
@@ -131,7 +140,7 @@
 <section class="hero" data-screen-label="Hero" id="start">
     <div class="container hero-grid">
       <div class="hero-text">
-        <span class="eyebrow">Begleitet durch eine Fachanwältin für Familienrecht</span>
+        <span class="eyebrow">Begleitet durch Ihre Fachanwältin für Familienrecht</span>
         <h1>
           Ihre Scheidung.<br/>
           <em>Klar vorbereitet,</em><br/>
@@ -150,24 +159,6 @@
           <a href="#rechner" class="hero-cta-link">Lieber zuerst die Kosten verstehen <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></a>
         </div>
 
-        <div class="hero-trust">
-          <div class="hero-trust-item">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            Fachanwältin für Familienrecht
-          </div>
-          <div class="hero-trust-item">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
-            Persönliche Prüfung
-          </div>
-          <div class="hero-trust-item">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
-            Deutschlandweite Vertretung möglich
-          </div>
-          <div class="hero-trust-item">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="6" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-            Anwaltliche Verschwiegenheit
-          </div>
-        </div>
 
         <!-- Kompakte Mobile-Karte: Bewertung + DSGVO (nur Mobil) -->
         <div class="hero-mobilecard">
@@ -177,10 +168,6 @@
               <strong class="hero-rc-name">Janine D. Wagner</strong>
               <span class="hero-rc-role">Fachanwältin für Familienrecht</span>
             </div>
-          </div>
-          <div class="hero-dsgvo-pill">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
-            <span>Vertraulich · anwaltliche Verschwiegenheit</span>
           </div>
         </div>
       </div>
@@ -194,10 +181,6 @@
           <div class="rating-score"><div class="stars" style="font-size:18px;">★★★★★</div></div>
           <div class="lbl">Persönlich erreichbar,<br/>keine anonyme Plattform</div>
         </div>
-        <div class="hero-floating-card dsgvo">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
-          <span>Vertraulich · anwaltliche Verschwiegenheit</span>
-        </div>
       </div>
     </div>
   </section>
@@ -207,11 +190,10 @@
        ============================================================ -->
   <section class="section" data-screen-label="Einstiege" id="beratung">
     <div class="container">
-      <div class="center" style="max-width:760px;margin:0 auto;">
+      <div class="center" style="max-width:900px;margin:0 auto;">
         <h2>Sie sind hier richtig — so starten Sie.</h2>
-        <p class="lead" style="margin-top:14px;">
-          Drei Einstiege, ein Ziel: Ihre Scheidung, gut vorbereitet.
-          Den Rest übernehmen wir.
+        <p class="lead lead-oneline" style="margin-top:14px;">
+          Drei Einstiege, ein Ziel: Ihre Scheidung, gut vorbereitet. Den&nbsp;Rest&nbsp;übernehmen&nbsp;wir.
         </p>
       </div>
 
@@ -304,7 +286,7 @@
         <li class="process-step">
           <div class="process-num">4</div>
           <h3>Bis zum Beschluss begleitet</h3>
-          <p>Wir begleiten Sie durch den Gerichtstermin — bis Sie Ihren rechtskräftigen Scheidungsbeschluss in den Händen halten.</p>
+          <p>Wir begleiten Sie nicht nur durch den Gerichtstermin, sondern während des gesamten Verfahrens — bis Sie Ihren rechtskräftigen Scheidungsbeschluss in den Händen halten.</p>
         </li>
       </ol>
       <div class="process-dots" aria-hidden="true"></div>
@@ -337,10 +319,10 @@
             <h3>Direkt online starten, wenn …</h3>
           </div>
           <ul class="suit-list ok">
-            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Sie leben bereits getrennt oder planen die Trennung konkret</li>
-            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> die Scheidung ist im Grundsatz einvernehmlich</li>
-            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Sie möchten Unterlagen und Kommunikation digital organisieren</li>
-            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Sie wünschen einen klaren Ablauf mit persönlicher Ansprechpartnerin</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Sie bereits getrennt leben oder Ihre Trennung konkret planen,</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Sie sich über die Scheidung im Grundsatz einig sind,</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Sie Ihre Unterlagen und die Kommunikation digital organisieren möchten,</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Sie einen klaren Ablauf mit persönlicher Ansprechpartnerin wünschen.</li>
           </ul>
           <div class="suit-footer">
             <a href="#vorbereiten" class="btn btn-primary">Online starten</a>
@@ -355,13 +337,13 @@
             <h3>Zunächst mit einem persönlichen Gespräch starten, wenn …</h3>
           </div>
           <ul class="suit-list warn">
-            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> es gibt Streit über Kinder, Unterhalt, Vermögen oder die Wohnung</li>
-            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Sie wissen noch nicht, ob Ihr Ehepartner zustimmen wird</li>
-            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> es bestehen Auslandsbezug oder besondere Vermögensverhältnisse</li>
-            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Sie benötigen dringend Schutz oder eine schnelle gerichtliche Regelung</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> es Streit über Kinder, Unterhalt, Vermögen, die Wohnung oder Ähnliches gibt,</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Sie noch nicht wissen, ob Ihr Ehe- oder Lebenspartner der Scheidung zustimmen wird,</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Auslandsbezüge bestehen oder besondere Vermögensverhältnisse vorliegen,</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Sie dringend Schutz oder eine schnelle gerichtliche Regelung benötigen.</li>
           </ul>
           <div class="suit-footer">
-            <a href="#kontakt" class="btn btn-secondary">Erstgespräch anfragen</a>
+            <a href="#kontakt" class="btn btn-accent">Erstgespräch anfragen</a>
           </div>
         </article>
       </div>
@@ -373,22 +355,6 @@
     </div>
   </section>
 
-    <!-- ============================================================
-       Diskretion
-       ============================================================ -->
-  <section class="section" data-screen-label="Diskretion">
-    <div class="container">
-      <div class="center">
-        <span class="eyebrow">Diskretion</span>
-        <h2>Niemand muss davon erfahren, bevor Sie es möchten.</h2>
-      </div>
-      <div class="disc-grid">
-        <div class="disc-card"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg><h3>Verschlüsselte Übertragung</h3><p>Ihre Angaben werden verschlüsselt übertragen und nicht automatisiert weitergegeben.</p></div>
-        <div class="disc-card"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg><h3>Anwaltliche Verschwiegenheit</h3><p>Alles, was Sie uns anvertrauen, unterliegt der gesetzlichen Schweigepflicht.</p></div>
-        <div class="disc-card"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg><h3>Kontakt nur nach Absprache</h3><p>Keine Post nach Hause und keine Anrufe zu Zeiten, die Sie nicht gewählt haben.</p></div>
-      </div>
-    </div>
-  </section>
 
 <!-- ============================================================
        Section 7 — Kosten
@@ -415,7 +381,7 @@
         </p>
         <blockquote style="margin:24px 0 0;padding:18px 24px;border-left:3px solid var(--c-accent);font-size:19px;line-height:1.5;font-style:normal;color:#fff;">
           „Mein Anspruch ist, Ihnen in einer belastenden Phase Orientierung zu
-          geben — verständlich, ehrlich und direkt."
+          geben und Sie verlässlich zu begleiten — verständlich, ehrlich und direkt.“
         </blockquote>
         <div style="margin-top:16px;font-size:14px;color:rgba(255,255,255,0.6);">
           <strong style="color:#fff;display:block;">Janine D. Wagner</strong>
@@ -440,10 +406,7 @@
       <div class="review-grid">
         <article class="review-card">
           <div class="review-stars">★★★★★</div>
-          <p class="review-quote">
-            „Die Online-Abwicklung war für mich der entscheidende Punkt. Alle
-            Fragen wurden schnell und persönlich beantwortet."
-          </p>
+          <p class="review-quote">Die Online-Abwicklung war für mich der entscheidende Punkt. Alle Fragen wurden schnell und persönlich beantwortet.</p>
           <div class="review-meta">
             <div class="review-avatar">SK</div>
             <div class="review-meta-text">
@@ -455,10 +418,7 @@
 
         <article class="review-card">
           <div class="review-stars">★★★★★</div>
-          <p class="review-quote">
-            „Sehr klare Kommunikation von Anfang an. Ich wusste immer, in
-            welchem Schritt das Verfahren steht."
-          </p>
+          <p class="review-quote">Sehr klare Kommunikation von Anfang an. Ich wusste immer, in welchem Schritt das Verfahren steht.</p>
           <div class="review-meta">
             <div class="review-avatar">MB</div>
             <div class="review-meta-text">
@@ -470,10 +430,7 @@
 
         <article class="review-card">
           <div class="review-stars">★★★★★</div>
-          <p class="review-quote">
-            „Trotz Online-Verfahren hatte ich nie das Gefühl, allein zu sein.
-            Wirklich empfehlenswert in einer schwierigen Zeit."
-          </p>
+          <p class="review-quote">Trotz Online-Verfahren hatte ich nie das Gefühl, allein zu sein. Wirklich empfehlenswert in einer schwierigen Zeit.</p>
           <div class="review-meta">
             <div class="review-avatar">JF</div>
             <div class="review-meta-text">
@@ -574,7 +531,7 @@
         <h2>Was Sie vor dem ersten Schritt wissen sollten.</h2>
         <p class="lead" style="margin-top:16px;">
           Wenn Ihre Frage nicht dabei ist — schreiben Sie uns einfach.
-          Wir antworten persönlich, in der Regel am selben Tag.
+          Wir antworten persönlich, in der Regel innerhalb von 48 Stunden.
         </p>
       </div>
 
@@ -586,7 +543,7 @@
           </button>
           <div class="faq-a">
             <div class="faq-a-inner">
-              In der Regel gehört ein kurzer Termin beim Familiengericht zum Verfahren — meist einmalig und oft nach wenigen Minuten vorbei. Sie gehen nicht allein: Wir bereiten Sie auf den Ablauf vor und begleiten Sie bis dahin. Vielen Mandantinnen und Mandanten nimmt das die größte Sorge.
+              Ja. Ein kurzer Termin beim Familiengericht gehört zum Verfahren und bildet den Abschluss Ihrer Scheidung. Wir begleiten Sie jedoch bei diesem Termin: Wir bereiten Sie auf den Ablauf vor und nehmen den Termin gemeinsam mit Ihnen wahr.
             </div>
           </div>
         </div>
@@ -619,7 +576,7 @@
           </button>
           <div class="faq-a">
             <div class="faq-a-inner">
-              Bei einer einvernehmlichen Scheidung gilt regelmäßig das Trennungsjahr. Vor Ablauf eines Jahres kommt eine Scheidung nur in besonderen Härtefällen in Betracht. Nach drei Jahren Trennung wird das Scheitern der Ehe gesetzlich vermutet — auch ohne Zustimmung des anderen Ehegatten.
+              Grundsätzlich muss nahezu ein Trennungsjahr hinter Ihnen liegen, bevor die Scheidung eingereicht werden kann. In der Regel ist die Antragstellung nach zehnmonatiger Trennung möglich. Vor Ablauf eines Jahres kommt eine Scheidung nur in besonderen Härtefällen in Betracht.
             </div>
           </div>
         </div>
@@ -669,7 +626,7 @@
       </p>
       <div class="final-cta-buttons">
         <a href="#vorbereiten" class="btn btn-gold btn-arrow">Unverbindlich online starten</a>
-        <a href="tel:+4951154368383" class="btn btn-ghost-light">0511 54 36 83 83</a>
+        <a href="tel:+4951154368383" class="btn btn-ghost-light">Rufen Sie uns gerne an: 0511 54 36 83 83</a>
       </div>
     </div>
   </section>
@@ -691,6 +648,7 @@
         <div>
           <div class="footer-h">Navigation</div>
           <ul class="footer-list">
+            <li><a href="#start">Startseite</a></li>
             <li><a href="#ablauf">Ablauf</a></li>
             <li><a href="#rechner">Kosten</a></li>
             <li><a href="#geeignet">Für wen geeignet?</a></li>
@@ -721,11 +679,11 @@
           <div class="footer-h">Kontakt</div>
           <div class="footer-contact-item">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.72 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.35 1.85.59 2.81.72A2 2 0 0 1 22 16.92z"/></svg>
-            <div><a href="tel:+4951154368383" style="color:inherit;">0511 54 36 83 83</a><br/><span style="font-size:13px;color:rgba(255,255,255,0.5);">Mo–Fr 8–18 Uhr</span></div>
+            <div><a href="tel:+4951154368383" style="color:inherit;">0511 54 36 83 83</a><br/><span style="font-size:13px;color:rgba(255,255,255,0.5);">Mo–Do 8–17 Uhr · Fr 8–14 Uhr</span></div>
           </div>
           <div class="footer-contact-item">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-            <a href="mailto:info@scheidung-online-direkt.de" style="color:inherit;">info@scheidung-online-direkt.de</a>
+            <div><a href="mailto:info@scheidung-online-direkt.de" style="color:inherit;">info@scheidung-online-direkt.de</a><br/><span style="font-size:13px;color:rgba(255,255,255,0.5);">Antwort i. d. R. innerhalb von 48 Stunden</span></div>
           </div>
         </div>
       </div>
@@ -743,6 +701,7 @@
 <div id="view-vorbereiten" class="view-panel" style="display:none">
 <section class="wz-hero" data-screen-label="Hero">
     <div class="container wz-hero-inner">
+      <a href="#start" class="wz-home-link"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg> Zur Startseite</a>
       <span class="wz-eyebrow"><span class="dot"></span> Persönlich anwaltlich geprüft · Keine KI-Rechtsberatung</span>
       <h1>Ihr Scheidungsantrag — von uns erstellt, von Ihnen online vorbereitet</h1>
       <p class="wz-sub">
@@ -810,12 +769,12 @@
                 <div class="wz-fields">
                   <div class="wz-field">
                     <label class="wz-label" for="a_vorname">Vorname <span class="req">*</span></label>
-                    <input class="wz-input" id="a_vorname" name="a_vorname" type="text" autocomplete="given-name" required />
+                    <input class="wz-input" id="a_vorname" name="a_vorname" type="text" autocomplete="given-name" data-check="name" required />
                     <span class="wz-err">Bitte geben Sie Ihren Vornamen an.</span>
                   </div>
                   <div class="wz-field">
                     <label class="wz-label" for="a_nachname">Nachname <span class="req">*</span></label>
-                    <input class="wz-input" id="a_nachname" name="a_nachname" type="text" autocomplete="family-name" required />
+                    <input class="wz-input" id="a_nachname" name="a_nachname" type="text" autocomplete="family-name" data-check="name" required />
                     <span class="wz-err">Bitte geben Sie Ihren Nachnamen an.</span>
                   </div>
                   <div class="wz-field">
@@ -825,7 +784,7 @@
                   </div>
                   <div class="wz-field">
                     <label class="wz-label" for="a_telefon">Telefonnummer <span class="req">*</span></label>
-                    <input class="wz-input" id="a_telefon" name="a_telefon" type="tel" inputmode="tel" autocomplete="tel" required />
+                    <input class="wz-input" id="a_telefon" name="a_telefon" type="tel" inputmode="tel" autocomplete="tel" data-check="phone" required />
                     <span class="wz-err">Bitte geben Sie eine Telefonnummer an.</span>
                   </div>
                 </div>
@@ -836,7 +795,7 @@
                 <div class="wz-step-head">
                   <div class="wz-step-num">Schritt 2 · Ihre Situation</div>
                   <h2>Ein paar Angaben zu Ihrer Situation</h2>
-                  <p class="wz-step-desc">Diese Eckdaten brauchen wir, um Ihren Antrag vorzubereiten. Eine ungefähre Angabe genügt.</p>
+                  <p class="wz-step-desc">Diese Eckdaten brauchen wir, um Ihren Antrag vorzubereiten. Beim Datum genügt eine ungefähre Angabe. Für die Zuständigkeit des Gerichts brauchen wir PLZ und Ort Ihrer letzten gemeinsamen Ehewohnung — die genaue Anschrift ist nicht nötig.</p>
                 </div>
                 <div class="wz-fields">
                   <div class="wz-field full">
@@ -863,28 +822,15 @@
                     <input class="wz-input" id="t_beginn" name="t_beginn" type="date" required />
                     <span class="wz-err">Bitte geben Sie das Datum an.</span>
                   </div>
-                  <div class="wz-field full">
-                    <label class="wz-label" for="t_bundesland">In welchem Bundesland haben Sie zuletzt gemeinsam gewohnt? <span class="req">*</span></label>
-                    <select class="wz-select" id="t_bundesland" name="t_bundesland" required>
-                      <option value="" disabled selected>Bitte wählen …</option>
-                      <option>Baden-Württemberg</option>
-                      <option>Bayern</option>
-                      <option>Berlin</option>
-                      <option>Brandenburg</option>
-                      <option>Bremen</option>
-                      <option>Hamburg</option>
-                      <option>Hessen</option>
-                      <option>Mecklenburg-Vorpommern</option>
-                      <option>Niedersachsen</option>
-                      <option>Nordrhein-Westfalen</option>
-                      <option>Rheinland-Pfalz</option>
-                      <option>Saarland</option>
-                      <option>Sachsen</option>
-                      <option>Sachsen-Anhalt</option>
-                      <option>Schleswig-Holstein</option>
-                      <option>Thüringen</option>
-                    </select>
-                    <span class="wz-err">Bitte wählen Sie ein Bundesland.</span>
+                  <div class="wz-field">
+                    <label class="wz-label" for="t_plz">PLZ der letzten gemeinsamen Ehewohnung <span class="req">*</span></label>
+                    <input class="wz-input" id="t_plz" name="t_plz" type="text" inputmode="numeric" autocomplete="off" maxlength="5" placeholder="z. B. 30159" data-check="plz" required />
+                    <span class="wz-err">Bitte geben Sie die Postleitzahl an.</span>
+                  </div>
+                  <div class="wz-field">
+                    <label class="wz-label" for="t_ort">Ort der letzten gemeinsamen Ehewohnung <span class="req">*</span></label>
+                    <input class="wz-input" id="t_ort" name="t_ort" type="text" autocomplete="off" placeholder="z. B. Hannover" data-check="ort" required />
+                    <span class="wz-err">Bitte geben Sie den Ort an.</span>
                   </div>
                 </div>
               </div>
@@ -899,12 +845,12 @@
                 <div class="wz-fields">
                   <div class="wz-field full">
                     <label class="wz-label" for="p_name">Vor- und Nachname <span class="req">*</span></label>
-                    <input class="wz-input" id="p_name" name="p_name" type="text" placeholder="z. B. Maria Wagner" required />
+                    <input class="wz-input" id="p_name" name="p_name" type="text" placeholder="z. B. Maria Wagner" data-check="name" required />
                     <span class="wz-err">Bitte geben Sie den Namen an.</span>
                   </div>
                   <div class="wz-field full">
                     <label class="wz-label" for="p_anschrift">Anschrift <span class="req">*</span></label>
-                    <input class="wz-input" id="p_anschrift" name="p_anschrift" type="text" placeholder="Straße, PLZ, Ort" required />
+                    <input class="wz-input" id="p_anschrift" name="p_anschrift" type="text" placeholder="Straße, PLZ, Ort" data-check="address" required />
                     <span class="wz-err">Bitte geben Sie die Anschrift an.</span>
                   </div>
                 </div>
@@ -941,6 +887,28 @@
                       <input class="wz-input" id="k_anzahl" name="k_anzahl" type="number" inputmode="numeric" min="1" max="12" step="1" placeholder="z. B. 2" />
                       <span class="wz-err">Bitte geben Sie die Anzahl an.</span>
                     </div>
+                    <div class="wz-field full wz-kids-home">
+                      <label class="wz-label">Bei wem leben die Kinder überwiegend? <span class="req">*</span></label>
+                      <div class="wz-choice grid2">
+                        <label class="wz-opt">
+                          <input type="radio" name="k_wohnort" value="Bei mir" />
+                          <span class="tick"></span><span>Bei mir</span>
+                        </label>
+                        <label class="wz-opt">
+                          <input type="radio" name="k_wohnort" value="Beim anderen Elternteil" />
+                          <span class="tick"></span><span>Beim anderen Elternteil</span>
+                        </label>
+                        <label class="wz-opt">
+                          <input type="radio" name="k_wohnort" value="Im Wechsel bei beiden" />
+                          <span class="tick"></span><span>Im Wechsel bei beiden</span>
+                        </label>
+                        <label class="wz-opt">
+                          <input type="radio" name="k_wohnort" value="Unterschiedlich (Geschwister leben getrennt)" />
+                          <span class="tick"></span><span>Unterschiedlich (Geschwister leben getrennt)</span>
+                        </label>
+                      </div>
+                      <span class="wz-err" id="k_wohnort-err">Bitte wählen Sie eine Option. Der Wohnort der Kinder bestimmt das zuständige Gericht.</span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -967,24 +935,6 @@
                       <label class="wz-opt">
                         <input type="radio" name="s_einvernehmlich" value="Noch nicht sicher" />
                         <span class="tick"></span><span>Noch nicht sicher</span>
-                      </label>
-                    </div>
-                    <span class="wz-err">Bitte wählen Sie eine Option.</span>
-                  </div>
-                  <div class="wz-field full">
-                    <label class="wz-label">Soll Frau Wagner Sie vertreten? <span class="req">*</span></label>
-                    <div class="wz-choice row">
-                      <label class="wz-opt">
-                        <input type="radio" name="s_vertretung" value="Ja" required />
-                        <span class="tick"></span><span>Ja</span>
-                      </label>
-                      <label class="wz-opt">
-                        <input type="radio" name="s_vertretung" value="Nein" />
-                        <span class="tick"></span><span>Nein</span>
-                      </label>
-                      <label class="wz-opt">
-                        <input type="radio" name="s_vertretung" value="Weiß ich noch nicht" />
-                        <span class="tick"></span><span>Weiß ich noch nicht</span>
                       </label>
                     </div>
                     <span class="wz-err">Bitte wählen Sie eine Option.</span>
@@ -1054,7 +1004,7 @@
             <div class="wz-success-next">
               <span class="chip">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                Rückmeldung i. d. R. innerhalb von 24 Std.
+                Rückmeldung i. d. R. innerhalb von 48 Std.
               </span>
               <span class="chip">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
@@ -1111,8 +1061,8 @@
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
             </span>
             <span class="t">
-              <strong>Fragen? Wir sind da.</strong>
-              Rufen Sie an: <a href="tel:+4951154368383">0511 54 36 83 83</a>
+              <strong>Haben Sie noch Fragen? Wir sind gerne für Sie da.</strong>
+              Rufen Sie uns an unter <a href="tel:+4951154368383">0511 54 36 83 83</a>
             </span>
           </div>
         </aside>
@@ -1143,8 +1093,8 @@
 <div id="view-rechner" class="view-panel" style="display:none">
 <section class="wz-hero" data-screen-label="Hero">
     <div class="container wz-hero-inner">
-      <span class="wz-eyebrow"><span class="dot"></span> Nach gesetzlichen Gebühren · RVG &amp; FamGKG</span>
-      <h1>Was Ihre Scheidung kostet</h1>
+      <a href="#start" class="wz-home-link"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg> Zur Startseite</a>
+      <h1>Die Kosten Ihrer Scheidung</h1>
       <p class="wz-sub">
         Die gesetzlichen Anwalts- und Gerichtskosten richten sich nach dem
         Gegenstands- bzw. Verfahrenswert, den das Gericht festsetzt. Ändert er
@@ -1180,25 +1130,26 @@
 
           <div class="wz-body" style="padding-top:0;border-top:1px solid var(--c-border);">
             <div class="wz-step-head">
-              <div class="wz-step-num">Ihre Kosteneinschätzung</div>
-              <h2>Wir melden uns mit Ihrer Kosteneinschätzung</h2>
-              <p class="wz-step-desc">Sie erhalten Ihre Einschätzung schriftlich per E-Mail — in der Regel innerhalb von 24 Stunden.</p>
+              <div class="wz-step-num">Die Kosten Ihrer Ehescheidung</div>
+              <h2>Wir melden uns mit einer Kostenübersicht</h2>
+              <p class="wz-step-desc">Sie erhalten Ihre Kostenübersicht schriftlich per E-Mail — in der Regel innerhalb von zwei Werktagen.</p>
             </div>
             <form id="cost-contact-form" novalidate>
               <div class="wz-fields">
                 <div class="wz-field">
                   <label class="wz-label" for="c_vorname">Vorname <span class="req">*</span></label>
-                  <input class="wz-input" id="c_vorname" name="c_vorname" type="text" autocomplete="given-name" required />
+                  <input class="wz-input" id="c_vorname" name="c_vorname" type="text" autocomplete="given-name" data-check="name" required />
                   <span class="wz-err">Bitte geben Sie Ihren Vornamen an.</span>
                 </div>
                 <div class="wz-field">
                   <label class="wz-label" for="c_nachname">Nachname <span class="req">*</span></label>
-                  <input class="wz-input" id="c_nachname" name="c_nachname" type="text" autocomplete="family-name" required />
+                  <input class="wz-input" id="c_nachname" name="c_nachname" type="text" autocomplete="family-name" data-check="name" required />
                   <span class="wz-err">Bitte geben Sie Ihren Nachnamen an.</span>
                 </div>
                 <div class="wz-field">
                   <label class="wz-label" for="c_telefon">Telefonnummer <span class="opt">(optional, für Rückfragen)</span></label>
-                  <input class="wz-input" id="c_telefon" name="c_telefon" type="tel" inputmode="tel" autocomplete="tel" />
+                  <input class="wz-input" id="c_telefon" name="c_telefon" type="tel" inputmode="tel" autocomplete="tel" data-check="phone" />
+                  <span class="wz-err">Bitte prüfen Sie die Telefonnummer.</span>
                 </div>
                 <div class="wz-field">
                   <label class="wz-label" for="c_email">E-Mail-Adresse <span class="req">*</span></label>
@@ -1220,7 +1171,7 @@
               </div>
               <div class="wz-nav" style="position:static;box-shadow:none;border-top:1px solid var(--c-border);justify-content:flex-end;">
                 <button type="submit" class="btn btn-primary wz-next" id="cost-submit-btn" style="flex:0 0 auto;">
-                  <span class="label">Kosteneinschätzung anfragen</span>
+                  <span class="label">Kostenübersicht anfragen</span>
                   <span class="spinner"></span>
                 </button>
               </div>
@@ -1229,7 +1180,7 @@
             <div class="wz-success" id="cost-success">
               <div class="wz-success-check"><svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
               <h2>Vielen Dank.</h2>
-              <p>Wir melden uns mit Ihrer persönlichen Kosteneinschätzung per E-Mail — in der Regel innerhalb von 24 Stunden.</p>
+              <p>Wir melden uns mit Ihrer persönlichen Kostenübersicht per E-Mail — in der Regel innerhalb von zwei Werktagen.</p>
               <div class="wz-success-actions"><a href="#start" class="btn btn-secondary">Zurück zur Startseite</a></div>
             </div>
           </div>
@@ -1257,7 +1208,8 @@
     </div>
   </footer>
 </div>
-<script src="v2-desktop.js?v=20260829a"></script>
+<script src="form-guard.js?v=20261013a"></script>
+<script src="v2-desktop.js?v=20261013a"></script>
 <script src="consent.js?v=20260903a"></script>
 </body>
 </html>

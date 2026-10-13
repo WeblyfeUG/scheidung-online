@@ -1528,3 +1528,45 @@ body.has-wznav .wz-nav.m-fixed{bottom:calc(var(--tabbar-h) + env(safe-area-inset
 /* Eyebrows: Desktop-Referenz-Override nachgezogen (Gold nur dekorativ) */
 .eyebrow { color: var(--c-text-soft); }
 .m-security .eyebrow, .m-finalcta .eyebrow { color: rgba(255, 255, 255, 0.65); }
+
+/* ============================================================
+   Feedback 12.10.2026
+   ============================================================ */
+/* Eignung: Farbfeld = Farbe des jeweiligen Buttons */
+.m-suit-icon.ok { background: var(--c-primary); color: #fff; }
+.m-suit-card ul.ok li svg { color: var(--c-primary); }
+.m-suit-icon.warn { background: var(--c-accent); color: #fff; }
+.btn-accent {
+  background: var(--c-accent);
+  color: var(--c-primary-deep);
+  border: 1px solid var(--c-accent);
+}
+.btn-accent:hover, .btn-accent:active { background: #BB8C45; border-color: #BB8C45; color: var(--c-primary-deep); }
+
+/* Weg zurück zur Startseite in Antrag und Kosten */
+.wz-home-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 40px;
+  margin-bottom: 12px;
+  padding: 6px 14px 6px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--c-border);
+  background: rgba(255,255,255,0.8);
+  color: var(--c-primary);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+/* Bugfix (Test 13.10.): Die Weiter/Zurück-Leiste des Online-Antrags lag
+   hinter der Tab-Leiste — die Regel oben griff nur mit der nie gesetzten
+   Klasse .m-fixed. Leiste sitzt jetzt direkt über der Tab-Leiste. */
+body.has-wznav .wz-nav { bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom)); }
+body.has-wznav { padding-bottom: calc(var(--tabbar-h) + 84px + env(safe-area-inset-bottom)) !important; }
+/* Bugfix: Bewertungs-Karussell ist selbst .m-container — der negative
+   Rand ließ die ganze Seite 18px seitlich scrollen. */
+.m-review-scroll.m-container { margin: 0; }
+/* Kinder: Antworten untereinander (lange Texte) */
+.wz-kids-home .wz-choice.grid2 { grid-template-columns: 1fr; }

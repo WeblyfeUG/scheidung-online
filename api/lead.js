@@ -6,6 +6,8 @@
    Ohne gesetzte Variable: Demo-Modus (200, nichts weitergeleitet).
    ============================================================ */
 
+const guard = require('../form-guard.js');
+
 const WINDOW_MS = 60 * 1000;
 const MAX_PER_WINDOW = 8;
 const hits = new Map(); // best effort — pro Lambda-Instanz
@@ -32,6 +34,17 @@ function str(v, max) {
   return typeof v === 'string' && v.length <= max;
 }
 
+// Plausibilität (gleiche Regeln wie im Browser, form-guard.js)
+function ok(type, v) {
+  return typeof v === 'string' && v.trim().length > 0 && guard.check(type, v) === '';
+}
+
+// Fangfeld gefüllt oder in unter 1,5 s ausgefüllt
+function looksLikeBot(g) {
+  if (typeof g.hp === 'string' && g.hp.length > 0) return true;
+  return typeof g.fill_ms !== 'number' || g.fill_ms < 1500;
+}
+
 module.exports = async (req, res) => {
   res.setHeader('Cache-Control', 'no-store');
   if (req.method !== 'POST') {
@@ -55,6 +68,21 @@ module.exports = async (req, res) => {
   }
 
   const nonBlank = (v, max) => typeof v === 'string' && v.trim().length > 0 && v.length <= max;
+  const invalid = () => res.status(400).json({ ok: false, error: 'invalid_fields' });
+
+  // Ohne Schutz-Merkmal (direkter POST oder vor dem Update geöffnete Seite):
+  // sichtbarer Fehler statt stillem Verwerfen — echte Besucher laden neu
+  const g = b.meta && b.meta.guard;
+  if (!g || typeof g !== 'object' || Array.isArray(g)) {
+    res.status(400).json({ ok: false, error: 'reload_required' });
+    return;
+  }
+  // Bots bekommen ein stilles OK — nichts wird weitergeleitet
+  if (looksLikeBot(g)) {
+    console.log('[lead] Verdacht auf Spam verworfen (Fangfeld/Zeit).');
+    res.status(200).json({ ok: true });
+    return;
+  }
 
   // Grundvalidierung + DSGVO-Einwilligung je Formulartyp (Consent-Flag muss
   // zum tatsächlich angehakten Feld des jeweiligen Formulars gehören)
@@ -69,17 +97,18 @@ module.exports = async (req, res) => {
       return;
     }
   } else if (b.type === 'nachricht') {
-    // Kontakt-Baustein: Name + E-Mail, Antwort per E-Mail (kein Rückruf-Versprechen)
+    // Kontakt-Baustein: Name + E-Mail + Nachricht, Antwort per E-Mail (kein Rückruf-Versprechen)
     if (b.dsgvo_zugestimmt !== true) {
       res.status(400).json({ ok: false, error: 'consent_required' });
       return;
     }
-    if (!nonBlank(b.name, 160) || !isEmail(b.email)) {
+    if (!nonBlank(b.name, 160) || !isEmail(b.email) || !nonBlank(b.nachricht, 2000)) {
       res.status(400).json({ ok: false, error: 'missing_fields' });
       return;
     }
+    if (!ok('name', b.name)) { invalid(); return; }
   } else if (b.type === 'kostenrahmen') {
-    // Stand 03.09.2026: E-Mail Pflicht (schriftliche Einschätzung binnen 24 h),
+    // Stand 12.10.2026: E-Mail Pflicht (schriftliche Kostenübersicht binnen zwei Werktagen),
     // Telefon optional, keine Rückruf-Zeiten mehr
     if (b.cost_dsgvo !== true) {
       res.status(400).json({ ok: false, error: 'consent_required' });
@@ -91,6 +120,10 @@ module.exports = async (req, res) => {
     }
     if (b.c_telefon && !str(b.c_telefon, 60)) {
       res.status(400).json({ ok: false, error: 'invalid_phone' });
+      return;
+    }
+    if (!ok('name', b.c_vorname) || !ok('name', b.c_nachname) || (b.c_telefon && !ok('phone', b.c_telefon))) {
+      invalid();
       return;
     }
     if (b.c_nachricht && !str(b.c_nachricht, 2000)) {
@@ -110,6 +143,16 @@ module.exports = async (req, res) => {
     }
     if (b.nachricht && !str(b.nachricht, 2000)) {
       res.status(400).json({ ok: false, error: 'message_too_long' });
+      return;
+    }
+    const st = b.situation || {};
+    const ep = b.ehepartner || {};
+    const ki = b.kinder || {};
+    if (!ok('name', k.vorname) || !ok('name', k.nachname) || !ok('phone', k.telefon) ||
+        !ok('plz', st.ehewohnung_plz) || !ok('ort', st.ehewohnung_ort) ||
+        !ok('name', ep.name) || !ok('address', ep.anschrift) ||
+        (ki.vorhanden === 'Ja' && !nonBlank(ki.wohnort, 120))) {
+      invalid();
       return;
     }
   }

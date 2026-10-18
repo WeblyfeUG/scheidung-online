@@ -444,10 +444,19 @@
     state.sessionWeg = true;
     showLogin(FEHLER.unauthorized, true);
   }
+  /* Tatsächliche Topbar-Höhe als CSS-Variable (mobil zweizeilig) — Toast und Scroll-Abstände richten sich danach */
+  function syncTopbarH() {
+    var tb = $('.topbar');
+    if (!tb || !tb.offsetHeight) return;
+    try { document.documentElement.style.setProperty('--topbar-h', tb.offsetHeight + 'px'); } catch (e) {}
+  }
+  var resizeT;
+  window.addEventListener('resize', function () { clearTimeout(resizeT); resizeT = setTimeout(syncTopbarH, 120); });
   function showApp(user) {
     state.user = user; state.sessionWeg = false;
     setText('#user-name', user);
     $('#boot').hidden = true; hideLogin(); $('#app').hidden = false;
+    syncTopbarH();
     applyHash({ initial: true });
   }
   function angemeldet(user) {
@@ -591,7 +600,7 @@
     setText('#k-mandat', st.mandat || 0);
     setText('#k-ueber', u.ueberfaellig || 0);
     $('#k-ueber-kpi').classList.toggle('warn', (u.ueberfaellig || 0) > 0);
-    setText('#k-ueber-sub', u.heute_faellig ? 'davon ' + u.heute_faellig + ' heute fällig' : (u.ueberfaellig ? 'Zusage überschritten' : 'alles im Zeitrahmen'));
+    setText('#k-ueber-sub', u.heute_faellig ? 'zusätzlich ' + u.heute_faellig + ' heute fällig' : (u.ueberfaellig ? 'Zusage überschritten' : 'alles im Zeitrahmen'));
 
     setText('#e-heute', e.heute || 0); setText('#e-7', e.tage7 || 0); setText('#e-30', e.tage30 || 0);
     var bars = $('#e-bars'); bars.textContent = '';
@@ -809,11 +818,18 @@
     if (state.liste.length !== vorher) { state.treffer = Math.max(0, state.treffer - 1); renderList(); renderResult(); }
   }
   /* Neue Eingänge seit dem letzten Stand (Serverzeit) → Info-Toast */
+  var bekannteNummern = null;
   function merkeNeue(rows, stand) {
     var prev = state.stand;
     if (stand) state.stand = stand;
-    if (!prev || !Array.isArray(rows)) return;
-    var neue = rows.filter(function (r) { return r && r.created_at && r.created_at > prev; });
+    if (!Array.isArray(rows)) return;
+    if (!bekannteNummern) bekannteNummern = {};
+    var neue = rows.filter(function (r) {
+      if (!r || !r.nummer) return false;
+      var istNeu = !!prev && !!r.created_at && r.created_at > prev && !bekannteNummern[r.nummer];
+      bekannteNummern[r.nummer] = true;
+      return istNeu;
+    });
     if (neue.length) toast(neue.length + (neue.length === 1 ? ' neue Anfrage' : ' neue Anfragen'), { type: 'info' });
   }
   var listSeq = 0, listHolder = null;
@@ -904,7 +920,9 @@
     if (!items.length) return;
     var i = items.indexOf(document.activeElement);
     var n = i < 0 ? 0 : (e.key === 'ArrowDown' ? Math.min(items.length - 1, i + 1) : Math.max(0, i - 1));
-    e.preventDefault(); items[n].focus();
+    e.preventDefault();
+    items.forEach(function (it) { it.tabIndex = -1; });
+    items[n].tabIndex = 0; items[n].focus();
   });
 
   /* ===================== 9 Detail ===================== */
@@ -951,7 +969,7 @@
         state.wantedId = currentId();
         if (j.error === 'not_found') { entferneAusListe(id); if (!currentId() || cur === id) { state.current = null; state.wantedId = null; zeigePlatzhalter(); } }
         markActive(currentId());
-        if (j.error !== 'unauthorized') toast(fehlerText(j), { type: 'err' });
+        if (j.error !== 'unauthorized') { toast(fehlerText(j), { type: 'err' }); writeHash(true); }
         return false;
       }
       var vorher = state.current;
@@ -1280,7 +1298,11 @@
     var el = e.target;
     if (!el || !el.name) return;
     el.classList.toggle('open', !el.value.trim());
-    if (el.classList.contains('pre') && antragKontext().vorbelegt[el.name] !== el.value) el.classList.remove('pre');
+    if (el.classList.contains('pre') && antragKontext().vorbelegt[el.name] !== el.value) {
+      el.classList.remove('pre');
+      var fld = el.closest('.fld'), badge = fld && fld.querySelector('.pre-badge');
+      if (badge) badge.remove();
+    }
     markDirty('antrag');
     renderAntragFortschritt();
   });

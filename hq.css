@@ -30,7 +30,7 @@
 
 /* ---------- Basis ---------- */
 *, *::before, *::after { box-sizing: border-box; }
-html, body { margin: 0; min-height: 100%; overflow-x: hidden; }
+html, body { margin: 0; min-height: 100%; overflow-x: clip; } /* clip statt hidden: hidden würde position:sticky brechen */
 body { font-family: var(--ff); color: var(--c-text); background: var(--c-bg); font-size: 15px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
 [hidden] { display: none !important; }
 h1, h2, h3, h4 { margin: 0 0 var(--s-2); font-weight: 700; letter-spacing: -.01em; }
@@ -82,7 +82,7 @@ input::placeholder, textarea::placeholder { color: var(--c-text-soft); opacity: 
 .saved { color: var(--c-success); font-size: 14px; font-weight: 600; }
 
 /* ---------- Boot ---------- */
-.boot { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--s-4); padding: var(--s-6) var(--s-4); text-align: center; }
+.boot { position: fixed; inset: 0; z-index: 40; background: var(--c-bg); min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--s-4); padding: var(--s-6) var(--s-4); text-align: center; }
 .boot-logo { height: 38px; }
 .boot-text { font-weight: 600; color: var(--c-text-soft); margin: 0; }
 .boot-sub { margin: 0; max-width: 420px; }
@@ -238,7 +238,7 @@ input::placeholder, textarea::placeholder { color: var(--c-text-soft); opacity: 
 .age.due { background: var(--c-primary-light); color: var(--c-primary); font-weight: 600; padding: 1px 7px; border-radius: var(--r-pill); font-size: 12px; }
 .wv { display: inline-flex; align-items: center; font-size: 11.5px; font-weight: 700; padding: 2px 8px; border-radius: var(--r-pill); background: var(--c-primary-light); color: var(--c-primary); white-space: nowrap; }
 .wv.warn { background: var(--c-red-soft); color: var(--c-red); }
-.wv.due { background: var(--c-accent); color: var(--c-white); }
+.wv.due { background: var(--st-bearb-bg); color: var(--c-primary); box-shadow: inset 0 0 0 1px var(--c-border-strong); }
 
 /* ---------- Detail ---------- */
 .detail-pane { padding: var(--s-5) 28px 60px; min-width: 0; scroll-margin-top: calc(var(--topbar-h) + 8px); }

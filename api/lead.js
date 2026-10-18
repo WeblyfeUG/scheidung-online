@@ -39,6 +39,21 @@ function str(v, max) {
 const nonBlank = (v, max) => typeof v === 'string' && v.trim().length > 0 && v.length <= max;
 const clean = (v, max = 300) => (typeof v === 'string' ? v.trim().slice(0, max) : '');
 
+// Zusatzangaben des Wizards für den Antragsentwurf (api/_lib/antrag.js liest diese Schlüssel)
+const ERGAENZUNG_KEYS = ['anschrift', 'ehevertrag', 'staatsangehoerigkeit', 'nettoeinkommen_antragsteller',
+  'nettoeinkommen_antragsgegner', 'kind_1', 'kind_2', 'kind_3', 'kind_4'];
+
+/* Lässt nur bekannte Schlüssel mit Strings ≤ 200 Zeichen durch; alles andere wird verworfen. */
+function ergaenzung(b) {
+  const e = b.ergaenzung;
+  const out = {};
+  if (!e || typeof e !== 'object' || Array.isArray(e)) return out;
+  ERGAENZUNG_KEYS.forEach((k) => {
+    if (str(e[k], 200)) out[k] = e[k].trim();
+  });
+  return out;
+}
+
 // Plausibilität (gleiche Regeln wie im Browser, form-guard.js)
 function ok(type, v) {
   return typeof v === 'string' && v.trim().length > 0 && guard.check(type, v) === '';
@@ -82,6 +97,9 @@ function validate(b) {
         (ki.vorhanden === 'Ja' && !nonBlank(ki.wohnort, 120))) {
       return 'invalid_fields';
     }
+    // Optionale Zusatzangaben: Anschrift nur bei Angabe plausibilisieren
+    const erg = ergaenzung(b);
+    if (erg.anschrift && !ok('address', erg.anschrift)) return 'invalid_fields';
   }
   return null;
 }
@@ -113,6 +131,7 @@ function toRow(b) {
       typ: 'antrag', vorname: clean(k.vorname), nachname: clean(k.nachname),
       email: clean(k.email), telefon: clean(k.telefon, 60)
     });
+    row.daten.ergaenzung = ergaenzung(b);
   }
   return row;
 }

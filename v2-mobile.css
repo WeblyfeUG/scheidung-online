@@ -1570,3 +1570,9 @@ body.has-wznav { padding-bottom: calc(var(--tabbar-h) + 84px + env(safe-area-ins
 .m-review-scroll.m-container { margin: 0; }
 /* Kinder: Antworten untereinander (lange Texte) */
 .wz-kids-home .wz-choice.grid2 { grid-template-columns: 1fr; }
+
+/* ---- Zusatzfragen für den Antragsentwurf: Vorname + Geburtsdatum je Kind ---- */
+.wz-kid { display: none; grid-column: 1 / -1; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.wz-kid.show { display: grid; animation: wzStepIn 360ms ease; }
+#children-block .wz-kid .wz-field { max-width: none; min-width: 0; }
+@media (max-width: 400px) { .wz-kid { grid-template-columns: 1fr; } }

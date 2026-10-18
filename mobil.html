@@ -632,6 +632,11 @@
                   <input class="wz-input" id="a_telefon" name="a_telefon" type="tel" inputmode="tel" autocomplete="tel" data-check="phone" required />
                   <span class="wz-err">Bitte geben Sie eine Telefonnummer an.</span>
                 </div>
+                <div class="wz-field full">
+                  <label class="wz-label" for="a_anschrift">Ihre Anschrift <span class="opt">(optional)</span></label>
+                  <input class="wz-input" id="a_anschrift" name="a_anschrift" type="text" autocomplete="street-address" placeholder="Straße, PLZ Ort" data-check="address" />
+                  <span class="wz-err">Bitte prüfen Sie die Anschrift (Straße, PLZ, Ort).</span>
+                </div>
               </div>
             </div>
 
@@ -676,6 +681,27 @@
                   <label class="wz-label" for="t_ort">Ort der letzten gemeinsamen Ehewohnung <span class="req">*</span></label>
                   <input class="wz-input" id="t_ort" name="t_ort" type="text" autocomplete="off" placeholder="z. B. Hannover" data-check="ort" required />
                   <span class="wz-err">Bitte geben Sie den Ort an.</span>
+                </div>
+                <div class="wz-field full">
+                  <label class="wz-label">Gibt es einen Ehevertrag? <span class="opt">(optional)</span></label>
+                  <div class="wz-choice row">
+                    <label class="wz-opt">
+                      <input type="radio" name="e_ehevertrag" value="Ja" />
+                      <span class="tick"></span><span>Ja</span>
+                    </label>
+                    <label class="wz-opt">
+                      <input type="radio" name="e_ehevertrag" value="Nein" />
+                      <span class="tick"></span><span>Nein</span>
+                    </label>
+                    <label class="wz-opt">
+                      <input type="radio" name="e_ehevertrag" value="Weiß nicht" />
+                      <span class="tick"></span><span>Weiß nicht</span>
+                    </label>
+                  </div>
+                </div>
+                <div class="wz-field full">
+                  <label class="wz-label" for="e_staat">Staatsangehörigkeit (beide Ehegatten) <span class="opt">(optional)</span></label>
+                  <input class="wz-input" id="e_staat" name="e_staat" type="text" autocomplete="off" maxlength="120" placeholder="z. B. deutsch / deutsch" />
                 </div>
               </div>
             </div>
@@ -754,6 +780,50 @@
                     </div>
                     <span class="wz-err" id="k_wohnort-err">Bitte wählen Sie eine Option. Der Wohnort der Kinder bestimmt das zuständige Gericht.</span>
                   </div>
+                  <div class="wz-kid" data-kid="1">
+                    <div class="wz-field">
+                      <label class="wz-label" for="k_name_1">Vorname Kind 1 <span class="opt">(optional)</span></label>
+                      <input class="wz-input" id="k_name_1" name="k_name_1" type="text" autocomplete="off" data-check="name" />
+                      <span class="wz-err">Bitte prüfen Sie den Vornamen.</span>
+                    </div>
+                    <div class="wz-field">
+                      <label class="wz-label" for="k_geb_1">Geburtsdatum Kind 1 <span class="opt">(optional)</span></label>
+                      <input class="wz-input" id="k_geb_1" name="k_geb_1" type="date" />
+                    </div>
+                  </div>
+                  <div class="wz-kid" data-kid="2">
+                    <div class="wz-field">
+                      <label class="wz-label" for="k_name_2">Vorname Kind 2 <span class="opt">(optional)</span></label>
+                      <input class="wz-input" id="k_name_2" name="k_name_2" type="text" autocomplete="off" data-check="name" />
+                      <span class="wz-err">Bitte prüfen Sie den Vornamen.</span>
+                    </div>
+                    <div class="wz-field">
+                      <label class="wz-label" for="k_geb_2">Geburtsdatum Kind 2 <span class="opt">(optional)</span></label>
+                      <input class="wz-input" id="k_geb_2" name="k_geb_2" type="date" />
+                    </div>
+                  </div>
+                  <div class="wz-kid" data-kid="3">
+                    <div class="wz-field">
+                      <label class="wz-label" for="k_name_3">Vorname Kind 3 <span class="opt">(optional)</span></label>
+                      <input class="wz-input" id="k_name_3" name="k_name_3" type="text" autocomplete="off" data-check="name" />
+                      <span class="wz-err">Bitte prüfen Sie den Vornamen.</span>
+                    </div>
+                    <div class="wz-field">
+                      <label class="wz-label" for="k_geb_3">Geburtsdatum Kind 3 <span class="opt">(optional)</span></label>
+                      <input class="wz-input" id="k_geb_3" name="k_geb_3" type="date" />
+                    </div>
+                  </div>
+                  <div class="wz-kid" data-kid="4">
+                    <div class="wz-field">
+                      <label class="wz-label" for="k_name_4">Vorname Kind 4 <span class="opt">(optional)</span></label>
+                      <input class="wz-input" id="k_name_4" name="k_name_4" type="text" autocomplete="off" data-check="name" />
+                      <span class="wz-err">Bitte prüfen Sie den Vornamen.</span>
+                    </div>
+                    <div class="wz-field">
+                      <label class="wz-label" for="k_geb_4">Geburtsdatum Kind 4 <span class="opt">(optional)</span></label>
+                      <input class="wz-input" id="k_geb_4" name="k_geb_4" type="date" />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -782,6 +852,28 @@
                       <span class="tick"></span><span>Noch nicht sicher</span>
                     </label>
                   </div>
+                <div class="wz-field">
+                  <label class="wz-label" for="s_netto_a">Ihr monatliches Nettoeinkommen <span class="opt">(optional)</span></label>
+                  <select class="wz-select" id="s_netto_a" name="s_netto_a">
+                    <option value="">Bitte wählen</option>
+                    <option value="unter 1.500 €">unter 1.500 €</option>
+                    <option value="1.500–2.500 €">1.500–2.500 €</option>
+                    <option value="2.500–4.000 €">2.500–4.000 €</option>
+                    <option value="über 4.000 €">über 4.000 €</option>
+                    <option value="keine Angabe">keine Angabe</option>
+                  </select>
+                </div>
+                <div class="wz-field">
+                  <label class="wz-label" for="s_netto_p">Nettoeinkommen des Ehepartners <span class="opt">(optional)</span></label>
+                  <select class="wz-select" id="s_netto_p" name="s_netto_p">
+                    <option value="">Bitte wählen</option>
+                    <option value="unter 1.500 €">unter 1.500 €</option>
+                    <option value="1.500–2.500 €">1.500–2.500 €</option>
+                    <option value="2.500–4.000 €">2.500–4.000 €</option>
+                    <option value="über 4.000 €">über 4.000 €</option>
+                    <option value="keine Angabe">keine Angabe</option>
+                  </select>
+                </div>
                   <span class="wz-err">Bitte wählen Sie eine Option.</span>
                 </div>
               </div>

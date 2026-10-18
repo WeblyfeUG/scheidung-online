@@ -6,6 +6,8 @@
    Kanzlei ergänzt.
    ============================================================ */
 
+const { saeubern } = require('./http');
+
 /* Reihenfolge = Darstellung im HQ. */
 const FELDER = [
   { gruppe: 'Gericht', key: 'gericht_name', label: 'Amtsgericht (Familiengericht)' },
@@ -138,7 +140,7 @@ function bereinigen(input) {
     if (!KEYS.has(key)) return;
     let v = input[key];
     if (v === null || v === undefined) v = '';
-    v = String(v).replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, '').slice(0, 600);
+    v = saeubern(v).slice(0, 600);
     out[key] = v;
   });
   return out;

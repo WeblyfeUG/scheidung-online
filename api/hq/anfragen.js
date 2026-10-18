@@ -8,7 +8,7 @@
    ============================================================ */
 const { getStore, STATUS, TYPEN, LISTE_LIMIT } = require('../_lib/store');
 const { requireUser } = require('../_lib/auth');
-const { readBody, noStore } = require('../_lib/http');
+const { readBody, noStore, saeubern } = require('../_lib/http');
 const antrag = require('../_lib/antrag');
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -85,7 +85,8 @@ module.exports = async (req, res) => {
       }
       if (typeof b.notizen === 'string') {
         if (b.notizen.length > 10000) { res.status(400).json({ ok: false, error: 'notes_too_long' }); return; }
-        if (b.notizen !== (a.notizen || '')) { patch.notizen = b.notizen; events.push({ art: 'notiz', details: {} }); }
+        const notizen = saeubern(b.notizen);
+        if (notizen !== (a.notizen || '')) { patch.notizen = notizen; events.push({ art: 'notiz', details: {} }); }
       }
       if (Object.prototype.hasOwnProperty.call(b, 'wiedervorlage')) {
         const wv = b.wiedervorlage;
@@ -119,15 +120,12 @@ module.exports = async (req, res) => {
     if (req.method === 'DELETE') {
       const a = await store.getAnfrage(id);
       if (!a) { res.status(404).json({ ok: false, error: 'not_found' }); return; }
+      // Erst der Nachweis (ohne Personendaten), dann das Löschen — scheitert der Nachweis, bleibt die Anfrage erhalten
+      const g = (readBody(req) || {}).grund;
+      const grund = typeof g === 'string' ? saeubern(g).slice(0, 300) : '';
+      await store.addLoeschung({ nummer: a.nummer, typ: a.typ, benutzer: user, grund });
       await store.deleteAnfrage(id);
       console.log(`[hq] ${user} hat Anfrage ${a.nummer} gelöscht`);
-      try {
-        const g = (readBody(req) || {}).grund;
-        const grund = typeof g === 'string' ? g.slice(0, 300) : '';
-        await store.addLoeschung({ nummer: a.nummer, typ: a.typ, benutzer: user, grund });
-      } catch (e) {
-        console.error('[hq/anfragen] Löschnachweis fehlgeschlagen:', e.message);
-      }
       res.status(200).json({ ok: true });
       return;
     }

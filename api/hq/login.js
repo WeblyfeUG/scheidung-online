@@ -35,31 +35,34 @@ module.exports = async (req, res) => {
   const store = getStore();
   const persistent = store && store.kind === 'supabase';
 
-  // Sperre prüfen (persistent, wenn möglich; die Zählung darf den Login nie zum Absturz bringen)
+  const b = readBody(req) || {};
+  const name = typeof b.name === 'string' ? b.name : '';
+
+  // Sperre: In-Memory (Instanz) + persistent/atomar in Supabase. Jeder Versuch wird VOR der Passwortprüfung
+  // gezählt (kein Check-then-Act); ein erfolgreicher Login setzt den Zähler der IP zurück.
   const f = fails.get(ip);
   let gesperrt = !!(f && f.count >= MAX_FAILS && Date.now() - f.last < LOCK_MS);
   if (!gesperrt && persistent) {
-    try { gesperrt = (await store.loginFehler10min(ip)) >= MAX_FAILS; }
-    catch (e) { console.error('[hq/login] Sperrprüfung fehlgeschlagen:', e.message); }
+    try { gesperrt = (await store.loginVersuch(ip, name)) > MAX_FAILS; }
+    catch (e) { console.error('[hq/login] Sperrzähler nicht erreichbar:', e.message); }
   }
   if (gesperrt) {
+    await new Promise((r) => setTimeout(r, 600));
     res.status(429).json({ ok: false, error: 'locked' });
     return;
   }
 
-  const b = readBody(req) || {};
-  const user = auth.login(b.name, b.passwort);
+  const user = auth.login(name, b.passwort);
   if (!user) {
     fails.set(ip, { count: (f && Date.now() - f.last < LOCK_MS ? f.count : 0) + 1, last: Date.now() });
-    if (persistent) {
-      try { await store.zaehleLoginFehler(ip, typeof b.name === 'string' ? b.name : ''); }
-      catch (e) { console.error('[hq/login] Fehlversuch nicht protokolliert:', e.message); }
-    }
     await new Promise((r) => setTimeout(r, 600));
     res.status(401).json({ ok: false, error: 'invalid_login' });
     return;
   }
   fails.delete(ip);
+  if (persistent) {
+    try { await store.loginErfolg(ip); } catch (e) { console.error('[hq/login] Zähler nicht zurückgesetzt:', e.message); }
+  }
   auth.setSession(res, user);
   res.status(200).json({ ok: true, user });
 };

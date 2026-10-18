@@ -1,3 +1,4 @@
-# Nicht ausliefern: interne Doku und Werkzeugordner
+# Nicht ausliefern: interne Doku, Werkzeugordner, interne Prüflisten
 *.md
 .claude
+pruefliste-*.html

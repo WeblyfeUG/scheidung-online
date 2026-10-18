@@ -373,6 +373,10 @@
     var nr = state.current && state.current.anfrage ? state.current.anfrage.nummer : 'dieser Anfrage';
     if (!window.confirm('Ungespeicherte Änderungen an ' + nr + ' verwerfen?')) return false;
     state.dirty.notizen = false; state.dirty.antrag = false; updateDirtyUI();
+    if (state.current && state.current.anfrage) {
+      $('#d-notizen').value = state.current.anfrage.notizen || ''; syncNotizenPrint();
+      renderAntrag();
+    }
     return true;
   }
   function hashId() { return state.wantedId || currentId(); }
@@ -392,9 +396,9 @@
     if (mod !== 'uebersicht' && h.a) {
       if (h.a === currentId()) {
         state.detailGeschlossen = false; showDetailView();
-        setTab(h.t || state.tab, { silent: true });
+        setTab(h.t || (mod === 'antrag' ? 'antrag' : 'anfrage'), { silent: true });
       } else {
-        openDetail(h.a, { fromHash: true, tab: h.t, force: true });
+        openDetail(h.a, { fromHash: true, tab: h.t || (mod === 'antrag' ? 'antrag' : 'anfrage'), force: true });
       }
     } else {
       state.detailGeschlossen = true; closeDetailView();
@@ -463,7 +467,7 @@
     if (state.sessionWeg) {
       state.sessionWeg = false; state.user = user; setText('#user-name', user); hideLogin();
       if (istDirty()) toast('Eingaben erhalten — jetzt speichern', { type: 'info', dauer: 4000 });
-      else if (currentId()) openDetail(currentId(), { force: true, keepHash: true });
+      else if (state.wantedId || currentId()) openDetail(state.wantedId || currentId(), { force: true, keepHash: true });
       if (state.mod === 'uebersicht') loadUebersicht(); else loadList();
       return;
     }
@@ -675,7 +679,9 @@
     if (!b) return;
     var id = b.getAttribute('data-id');
     if (id !== currentId() && !confirmDirty()) return;
-    setModule('anfragen');
+    state.filter = { status: '', typ: '', q: '' };
+    $('#q').value = ''; $('#typ').value = '';
+    setModule('anfragen', { fromHash: true }); // Hash schreibt erst openDetail (ein History-Eintrag)
     openDetail(id, { force: true });
   }
   on('#hb-list', 'click', ueRowClick);
@@ -845,6 +851,7 @@
     show('#list-sk', leer && !opts.append);
     if (!leer) $('#list').classList.add('dim');
     var more = $('#more');
+    busy(more, false);
     if (opts.append) busy(more, true, 'Lädt …');
     var offset = opts.append ? (state.offset || 0) + (state.limit || LIMIT) : 0;
     var p = new URLSearchParams();
@@ -854,10 +861,10 @@
     if (state.filter.q) p.set('q', state.filter.q);
     if (offset) p.set('offset', String(offset));
     return api('GET', API + '?' + p.toString(), undefined, { holder: listHolder }).then(function (j) {
+      if (opts.append) busy(more, false);
       if (seq !== listSeq) return false;
       pane.setAttribute('aria-busy', 'false');
       show('#list-sk', false); $('#list').classList.remove('dim');
-      if (opts.append) busy(more, false);
       if (!j.ok) {
         if (j.error !== 'unauthorized' && j.error !== 'abgebrochen') {
           setText('#list-err-text', fehlerText(j)); show('#list-err', true);
@@ -966,6 +973,7 @@
       pane.setAttribute('aria-busy', 'false');
       $('#detail-card').classList.remove('dim');
       if (!j.ok) {
+        if (j.error === 'unauthorized') return false; // wantedId bleibt — wird nach dem erneuten Login geöffnet
         state.wantedId = currentId();
         if (j.error === 'not_found') { entferneAusListe(id); if (!currentId() || cur === id) { state.current = null; state.wantedId = null; zeigePlatzhalter(); } }
         markActive(currentId());
@@ -1112,7 +1120,7 @@
     if (!a) return;
     var id = a.id, von = a.status, nach = sel.value;
     if (von === nach) return;
-    if (state.pending[id]) { sel.value = von; return; }
+    if (state.pending[id]) { sel.value = von; toast('Bitte warten — Speichern läuft noch.', { type: 'info' }); return; }
     sel.disabled = true;
     patchId(id, { status: nach }).then(function (ok) {
       sel.disabled = false;
@@ -1136,7 +1144,7 @@
     if (!a) return;
     var id = a.id, wert = inp.value || null;
     if (wert === (a.wiedervorlage || null)) return;
-    if (state.pending[id]) { inp.value = a.wiedervorlage || ''; return; }
+    if (state.pending[id]) { inp.value = a.wiedervorlage || ''; toast('Bitte warten — Speichern läuft noch.', { type: 'info' }); return; }
     inp.disabled = true;
     patchId(id, { wiedervorlage: wert }).then(function (ok) {
       inp.disabled = false;
@@ -1168,11 +1176,16 @@
     if (!id || state.pending[id]) return Promise.resolve(false);
     var btn = $('#save-notizen'), mb = $('#mobile-save');
     busy(btn, true, 'Speichert …'); busy(mb, true, 'Speichert …');
-    return patchId(id, { notizen: $('#d-notizen').value }).then(function (ok) {
+    var gesendet = $('#d-notizen').value;
+    return patchId(id, { notizen: gesendet }).then(function (ok) {
       busy(btn, false); busy(mb, false);
       if (ok && currentId() === id) {
-        state.dirty.notizen = false; updateDirtyUI();
-        var s = $('#notizen-saved'); s.textContent = 'Gespeichert um ' + jetztUhr(); s.hidden = false;
+        if ($('#d-notizen').value === gesendet) {
+          state.dirty.notizen = false; updateDirtyUI();
+          var s = $('#notizen-saved'); s.textContent = 'Gespeichert um ' + jetztUhr(); s.hidden = false;
+        } else {
+          markDirty('notizen'); // während des Speicherns weitergetippt → bleibt als ungespeichert markiert
+        }
       }
       return ok;
     });
@@ -1332,12 +1345,26 @@
     if (!id || state.pending[id]) return Promise.resolve(false);
     var btn = $('#save-antrag'), mb = $('#mobile-save');
     busy(btn, true, 'Speichert …'); busy(mb, true, 'Speichert …');
-    return patchId(id, { antrag: antragWerte() }).then(function (ok) {
+    var gesendet = antragWerte();
+    var vorher = {}; $$('#antrag-form [name]').forEach(function (el) { vorher[el.name] = el.value; });
+    return patchId(id, { antrag: gesendet }).then(function (ok) {
       busy(btn, false); busy(mb, false);
       if (ok && currentId() === id) {
-        state.dirty.antrag = false; updateDirtyUI();
+        // Felder, die während des Speicherns weiter bearbeitet wurden, nach dem Neuaufbau wiederherstellen
+        var nachher = {}; $$('#antrag-form [name]').forEach(function (el) { nachher[el.name] = el.value; });
+        var weiter = Object.keys(nachher).filter(function (k) { return k in vorher && nachher[k] !== vorher[k]; });
         renderAntrag();
-        var s = $('#antrag-saved'); s.textContent = 'Gespeichert um ' + jetztUhr(); s.hidden = false;
+        var wiederDirty = false;
+        weiter.forEach(function (k) {
+          var el = $('#antrag-form').elements[k];
+          if (!el) return;
+          el.value = nachher[k]; el.classList.toggle('open', !el.value.trim()); wiederDirty = true;
+        });
+        if (wiederDirty) { markDirty('antrag'); renderAntragFortschritt(); }
+        else {
+          state.dirty.antrag = false; updateDirtyUI();
+          var s = $('#antrag-saved'); s.textContent = 'Gespeichert um ' + jetztUhr(); s.hidden = false;
+        }
         toast('Antragsfelder gespeichert.', { type: 'ok' });
       }
       return ok;
@@ -1401,7 +1428,8 @@
   });
   function autoRefresh() {
     if (document.visibilityState !== 'visible' || !state.user || state.sessionWeg || istDirty()) return;
-    if (state.mod === 'uebersicht') loadUebersicht(); else loadList();
+    if (state.mod === 'uebersicht') loadUebersicht();
+    else if (!(state.offset > 0)) loadList(); // mit nachgeladenen Seiten nicht automatisch zurückspringen
   }
   setInterval(autoRefresh, 60000);
   document.addEventListener('visibilitychange', function () {

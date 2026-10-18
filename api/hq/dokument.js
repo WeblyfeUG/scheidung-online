@@ -35,7 +35,7 @@ module.exports = async (req, res) => {
   const url = new URL(req.url, 'http://x');
   const id = url.searchParams.get('id') || '';
   const typ = url.searchParams.get('typ') || 'antragsentwurf';
-  const vorlage = VORLAGEN[typ];
+  const vorlage = Object.prototype.hasOwnProperty.call(VORLAGEN, typ) ? VORLAGEN[typ] : null;
   if (!vorlage || !UUID.test(id)) { res.status(400).json({ ok: false, error: 'invalid_request' }); return; }
 
   try {

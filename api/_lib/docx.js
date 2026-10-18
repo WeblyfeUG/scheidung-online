@@ -6,6 +6,7 @@
    einfacher Textersatz.
    ============================================================ */
 const zlib = require('zlib');
+const { saeubern } = require('./http');
 
 function readZip(buf) {
   // End of central directory
@@ -89,8 +90,7 @@ function writeZip(entries) {
 
 /* Steuerzeichen (außer Tab/LF/CR) sind in XML verboten und würden Word die Datei verweigern lassen. */
 function xmlEscape(s) {
-  return String(s).replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F\uFFFE\uFFFF]/g, '')
-    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  return saeubern(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
 /* Zeilenumbrüche im Wert werden zu Word-Umbrüchen innerhalb des Laufs. */

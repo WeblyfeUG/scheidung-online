@@ -241,16 +241,13 @@ const supabaseStore = {
   async addLoeschung(row) {
     await sb('so_loeschungen', { method: 'POST', body: row, prefer: 'return=minimal' });
   },
-  async zaehleLoginFehler(ip, benutzer) {
-    await sb('so_login_versuche', { method: 'POST', body: { ip: String(ip).slice(0, 100), benutzer: String(benutzer || '').slice(0, 80) }, prefer: 'return=minimal' });
+  /* Zählt den Versuch und liefert atomar die Anzahl der letzten 10 Minuten (Postgres-Funktion mit Sperre je IP). */
+  async loginVersuch(ip, benutzer) {
+    const n = await sb('rpc/so_login_fehlversuch', { method: 'POST', body: { p_ip: String(ip).slice(0, 100), p_benutzer: String(benutzer || '').slice(0, 80) } });
+    return Number(n) || 0;
   },
-  async loginFehler10min(ip) {
-    const seit = new Date(Date.now() - 10 * 60e3).toISOString();
-    const { data, headers } = await sbRaw(
-      'so_login_versuche?ip=eq.' + encodeURIComponent(ip) + '&zeit=gte.' + encodeURIComponent(seit) + '&select=id&limit=50',
-      { prefer: 'count=exact' }
-    );
-    return trefferAus(headers, data.length);
+  async loginErfolg(ip) {
+    await sb('rpc/so_login_erfolg', { method: 'POST', body: { p_ip: String(ip).slice(0, 100) } });
   }
 };
 
@@ -326,8 +323,8 @@ function fileStore(file) {
       const db = load();
       db.loeschungen.unshift({ id: db.loeschungen.length + 1, zeit: new Date().toISOString(), ...row }); save(db);
     },
-    async zaehleLoginFehler() { /* lokal: In-Memory-Sperre in login.js */ },
-    async loginFehler10min() { return 0; }
+    async loginVersuch() { return 0; /* lokal: In-Memory-Sperre in login.js */ },
+    async loginErfolg() {}
   };
 }
 

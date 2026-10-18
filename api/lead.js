@@ -8,7 +8,7 @@
    ============================================================ */
 const guard = require('../form-guard.js');
 const { getStore } = require('./_lib/store');
-const { readBody, clientIp, noStore } = require('./_lib/http');
+const { readBody, clientIp, noStore, saeubern } = require('./_lib/http');
 
 const WINDOW_MS = 60 * 1000;
 const MAX_PER_WINDOW = 8;
@@ -41,14 +41,13 @@ const nonBlank = (v, max) => typeof v === 'string' && v.trim().length > 0 && v.l
 const clean = (v, max = 300) => (typeof v === 'string' ? v.trim().slice(0, max) : '');
 
 /* Steuerzeichen (außer Tab/LF/CR) aus allen Strings entfernen — rekursiv, begrenzt. */
-const CTRL = /[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g;
 function sanitize(v, depth = 0) {
-  if (typeof v === 'string') return v.replace(CTRL, '');
+  if (typeof v === 'string') return saeubern(v);
   if (Array.isArray(v)) return depth >= 4 ? [] : v.slice(0, 100).map((x) => sanitize(x, depth + 1));
   if (v && typeof v === 'object') {
     if (depth >= 4) return {};
     const out = {};
-    Object.keys(v).slice(0, 200).forEach((k) => { out[k.replace(CTRL, '').slice(0, 100)] = sanitize(v[k], depth + 1); });
+    Object.keys(v).slice(0, 200).forEach((k) => { out[saeubern(k).slice(0, 100)] = sanitize(v[k], depth + 1); });
     return out;
   }
   return v;

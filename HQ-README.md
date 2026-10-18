@@ -17,7 +17,7 @@ Dort wird validiert und die Anfrage in der Datenbank gespeichert. Make.com und T
 | `api/_lib/antrag.js` | Felder des Antragsentwurfs, Vorbelegung aus der Anfrage, Hinweise (z. B. Einkommensspanne), nicht zutreffende Felder. |
 | `api/_lib/docx.js` | Minimaler ZIP-Leser/-Schreiber + Platzhalter-Ersetzung (`{{feld}}`), Zeilenumbrüche als `<w:br/>`. |
 | `api/_templates/*.docx` | Kanzlei-Vorlagen mit Platzhaltern (Antragsentwurf, Vollmacht). |
-| `.vercelignore` | Schließt `*.md` und `.claude/` vom Deploy aus (diese Datei ist produktiv nicht abrufbar). |
+| `.vercelignore` | Schließt `*.md`, `.claude/` und die internen Prüflisten `pruefliste-*.html` vom Deploy aus (diese Datei ist produktiv nicht abrufbar). |
 
 Datenbank (Supabase, Schema `public`): `so_anfragen` (eine Zeile je Anfrage, laufende Nummer `SO-JJ-0001`, Status, Kontakt,
 kompletter Payload in `daten`, Antragsfelder in `antrag`, Notizen, `wiedervorlage`), `so_ereignisse` (Verlauf),

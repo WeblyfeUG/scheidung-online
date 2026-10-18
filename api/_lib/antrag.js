@@ -6,43 +6,44 @@
    Kanzlei ergänzt.
    ============================================================ */
 
+const { saeubern } = require('./http');
+
 /* Reihenfolge = Darstellung im HQ. */
 const FELDER = [
   { gruppe: 'Gericht', key: 'gericht_name', label: 'Amtsgericht (Familiengericht)' },
   { gruppe: 'Gericht', key: 'gericht_strasse', label: 'Straße' },
   { gruppe: 'Gericht', key: 'gericht_ort', label: 'PLZ / Ort' },
-  { gruppe: 'Verfahren', key: 'datum', label: 'Datum des Schreibens' },
+  { gruppe: 'Verfahren', key: 'datum', label: 'Datum des Schreibens', hint: 'TT.MM.JJJJ' },
   { gruppe: 'Verfahren', key: 'aktenzeichen', label: 'Unser Zeichen' },
   { gruppe: 'Verfahren', key: 'wegen', label: 'wegen (Vollmacht)' },
-  { gruppe: 'Verfahren', key: 'gegenstandswert_scheidung', label: 'Vorl. Gegenstandswert Scheidung (€)' },
-  { gruppe: 'Verfahren', key: 'gegenstandswert_versorgungsausgleich', label: 'Vorl. Gegenstandswert Versorgungsausgleich (€)' },
+  { gruppe: 'Verfahren', key: 'gegenstandswert_scheidung', label: 'Vorl. Gegenstandswert Scheidung (€)', numerisch: true },
+  { gruppe: 'Verfahren', key: 'gegenstandswert_versorgungsausgleich', label: 'Vorl. Gegenstandswert Versorgungsausgleich (€)', numerisch: true },
   { gruppe: 'Antragsteller/in', key: 'antragsteller_name', label: 'Name' },
   { gruppe: 'Antragsteller/in', key: 'antragsteller_geburtsname', label: 'Geburtsname' },
-  { gruppe: 'Antragsteller/in', key: 'antragsteller_geburtsdatum', label: 'Geburtsdatum' },
+  { gruppe: 'Antragsteller/in', key: 'antragsteller_geburtsdatum', label: 'Geburtsdatum', hint: 'TT.MM.JJJJ' },
   { gruppe: 'Antragsteller/in', key: 'antragsteller_anschrift', label: 'Anschrift' },
-  { gruppe: 'Antragsteller/in', key: 'nettoeinkommen_antragsteller', label: 'Mtl. Nettoeinkommen (€)' },
+  { gruppe: 'Antragsteller/in', key: 'nettoeinkommen_antragsteller', label: 'Mtl. Nettoeinkommen (€)', numerisch: true },
   { gruppe: 'Antragsgegner/in', key: 'antragsgegner_name', label: 'Name' },
   { gruppe: 'Antragsgegner/in', key: 'antragsgegner_geburtsname', label: 'Geburtsname' },
-  { gruppe: 'Antragsgegner/in', key: 'antragsgegner_geburtsdatum', label: 'Geburtsdatum' },
+  { gruppe: 'Antragsgegner/in', key: 'antragsgegner_geburtsdatum', label: 'Geburtsdatum', hint: 'TT.MM.JJJJ' },
   { gruppe: 'Antragsgegner/in', key: 'antragsgegner_anschrift', label: 'Anschrift' },
-  { gruppe: 'Antragsgegner/in', key: 'nettoeinkommen_antragsgegner', label: 'Mtl. Nettoeinkommen (€)' },
-  { gruppe: 'Ehe', key: 'heiratsdatum', label: 'Tag der Eheschließung' },
+  { gruppe: 'Antragsgegner/in', key: 'nettoeinkommen_antragsgegner', label: 'Mtl. Nettoeinkommen (€)', numerisch: true },
+  { gruppe: 'Ehe', key: 'heiratsdatum', label: 'Tag der Eheschließung', hint: 'TT.MM.JJJJ' },
   { gruppe: 'Ehe', key: 'standesamt_ort', label: 'Standesamt (Ort)' },
   { gruppe: 'Ehe', key: 'heiratsregisternummer', label: 'Heiratsregisternummer' },
-  { gruppe: 'Ehe', key: 'staatsangehoerigkeit', label: 'Staatsangehörigkeit (beide)' },
-  { gruppe: 'Ehe', key: 'trennungsdatum', label: 'Getrennt lebend seit' },
+  { gruppe: 'Ehe', key: 'staatsangehoerigkeit', label: 'Staatsangehörigkeit (Adjektiv, z. B. „deutsche“)' },
+  { gruppe: 'Ehe', key: 'trennungsdatum', label: 'Getrennt lebend seit', hint: 'TT.MM.JJJJ' },
   { gruppe: 'Kinder', key: 'gemeinsame_kinder_text', label: 'Gemeinsame Kinder (Satzteil)' },
-  { gruppe: 'Kinder', key: 'kind_1', label: 'Kind 1 (Name, geb. am)' },
-  { gruppe: 'Kinder', key: 'kind_2', label: 'Kind 2 (Name, geb. am)' },
+  { gruppe: 'Kinder', key: 'kinder_liste', label: 'Kinder (je Zeile: Name, geb. am TT.MM.JJJJ)', multiline: true },
   { gruppe: 'Kinder', key: 'aufenthalt_kinder', label: 'Aufenthalt der Kinder (Satz)', multiline: true }
 ];
 const KEYS = new Set(FELDER.map((f) => f.key));
 
 const ZAHLWORT = ['keine', 'ein', 'zwei', 'drei', 'vier', 'fünf', 'sechs', 'sieben', 'acht'];
 
+/* Datum des Schreibens in Berliner Zeit (Vercel läuft in UTC). */
 function heute() {
-  const d = new Date();
-  return String(d.getDate()).padStart(2, '0') + '.' + String(d.getMonth() + 1).padStart(2, '0') + '.' + d.getFullYear();
+  return new Date().toLocaleDateString('de-DE', { timeZone: 'Europe/Berlin', day: '2-digit', month: '2-digit', year: 'numeric' });
 }
 
 /* ISO-Datum (aus <input type=date>) → TT.MM.JJJJ; alles andere unverändert. */
@@ -55,6 +56,12 @@ function join(...parts) {
   return parts.map((p) => (p || '').toString().trim()).filter(Boolean).join(' ');
 }
 
+/* Nettoeinkommen nur übernehmen, wenn es eine Zahl ist (Spannen aus dem Wizard bleiben Hinweis). */
+function betrag(v) {
+  const s = String(v || '').replace(/€/g, '').trim();
+  return s && /^[\d.,\s]+$/.test(s) ? s : '';
+}
+
 /* Vorbelegung aus dem gespeicherten Formular-Payload (nur Typ "antrag" liefert viel). */
 function vorbelegung(anfrage) {
   const d = anfrage.daten || {};
@@ -62,7 +69,7 @@ function vorbelegung(anfrage) {
   const sit = d.situation || {};
   const p = d.ehepartner || {};
   const kinder = d.kinder || {};
-  const erg = d.ergaenzung || {};   // spätere Zusatzfragen des Wizards (Anschrift, Einkommen …)
+  const erg = d.ergaenzung || {};   // Zusatzfragen des Wizards (Anschrift, Einkommen, Kinder …)
 
   const anzahl = kinder.vorhanden === 'Ja' ? parseInt(kinder.anzahl, 10) || 0 : 0;
   let kinderText = '';
@@ -81,34 +88,48 @@ function vorbelegung(anfrage) {
     'Unterschiedlich (Geschwister leben getrennt)': 'Die Kinder leben getrennt voneinander bei jeweils einem Elternteil; Einzelheiten werden gesondert vorgetragen.'
   };
 
-  return {
+  const hinweise = {};
+  ['nettoeinkommen_antragsteller', 'nettoeinkommen_antragsgegner'].forEach((key) => {
+    if (erg[key] && !betrag(erg[key])) hinweise[key] = 'Wizard: ' + erg[key];
+  });
+  if (erg.staatsangehoerigkeit && !/^deutsch\s*\/\s*deutsch$/i.test(erg.staatsangehoerigkeit)) {
+    hinweise.staatsangehoerigkeit = 'Wizard: ' + erg.staatsangehoerigkeit;
+  }
+
+  const werte = {
     datum: heute(),
     wegen: 'Ehescheidung',
     antragsteller_name: join(k.vorname || anfrage.vorname, k.nachname || anfrage.nachname),
     antragsteller_anschrift: erg.anschrift || '',
-    nettoeinkommen_antragsteller: erg.nettoeinkommen_antragsteller || '',
+    nettoeinkommen_antragsteller: betrag(erg.nettoeinkommen_antragsteller),
     antragsgegner_name: p.name || '',
     antragsgegner_anschrift: p.anschrift || '',
-    nettoeinkommen_antragsgegner: erg.nettoeinkommen_antragsgegner || '',
+    nettoeinkommen_antragsgegner: betrag(erg.nettoeinkommen_antragsgegner),
     heiratsdatum: datumDE(sit.heiratsdatum),
     trennungsdatum: datumDE(sit.trennung_beginn),
-    staatsangehoerigkeit: erg.staatsangehoerigkeit || '',
+    staatsangehoerigkeit: /^deutsch\s*\/\s*deutsch$/i.test(erg.staatsangehoerigkeit || '') ? 'deutsche' : '',
     gemeinsame_kinder_text: kinderText,
-    kind_1: erg.kind_1 || '',
-    kind_2: erg.kind_2 || '',
+    kinder_liste: [erg.kind_1, erg.kind_2, erg.kind_3, erg.kind_4].filter(Boolean).join('\n'),
     aufenthalt_kinder: anzahl > 0 ? (AUFENTHALT[kinder.wohnort] || AUFENTHALT['Bei mir']) : ''
   };
+  // Ausdrücklich kinderlos (Wizard-Antwort „Nein“): Kinderfelder sind nicht zutreffend
+  const nichtZutreffend = kinder.vorhanden === 'Nein' ? ['kinder_liste', 'aufenthalt_kinder'] : [];
+  return { werte, hinweise, nichtZutreffend };
 }
 
 /* Effektive Werte = Vorbelegung, überschrieben durch das, was im HQ gespeichert wurde. */
 function effektiv(anfrage) {
   const base = vorbelegung(anfrage);
   const saved = anfrage.antrag || {};
-  const out = {};
+  const werte = {};
   FELDER.forEach((f) => {
-    out[f.key] = Object.prototype.hasOwnProperty.call(saved, f.key) ? saved[f.key] : (base[f.key] || '');
+    const hat = Object.prototype.hasOwnProperty.call(saved, f.key);
+    // Datum des Schreibens: ein leerer gespeicherter Wert friert es nicht ein
+    if (f.key === 'datum') werte[f.key] = hat && String(saved[f.key]).trim() ? saved[f.key] : base.werte.datum;
+    else werte[f.key] = hat ? saved[f.key] : (base.werte[f.key] || '');
   });
-  return out;
+  const kinder_beweis = String(werte.kinder_liste || '').trim() ? 'Beweis: Geburtsurkunden der Kinder, Anlage 2' : '';
+  return { werte, hinweise: base.hinweise, nichtZutreffend: base.nichtZutreffend, vorbelegt: base.werte, kinder_beweis };
 }
 
 /* Nimmt nur bekannte Felder an, kürzt, entfernt Steuerzeichen. */
@@ -119,7 +140,7 @@ function bereinigen(input) {
     if (!KEYS.has(key)) return;
     let v = input[key];
     if (v === null || v === undefined) v = '';
-    v = String(v).replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, '').slice(0, 600);
+    v = saeubern(v).slice(0, 600);
     out[key] = v;
   });
   return out;

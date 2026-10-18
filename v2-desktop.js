@@ -163,10 +163,11 @@ var __RM = window.matchMedia && window.matchMedia('(prefers-reduced-motion: redu
 
       /* text/date/email/select inputs (no radio, file, checkbox) */
       stepEl.querySelectorAll('input:not([type=radio]):not([type=file]):not([type=checkbox]), select, textarea').forEach(inp => {
-        if (!inp.required) { setErr(inp, false); return; }
+        /* optionale Felder: nur prüfen, wenn ausgefüllt, sichtbar und mit Plausibilitätsregel (data-check) */
+        if (!inp.required && !(inp.dataset.check && inp.value.trim() && inp.offsetParent !== null)) { setErr(inp, false); return; }
         /* skip the conditional children count unless visible */
         if (inp.id === 'k_anzahl') return;
-        let bad = !inp.value.trim();
+        let bad = inp.required && !inp.value.trim();
         if (!bad && inp.type === 'email') bad = !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(inp.value.trim());
         /* Plausibilität (Feedback 12.10.): keine Fantasie-Eingaben */
         const err = inp.closest('.wz-field') && inp.closest('.wz-field').querySelector('.wz-err');
@@ -253,6 +254,14 @@ var __RM = window.matchMedia && window.matchMedia('(prefers-reduced-motion: redu
       }
     });
 
+    /* Vorname + Geburtsdatum je Kind (bis 4) — Zusatzangaben für den Antragsentwurf */
+    const kidRows = Array.from(form.querySelectorAll('.wz-kid'));
+    function updateKids() {
+      const n = Math.min(4, Math.max(0, parseInt(document.getElementById('k_anzahl').value, 10) || 0));
+      kidRows.forEach(r => r.classList.toggle('show', Number(r.dataset.kid) <= n));
+    }
+    form.addEventListener('input', e => { if (e.target.id === 'k_anzahl') updateKids(); });
+
     /* ============================================================
        Zeichenzähler (Schritt 6)
        ============================================================ */
@@ -301,6 +310,7 @@ var __RM = window.matchMedia && window.matchMedia('(prefers-reduced-motion: redu
         }
       });
       if (s.k_vorhanden === 'Ja') childrenBlock.classList.add('show');
+      updateKids();
       if (msgEl && msgCount) msgCount.textContent = (msgEl.value || '').length + ' / 500';
     }
 
@@ -331,6 +341,29 @@ var __RM = window.matchMedia && window.matchMedia('(prefers-reduced-motion: redu
     /* ============================================================
        Submit → Make.com webhook
        ============================================================ */
+    /* ISO-Datum (input type=date) → TT.MM.JJJJ */
+    function datumDE(v) {
+      const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(v || '');
+      return m ? m[3] + '.' + m[2] + '.' + m[1] : (v || '');
+    }
+    /* Zusatzangaben für den Antragsentwurf (alle optional, Schlüssel = api/_lib/antrag.js) */
+    function buildErgaenzung(s) {
+      const t = v => (v || '').trim();
+      const e = {
+        anschrift: t(s.a_anschrift),
+        ehevertrag: t(s.e_ehevertrag),
+        staatsangehoerigkeit: t(s.e_staat),
+        nettoeinkommen_antragsteller: t(s.s_netto_a),
+        nettoeinkommen_antragsgegner: t(s.s_netto_p)
+      };
+      const n = s.k_vorhanden === 'Ja' ? Math.min(4, parseInt(s.k_anzahl, 10) || 0) : 0;
+      for (let i = 1; i <= n; i++) {
+        const name = t(s['k_name_' + i]), geb = datumDE(t(s['k_geb_' + i]));
+        e['kind_' + i] = name && geb ? name + ', geb. am ' + geb : (name || (geb ? 'geb. am ' + geb : ''));
+      }
+      return e;
+    }
+
     function buildPayload() {
       const s = collectScalar();
       return {
@@ -363,6 +396,7 @@ var __RM = window.matchMedia && window.matchMedia('(prefers-reduced-motion: redu
         scheidung: {
           einvernehmlich: s.s_einvernehmlich
         },
+        ergaenzung: buildErgaenzung(s),
         nachricht: s.m_nachricht || '',
         dsgvo_zugestimmt: document.getElementById('dsgvo').checked
       };

@@ -3,12 +3,12 @@
    Validiert (inkl. Plausibilität + Spamschutz aus form-guard.js),
    rate-limitet und speichert die Anfrage im HQ (Supabase, Zugang
    nur über Umgebungsvariablen SUPABASE_URL + SUPABASE_SERVICE_KEY —
-   nie im Frontend). Ohne gesetzte Variablen: Demo-Modus (200,
-   nichts gespeichert).
+   nie im Frontend). Ohne Speicher: 503 (sichtbarer Fehler im
+   Formular) — außer SO_DEMO=1 ist gesetzt (200, nichts gespeichert).
    ============================================================ */
 const guard = require('../form-guard.js');
 const { getStore } = require('./_lib/store');
-const { readBody, clientIp, noStore } = require('./_lib/http');
+const { readBody, clientIp, noStore, saeubern } = require('./_lib/http');
 
 const WINDOW_MS = 60 * 1000;
 const MAX_PER_WINDOW = 8;
@@ -28,8 +28,9 @@ function rateLimited(ip) {
   return arr.length > MAX_PER_WINDOW;
 }
 
+/* Strenge E-Mail-Regel aus form-guard.js (keine ? & = # / < > " ' und keine Leerzeichen) */
 function isEmail(v) {
-  return typeof v === 'string' && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+  return typeof v === 'string' && v.trim().length > 0 && v.length <= 254 && guard.check('email', v) === '';
 }
 
 function str(v, max) {
@@ -38,6 +39,46 @@ function str(v, max) {
 
 const nonBlank = (v, max) => typeof v === 'string' && v.trim().length > 0 && v.length <= max;
 const clean = (v, max = 300) => (typeof v === 'string' ? v.trim().slice(0, max) : '');
+
+/* Steuerzeichen (außer Tab/LF/CR) aus allen Strings entfernen — rekursiv, begrenzt. */
+function sanitize(v, depth = 0) {
+  if (typeof v === 'string') return saeubern(v);
+  if (Array.isArray(v)) return depth >= 4 ? [] : v.slice(0, 100).map((x) => sanitize(x, depth + 1));
+  if (v && typeof v === 'object') {
+    if (depth >= 4) return {};
+    const out = {};
+    Object.keys(v).slice(0, 200).forEach((k) => { out[saeubern(k).slice(0, 100)] = sanitize(v[k], depth + 1); });
+    return out;
+  }
+  return v;
+}
+
+/* Nur erlaubte Schlüssel übernehmen; Strings getrimmt und gekürzt, Zahlen/Booleans unverändert. */
+function pick(o, keys, max = 2000) {
+  const out = {};
+  if (!o || typeof o !== 'object' || Array.isArray(o)) return out;
+  keys.forEach((k) => {
+    const v = o[k];
+    if (typeof v === 'string') out[k] = v.trim().slice(0, max);
+    else if (typeof v === 'number' || typeof v === 'boolean') out[k] = v;
+  });
+  return out;
+}
+
+// Zusatzangaben des Wizards für den Antragsentwurf (api/_lib/antrag.js liest diese Schlüssel)
+const ERGAENZUNG_KEYS = ['anschrift', 'ehevertrag', 'staatsangehoerigkeit', 'nettoeinkommen_antragsteller',
+  'nettoeinkommen_antragsgegner', 'kind_1', 'kind_2', 'kind_3', 'kind_4'];
+
+/* Lässt nur bekannte Schlüssel mit Strings ≤ 200 Zeichen durch; alles andere wird verworfen. */
+function ergaenzung(b) {
+  const e = b.ergaenzung;
+  const out = {};
+  if (!e || typeof e !== 'object' || Array.isArray(e)) return out;
+  ERGAENZUNG_KEYS.forEach((k) => {
+    if (str(e[k], 200)) out[k] = e[k].trim();
+  });
+  return out;
+}
 
 // Plausibilität (gleiche Regeln wie im Browser, form-guard.js)
 function ok(type, v) {
@@ -82,17 +123,24 @@ function validate(b) {
         (ki.vorhanden === 'Ja' && !nonBlank(ki.wohnort, 120))) {
       return 'invalid_fields';
     }
+    // Optionale Zusatzangaben: Anschrift nur bei Angabe plausibilisieren
+    const erg = ergaenzung(b);
+    if (erg.anschrift && !ok('address', erg.anschrift)) return 'invalid_fields';
   }
   return null;
 }
 
-/* Normalisiert die vier Payload-Formen auf eine Datenbankzeile. */
+/* Normalisiert die vier Payload-Formen auf eine Datenbankzeile (nur bekannte Schlüssel). */
 function toRow(b) {
   const meta = (b.meta && typeof b.meta === 'object' && !Array.isArray(b.meta)) ? b.meta : {};
-  const { guard: _g, ...metaOhneGuard } = meta;
-  const row = { quelle: clean(meta.quelle, 120), seite: clean(meta.seite, 500), daten: { ...b, meta: metaOhneGuard } };
+  const row = {
+    vorname: '', nachname: '', email: '', telefon: '',
+    quelle: clean(meta.quelle, 120), seite: clean(meta.seite, 500),
+    daten: { meta: { quelle: clean(meta.quelle, 120), seite: clean(meta.seite, 500), gesendet_am: clean(meta.gesendet_am, 40) } }
+  };
   if (b.type === 'checkliste_pdf') {
     Object.assign(row, { typ: 'checkliste_pdf', email: clean(b.email) });
+    Object.assign(row.daten, pick(b, ['email', 'dsgvo_zugestimmt']));
   } else if (b.type === 'nachricht') {
     const name = clean(b.name, 160);
     const i = name.lastIndexOf(' ');
@@ -102,17 +150,27 @@ function toRow(b) {
       nachname: i > 0 ? name.slice(i + 1) : '',
       email: clean(b.email)
     });
+    Object.assign(row.daten, pick(b, ['name', 'email', 'nachricht', 'dsgvo_zugestimmt']));
   } else if (b.type === 'kostenrahmen') {
     Object.assign(row, {
       typ: 'kostenrahmen', vorname: clean(b.c_vorname), nachname: clean(b.c_nachname),
       email: clean(b.c_email), telefon: clean(b.c_telefon, 60)
     });
+    Object.assign(row.daten, pick(b, ['c_vorname', 'c_nachname', 'c_email', 'c_telefon', 'c_nachricht', 'cost_dsgvo']));
   } else {
     const k = b.kontakt || {};
     Object.assign(row, {
       typ: 'antrag', vorname: clean(k.vorname), nachname: clean(k.nachname),
       email: clean(k.email), telefon: clean(k.telefon, 60)
     });
+    Object.assign(row.daten, {
+      kontakt: pick(b.kontakt, ['vorname', 'nachname', 'email', 'telefon']),
+      situation: pick(b.situation, ['mindestens_ein_jahr_getrennt', 'heiratsdatum', 'trennung_beginn', 'bundesland', 'ehewohnung_plz', 'ehewohnung_ort']),
+      ehepartner: pick(b.ehepartner, ['name', 'anschrift']),
+      kinder: pick(b.kinder, ['vorhanden', 'anzahl', 'wohnort']),
+      scheidung: pick(b.scheidung, ['einvernehmlich', 'vertretung_wagner']),
+      ergaenzung: ergaenzung(b)
+    }, pick(b, ['nachricht', 'dsgvo_zugestimmt']));
   }
   return row;
 }
@@ -128,11 +186,17 @@ module.exports = async (req, res) => {
     return;
   }
 
-  const b = readBody(req);
-  if (!b) {
+  const raw = readBody(req);
+  if (!raw) {
     res.status(400).json({ ok: false, error: 'invalid_body' });
     return;
   }
+  // Größenlimit gegen Missbrauch
+  if (JSON.stringify(raw).length > 20000) {
+    res.status(413).json({ ok: false, error: 'payload_too_large' });
+    return;
+  }
+  const b = sanitize(raw);
 
   // Ohne Schutz-Merkmal (direkter POST oder vor dem Update geöffnete Seite):
   // sichtbarer Fehler statt stillem Verwerfen — echte Besucher laden neu
@@ -153,16 +217,17 @@ module.exports = async (req, res) => {
     res.status(400).json({ ok: false, error: err });
     return;
   }
-  // Größenlimit gegen Missbrauch
-  if (JSON.stringify(b).length > 20000) {
-    res.status(413).json({ ok: false, error: 'payload_too_large' });
-    return;
-  }
 
   const store = getStore();
   if (!store) {
-    console.log('[lead] Kein Speicher konfiguriert (SUPABASE_URL/SUPABASE_SERVICE_KEY) — Demo-Modus, Anfrage nicht gespeichert.');
-    res.status(200).json({ ok: true, demo: true });
+    if (process.env.SO_DEMO === '1') {
+      console.log('[lead] Demo-Modus (SO_DEMO=1) — Anfrage nicht gespeichert.');
+      res.status(200).json({ ok: true, demo: true });
+      return;
+    }
+    // Lieber ein sichtbarer Fehler im Formular als eine still verlorene Mandatsanfrage
+    console.error('[lead] STORE NICHT KONFIGURIERT (SUPABASE_URL/SUPABASE_SERVICE_KEY) — Anfrage verloren.');
+    res.status(503).json({ ok: false, error: 'store_not_configured' });
     return;
   }
 

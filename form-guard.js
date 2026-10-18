@@ -43,7 +43,8 @@
       return /^[+0-9 ()\/-]{6,25}$/.test(v) && d.length >= 6 && d.length <= 15 && !/^(\d)\1+$/.test(d);
     },
     email: function (v) {
-      return /^[^\s@]+@[^\s@.]+(\.[^\s@.]+)*\.[a-z]{2,}$/i.test(v);
+      /* keine ? & = # / < > " ' und keine Leerzeichen — Umlaut-/IDN-Adressen bleiben erlaubt */
+      return v.length <= 254 && /^[\p{L}\p{N}._%+\-]+@[\p{L}\p{N}\-]+(\.[\p{L}\p{N}\-]+)*\.[\p{L}]{2,}$/u.test(v);
     },
     address: function (v) {
       return v.length >= 5 && v.length <= 200 && /\p{L}{2,}/u.test(v) && !gibberish(v.replace(/[0-9]/g, ' '));

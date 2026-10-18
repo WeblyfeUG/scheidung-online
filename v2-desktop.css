@@ -3669,3 +3669,9 @@ body.nav-open .nav-drawer {
 #children-block .wz-field.full.wz-kids-home { max-width: none; }
 #children-block .wz-kids-home .wz-choice.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); grid-auto-flow: row; gap: 12px; }
 @media (max-width: 560px) { #children-block .wz-kids-home .wz-choice.grid2 { grid-template-columns: 1fr; } }
+
+/* ---- Zusatzfragen für den Antragsentwurf: Vorname + Geburtsdatum je Kind ---- */
+.wz-kid { display: none; grid-column: 1 / -1; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+.wz-kid.show { display: grid; animation: wzStepIn 360ms ease; }
+#children-block .wz-kid .wz-field { max-width: none; min-width: 0; }
+@media (max-width: 400px) { .wz-kid { grid-template-columns: 1fr; } }

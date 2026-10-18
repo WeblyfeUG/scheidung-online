@@ -6,6 +6,7 @@
    einfacher Textersatz.
    ============================================================ */
 const zlib = require('zlib');
+const { saeubern } = require('./http');
 
 function readZip(buf) {
   // End of central directory
@@ -87,8 +88,9 @@ function writeZip(entries) {
   return Buffer.concat([...locals, ...centrals, eocd]);
 }
 
+/* Steuerzeichen (außer Tab/LF/CR) sind in XML verboten und würden Word die Datei verweigern lassen. */
 function xmlEscape(s) {
-  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  return saeubern(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
 /* Zeilenumbrüche im Wert werden zu Word-Umbrüchen innerhalb des Laufs. */
@@ -96,8 +98,10 @@ function xmlValue(s) {
   return String(s).split(/\r?\n/).map(xmlEscape).join('</w:t><w:br/><w:t xml:space="preserve">');
 }
 
-/* Füllt die Vorlage; fehlende Werte werden als sichtbare Lücke markiert. */
-function fillTemplate(templateBuf, values, { missing = '________' } = {}) {
+/* Füllt die Vorlage; fehlende Werte werden als sichtbare Lücke markiert.
+   Schlüssel in `leer` (nicht zutreffende Felder) werden still durch '' ersetzt. */
+function fillTemplate(templateBuf, values, { missing = '________', leer = [] } = {}) {
+  const leerSet = new Set(leer);
   const entries = readZip(templateBuf);
   const doc = entries.find((e) => e.name === 'word/document.xml');
   if (!doc) throw new Error('docx: word/document.xml fehlt');
@@ -105,7 +109,10 @@ function fillTemplate(templateBuf, values, { missing = '________' } = {}) {
   const unresolved = new Set();
   xml = xml.replace(/\{\{(\w+)\}\}/g, (m, key) => {
     const v = values[key];
-    if (v === undefined || v === null || String(v).trim() === '') { unresolved.add(key); return xmlEscape(missing); }
+    if (v === undefined || v === null || String(v).trim() === '') {
+      if (leerSet.has(key)) return '';
+      unresolved.add(key); return xmlEscape(missing);
+    }
     return xmlValue(v);
   });
   doc.data = Buffer.from(xml, 'utf8');

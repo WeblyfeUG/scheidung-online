@@ -65,7 +65,7 @@ nach zwei Werktagen, Checkliste nie (bleibt bis „Als gesendet markieren“); `
 - `HQ_SECRET` — lange Zufallszeichenfolge (≥ 16 Zeichen)
 - `SO_STORE_FILE` — nur lokal: Pfad einer JSON-Datei statt Supabase.
 
-## Supabase-Migration (einmalig, SQL-Editor)
+## Supabase-Migration (am 18.10.2026 im Projekt `ixczixhykdvjxvgajcid` eingespielt — nur bei einer neuen Datenbank erneut nötig)
 
 ```sql
 alter table public.so_anfragen
@@ -85,6 +85,11 @@ create table if not exists public.so_login_versuche (
   id bigserial primary key, ip text not null, benutzer text not null default '', zeit timestamptz not null default now());
 create index if not exists so_login_versuche_ip_zeit_idx on public.so_login_versuche (ip, zeit desc);
 alter table public.so_login_versuche enable row level security;
+-- Rechte: öffentliche Rollen bekommen nichts, nur service_role (Server)
+revoke all on public.so_loeschungen, public.so_login_versuche, public.so_anfragen_zaehler from anon, authenticated;
+grant select, insert, update, delete on public.so_anfragen, public.so_ereignisse, public.so_loeschungen, public.so_login_versuche to service_role;
+grant select on public.so_anfragen_zaehler to service_role;
+grant usage, select on sequence public.so_loeschungen_id_seq, public.so_login_versuche_id_seq, public.so_ereignisse_id_seq, public.so_anfragen_nr_seq to service_role;
 ```
 
 Ohne die View fällt `counts()` auf die Zeilen zurück (Warnung im Log); ohne die Spalte `wiedervorlage` scheitern Übersicht und Wiedervorlage.

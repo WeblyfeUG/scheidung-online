@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex, nofollow" />
+<title>HQ · Scheidung-Online</title>
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="hq.css?v=1" />
+</head>
+<body>
+
+<!-- Anmeldung -->
+<section id="login" class="login" hidden>
+  <form id="login-form" class="login-card" novalidate>
+    <img src="assets/logo-scheidung-online.png" alt="Scheidung-Online" class="login-logo" />
+    <h1>HQ-Anmeldung</h1>
+    <p class="muted">Interner Bereich der Kanzlei Wagner. Zugang nur für berechtigte Personen.</p>
+    <label>Benutzername<input name="name" autocomplete="username" required /></label>
+    <label>Passwort<input name="passwort" type="password" autocomplete="current-password" required /></label>
+    <p id="login-err" class="err" role="alert" hidden></p>
+    <button type="submit" class="btn btn-primary btn-block">Anmelden</button>
+  </form>
+</section>
+
+<!-- Anwendung -->
+<div id="app" class="app" hidden>
+  <header class="topbar">
+    <div class="brand">
+      <img src="assets/logo-scheidung-online.png" alt="" />
+      <span>HQ</span>
+    </div>
+    <nav class="modules" aria-label="Module">
+      <button class="mod active" data-mod="anfragen">Anfragen</button>
+      <button class="mod" data-mod="antrag" id="mod-antrag-btn" disabled title="Zuerst eine Anfrage öffnen">Antragsentwurf</button>
+    </nav>
+    <div class="user">
+      <span id="user-name"></span>
+      <button id="logout" class="btn btn-ghost btn-sm">Abmelden</button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <!-- Liste -->
+    <aside class="list-pane">
+      <div class="filters">
+        <input id="q" type="search" placeholder="Suche: Nummer, Name, E-Mail, Telefon" aria-label="Suche" />
+        <div class="chips" id="status-chips" role="group" aria-label="Status"></div>
+        <select id="typ" aria-label="Formular">
+          <option value="">Alle Formulare</option>
+          <option value="antrag">Online-Antrag</option>
+          <option value="kostenrahmen">Kosteneinschätzung</option>
+          <option value="nachricht">Nachricht</option>
+          <option value="checkliste_pdf">Checkliste (PDF)</option>
+        </select>
+      </div>
+      <div id="list" class="list" role="list"></div>
+      <p id="list-empty" class="muted center" hidden>Keine Anfragen gefunden.</p>
+    </aside>
+
+    <!-- Detail -->
+    <section class="detail-pane" id="detail">
+      <div class="placeholder" id="detail-empty">
+        <h2>Anfrage auswählen</h2>
+        <p class="muted">Links eine Anfrage anklicken. Rechts siehst du dann alle Angaben, den Status, Notizen und das Modul „Antragsentwurf".</p>
+      </div>
+
+      <article id="detail-card" hidden>
+        <header class="detail-head">
+          <div>
+            <div class="nummer" id="d-nummer"></div>
+            <h2 id="d-name"></h2>
+            <div class="meta" id="d-meta"></div>
+          </div>
+          <div class="detail-actions">
+            <label class="status-wrap">Status
+              <select id="d-status"></select>
+            </label>
+          </div>
+        </header>
+
+        <!-- Modul 1: Anfrage -->
+        <div class="view" data-view="anfragen">
+          <section class="card">
+            <h3>Kontakt</h3>
+            <dl class="kv" id="d-kontakt"></dl>
+          </section>
+          <section class="card">
+            <h3>Angaben aus dem Formular</h3>
+            <dl class="kv" id="d-daten"></dl>
+          </section>
+          <section class="card">
+            <h3>Notizen der Kanzlei</h3>
+            <textarea id="d-notizen" rows="5" placeholder="Interne Notizen, Telefonate, Rückfragen …"></textarea>
+            <div class="row">
+              <button class="btn btn-primary btn-sm" id="save-notizen">Notizen speichern</button>
+              <span class="saved" id="notizen-saved" hidden>Gespeichert</span>
+            </div>
+          </section>
+          <section class="card">
+            <h3>Verlauf</h3>
+            <ol class="verlauf" id="d-verlauf"></ol>
+          </section>
+          <section class="card danger">
+            <h3>Daten löschen</h3>
+            <p class="muted">Entfernt die Anfrage samt Verlauf endgültig (z. B. auf Wunsch der betroffenen Person oder nach Ablauf der Aufbewahrung).</p>
+            <button class="btn btn-danger btn-sm" id="delete">Anfrage endgültig löschen</button>
+          </section>
+        </div>
+
+        <!-- Modul 2: Antragsentwurf -->
+        <div class="view" data-view="antrag" hidden>
+          <section class="card">
+            <div class="row between">
+              <div>
+                <h3>Antragsentwurf</h3>
+                <p class="muted">Vorbelegt aus der Anfrage. Angaben aus Urkunden (Standesamt, Registernummer, Geburtsdaten, Gegenstandswerte) bitte hier ergänzen — leere Felder erscheinen im Word-Dokument als Lücke <code>________</code>.</p>
+              </div>
+            </div>
+            <form id="antrag-form" novalidate></form>
+            <div class="row">
+              <button class="btn btn-primary btn-sm" id="save-antrag">Felder speichern</button>
+              <span class="saved" id="antrag-saved" hidden>Gespeichert</span>
+            </div>
+          </section>
+          <section class="card">
+            <h3>Dokumente erzeugen</h3>
+            <p class="muted">Word-Dateien auf Basis der Kanzlei-Vorlagen. Die gespeicherten Felder werden verwendet; vorher „Felder speichern".</p>
+            <div class="row">
+              <a class="btn btn-primary" id="dl-antrag" href="#" download>Antragsentwurf (.docx)</a>
+              <a class="btn btn-secondary" id="dl-vollmacht" href="#" download>Vollmacht (.docx)</a>
+            </div>
+            <p class="muted small" id="offene-felder"></p>
+          </section>
+        </div>
+      </article>
+    </section>
+  </main>
+</div>
+
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+<script src="hq.js?v=1"></script>
+</body>
+</html>

@@ -1,12 +1,14 @@
 /* ============================================================
-   Serverseitige Same-Origin-Route für beide Formulare (v2).
-   Validiert, rate-limitet und leitet an den Make.com-Webhook
-   weiter. Der Webhook liegt NUR in der Umgebungsvariable
-   MAKE_WEBHOOK_URL (Vercel-Projekt-Settings), nie im Frontend.
-   Ohne gesetzte Variable: Demo-Modus (200, nichts weitergeleitet).
+   Serverseitige Same-Origin-Route für alle Website-Formulare.
+   Validiert (inkl. Plausibilität + Spamschutz aus form-guard.js),
+   rate-limitet und speichert die Anfrage im HQ (Supabase, Zugang
+   nur über Umgebungsvariablen SUPABASE_URL + SUPABASE_SERVICE_KEY —
+   nie im Frontend). Ohne gesetzte Variablen: Demo-Modus (200,
+   nichts gespeichert).
    ============================================================ */
-
 const guard = require('../form-guard.js');
+const { getStore } = require('./_lib/store');
+const { readBody, clientIp, noStore } = require('./_lib/http');
 
 const WINDOW_MS = 60 * 1000;
 const MAX_PER_WINDOW = 8;
@@ -34,6 +36,9 @@ function str(v, max) {
   return typeof v === 'string' && v.length <= max;
 }
 
+const nonBlank = (v, max) => typeof v === 'string' && v.trim().length > 0 && v.length <= max;
+const clean = (v, max = 300) => (typeof v === 'string' ? v.trim().slice(0, max) : '');
+
 // Plausibilität (gleiche Regeln wie im Browser, form-guard.js)
 function ok(type, v) {
   return typeof v === 'string' && v.trim().length > 0 && guard.check(type, v) === '';
@@ -45,30 +50,89 @@ function looksLikeBot(g) {
   return typeof g.fill_ms !== 'number' || g.fill_ms < 1500;
 }
 
+/* Prüft den Payload je Formulartyp; liefert Fehlercode oder null. */
+function validate(b) {
+  if (b.type === 'checkliste_pdf') {
+    if (b.dsgvo_zugestimmt !== true) return 'consent_required';
+    if (!isEmail(b.email)) return 'invalid_email';
+  } else if (b.type === 'nachricht') {
+    // Kontakt-Baustein: Name + E-Mail + Nachricht, Antwort per E-Mail (kein Rückruf-Versprechen)
+    if (b.dsgvo_zugestimmt !== true) return 'consent_required';
+    if (!nonBlank(b.name, 160) || !isEmail(b.email) || !nonBlank(b.nachricht, 2000)) return 'missing_fields';
+    if (!ok('name', b.name)) return 'invalid_fields';
+  } else if (b.type === 'kostenrahmen') {
+    // Stand 12.10.2026: E-Mail Pflicht (schriftliche Kostenübersicht binnen zwei Werktagen), Telefon optional
+    if (b.cost_dsgvo !== true) return 'consent_required';
+    if (!nonBlank(b.c_vorname, 120) || !nonBlank(b.c_nachname, 120) || !isEmail(b.c_email)) return 'missing_fields';
+    if (b.c_telefon && !str(b.c_telefon, 60)) return 'invalid_phone';
+    if (!ok('name', b.c_vorname) || !ok('name', b.c_nachname) || (b.c_telefon && !ok('phone', b.c_telefon))) return 'invalid_fields';
+    if (b.c_nachricht && !str(b.c_nachricht, 2000)) return 'message_too_long';
+  } else {
+    // Antrags-Wizard: eigenes Consent-Feld + Kontaktdaten + Plausibilität der Pflichtfelder
+    if (b.dsgvo_zugestimmt !== true) return 'consent_required';
+    const k = b.kontakt || {};
+    if (!nonBlank(k.vorname, 120) || !nonBlank(k.nachname, 120) || !isEmail(k.email)) return 'missing_fields';
+    if (b.nachricht && !str(b.nachricht, 2000)) return 'message_too_long';
+    const st = b.situation || {};
+    const ep = b.ehepartner || {};
+    const ki = b.kinder || {};
+    if (!ok('name', k.vorname) || !ok('name', k.nachname) || !ok('phone', k.telefon) ||
+        !ok('plz', st.ehewohnung_plz) || !ok('ort', st.ehewohnung_ort) ||
+        !ok('name', ep.name) || !ok('address', ep.anschrift) ||
+        (ki.vorhanden === 'Ja' && !nonBlank(ki.wohnort, 120))) {
+      return 'invalid_fields';
+    }
+  }
+  return null;
+}
+
+/* Normalisiert die vier Payload-Formen auf eine Datenbankzeile. */
+function toRow(b) {
+  const meta = (b.meta && typeof b.meta === 'object' && !Array.isArray(b.meta)) ? b.meta : {};
+  const { guard: _g, ...metaOhneGuard } = meta;
+  const row = { quelle: clean(meta.quelle, 120), seite: clean(meta.seite, 500), daten: { ...b, meta: metaOhneGuard } };
+  if (b.type === 'checkliste_pdf') {
+    Object.assign(row, { typ: 'checkliste_pdf', email: clean(b.email) });
+  } else if (b.type === 'nachricht') {
+    const name = clean(b.name, 160);
+    const i = name.lastIndexOf(' ');
+    Object.assign(row, {
+      typ: 'nachricht',
+      vorname: i > 0 ? name.slice(0, i) : name,
+      nachname: i > 0 ? name.slice(i + 1) : '',
+      email: clean(b.email)
+    });
+  } else if (b.type === 'kostenrahmen') {
+    Object.assign(row, {
+      typ: 'kostenrahmen', vorname: clean(b.c_vorname), nachname: clean(b.c_nachname),
+      email: clean(b.c_email), telefon: clean(b.c_telefon, 60)
+    });
+  } else {
+    const k = b.kontakt || {};
+    Object.assign(row, {
+      typ: 'antrag', vorname: clean(k.vorname), nachname: clean(k.nachname),
+      email: clean(k.email), telefon: clean(k.telefon, 60)
+    });
+  }
+  return row;
+}
+
 module.exports = async (req, res) => {
-  res.setHeader('Cache-Control', 'no-store');
+  noStore(res);
   if (req.method !== 'POST') {
     res.status(405).json({ ok: false, error: 'method_not_allowed' });
     return;
   }
-
-  const ip = (req.headers['x-forwarded-for'] || '').split(',')[0].trim() || 'unknown';
-  if (rateLimited(ip)) {
+  if (rateLimited(clientIp(req))) {
     res.status(429).json({ ok: false, error: 'rate_limited' });
     return;
   }
 
-  let b = req.body;
-  if (typeof b === 'string') {
-    try { b = JSON.parse(b); } catch (e) { b = null; }
-  }
-  if (!b || typeof b !== 'object' || Array.isArray(b)) {
+  const b = readBody(req);
+  if (!b) {
     res.status(400).json({ ok: false, error: 'invalid_body' });
     return;
   }
-
-  const nonBlank = (v, max) => typeof v === 'string' && v.trim().length > 0 && v.length <= max;
-  const invalid = () => res.status(400).json({ ok: false, error: 'invalid_fields' });
 
   // Ohne Schutz-Merkmal (direkter POST oder vor dem Update geöffnete Seite):
   // sichtbarer Fehler statt stillem Verwerfen — echte Besucher laden neu
@@ -77,110 +141,37 @@ module.exports = async (req, res) => {
     res.status(400).json({ ok: false, error: 'reload_required' });
     return;
   }
-  // Bots bekommen ein stilles OK — nichts wird weitergeleitet
+  // Bots bekommen ein stilles OK — nichts wird gespeichert
   if (looksLikeBot(g)) {
     console.log('[lead] Verdacht auf Spam verworfen (Fangfeld/Zeit).');
     res.status(200).json({ ok: true });
     return;
   }
 
-  // Grundvalidierung + DSGVO-Einwilligung je Formulartyp (Consent-Flag muss
-  // zum tatsächlich angehakten Feld des jeweiligen Formulars gehören)
-  if (b.type === 'checkliste_pdf') {
-    // Checklisten-Versand: E-Mail + Einwilligung
-    if (b.dsgvo_zugestimmt !== true) {
-      res.status(400).json({ ok: false, error: 'consent_required' });
-      return;
-    }
-    if (!isEmail(b.email)) {
-      res.status(400).json({ ok: false, error: 'invalid_email' });
-      return;
-    }
-  } else if (b.type === 'nachricht') {
-    // Kontakt-Baustein: Name + E-Mail + Nachricht, Antwort per E-Mail (kein Rückruf-Versprechen)
-    if (b.dsgvo_zugestimmt !== true) {
-      res.status(400).json({ ok: false, error: 'consent_required' });
-      return;
-    }
-    if (!nonBlank(b.name, 160) || !isEmail(b.email) || !nonBlank(b.nachricht, 2000)) {
-      res.status(400).json({ ok: false, error: 'missing_fields' });
-      return;
-    }
-    if (!ok('name', b.name)) { invalid(); return; }
-  } else if (b.type === 'kostenrahmen') {
-    // Stand 12.10.2026: E-Mail Pflicht (schriftliche Kostenübersicht binnen zwei Werktagen),
-    // Telefon optional, keine Rückruf-Zeiten mehr
-    if (b.cost_dsgvo !== true) {
-      res.status(400).json({ ok: false, error: 'consent_required' });
-      return;
-    }
-    if (!nonBlank(b.c_vorname, 120) || !nonBlank(b.c_nachname, 120) || !isEmail(b.c_email)) {
-      res.status(400).json({ ok: false, error: 'missing_fields' });
-      return;
-    }
-    if (b.c_telefon && !str(b.c_telefon, 60)) {
-      res.status(400).json({ ok: false, error: 'invalid_phone' });
-      return;
-    }
-    if (!ok('name', b.c_vorname) || !ok('name', b.c_nachname) || (b.c_telefon && !ok('phone', b.c_telefon))) {
-      invalid();
-      return;
-    }
-    if (b.c_nachricht && !str(b.c_nachricht, 2000)) {
-      res.status(400).json({ ok: false, error: 'message_too_long' });
-      return;
-    }
-  } else {
-    // Antrags-Wizard: eigenes Consent-Feld + Kontaktdaten
-    if (b.dsgvo_zugestimmt !== true) {
-      res.status(400).json({ ok: false, error: 'consent_required' });
-      return;
-    }
-    const k = b.kontakt || {};
-    if (!nonBlank(k.vorname, 120) || !nonBlank(k.nachname, 120) || !isEmail(k.email)) {
-      res.status(400).json({ ok: false, error: 'missing_fields' });
-      return;
-    }
-    if (b.nachricht && !str(b.nachricht, 2000)) {
-      res.status(400).json({ ok: false, error: 'message_too_long' });
-      return;
-    }
-    const st = b.situation || {};
-    const ep = b.ehepartner || {};
-    const ki = b.kinder || {};
-    if (!ok('name', k.vorname) || !ok('name', k.nachname) || !ok('phone', k.telefon) ||
-        !ok('plz', st.ehewohnung_plz) || !ok('ort', st.ehewohnung_ort) ||
-        !ok('name', ep.name) || !ok('address', ep.anschrift) ||
-        (ki.vorhanden === 'Ja' && !nonBlank(ki.wohnort, 120))) {
-      invalid();
-      return;
-    }
+  const err = validate(b);
+  if (err) {
+    res.status(400).json({ ok: false, error: err });
+    return;
   }
-
   // Größenlimit gegen Missbrauch
   if (JSON.stringify(b).length > 20000) {
     res.status(413).json({ ok: false, error: 'payload_too_large' });
     return;
   }
 
-  const target = process.env.MAKE_WEBHOOK_URL;
-  if (!target) {
-    console.log('[lead] MAKE_WEBHOOK_URL nicht gesetzt — Demo-Modus, Lead nicht weitergeleitet.');
+  const store = getStore();
+  if (!store) {
+    console.log('[lead] Kein Speicher konfiguriert (SUPABASE_URL/SUPABASE_SERVICE_KEY) — Demo-Modus, Anfrage nicht gespeichert.');
     res.status(200).json({ ok: true, demo: true });
     return;
   }
 
   try {
-    const meta = (b.meta && typeof b.meta === 'object' && !Array.isArray(b.meta)) ? b.meta : {};
-    const upstream = await fetch(target, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...b, meta })
-    });
-    if (!upstream.ok) throw new Error('upstream HTTP ' + upstream.status);
-    res.status(200).json({ ok: true });
-  } catch (err) {
-    console.error('[lead] Weiterleitung fehlgeschlagen:', err.message);
-    res.status(502).json({ ok: false, error: 'upstream_failed' });
+    const saved = await store.insertAnfrage(toRow(b));
+    await store.addEreignis({ anfrage_id: saved.id, benutzer: 'website', art: 'eingang', details: { typ: saved.typ, quelle: saved.quelle } });
+    res.status(200).json({ ok: true, nummer: saved.nummer });
+  } catch (e) {
+    console.error('[lead] Speichern fehlgeschlagen:', e.message);
+    res.status(502).json({ ok: false, error: 'store_failed' });
   }
 };

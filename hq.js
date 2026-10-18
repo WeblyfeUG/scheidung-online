@@ -9,7 +9,7 @@
     mandat: 'Mandat erteilt', erledigt: 'Erledigt', abgelehnt: 'Abgelehnt / kein Mandat'
   };
   var TYP = { antrag: 'Online-Antrag', kostenrahmen: 'Kosteneinschätzung', nachricht: 'Nachricht', checkliste_pdf: 'Checkliste (PDF)' };
-  var EREIGNIS = { eingang: 'Eingang über die Website', status: 'Status geändert', notiz: 'Notizen bearbeitet', antrag: 'Antragsfelder gespeichert', dokument: 'Dokument erzeugt' };
+  var EREIGNIS = { eingang: 'Eingang über die Website', status: 'Status geändert', notiz: 'Notizen bearbeitet', antrag: 'Antragsfelder gespeichert', dokument: 'Dokument erzeugt', benachrichtigung: 'Kanzlei per E-Mail benachrichtigt', benachrichtigung_fehler: 'E-Mail-Benachrichtigung fehlgeschlagen' };
 
   /* Lesbare Bezeichnungen für die Formular-Payloads */
   var LABELS = {
@@ -198,6 +198,7 @@
     $('#d-verlauf').innerHTML = v.map(function (e) {
       var d = e.details || {}, txt = EREIGNIS[e.art] || e.art;
       if (e.art === 'status') txt += ': ' + (STATUS[d.von] || d.von) + ' → ' + (STATUS[d.nach] || d.nach);
+      if (e.art === 'benachrichtigung_fehler' && d.grund) txt += ' (' + d.grund + ')';
       if (e.art === 'dokument') txt += ': ' + (d.typ === 'vollmacht' ? 'Vollmacht' : 'Antragsentwurf') + (d.offen && d.offen.length ? ' (' + d.offen.length + ' Felder offen)' : '');
       return '<li><time>' + esc(fmtDate(e.zeit, true)) + '</time><span>' + esc(txt) + (e.benutzer ? ' <span class="muted">· ' + esc(e.benutzer) + '</span>' : '') + '</span></li>';
     }).join('') || '<li class="muted">Noch keine Einträge.</li>';

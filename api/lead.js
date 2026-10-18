@@ -4,10 +4,13 @@
    rate-limitet und speichert die Anfrage im HQ (Supabase, Zugang
    nur über Umgebungsvariablen SUPABASE_URL + SUPABASE_SERVICE_KEY —
    nie im Frontend). Ohne gesetzte Variablen: Demo-Modus (200,
-   nichts gespeichert).
+   nichts gespeichert). Nach dem Speichern wird die Kanzlei per
+   E-Mail benachrichtigt (_lib/notify.js, Resend) — ein Mailfehler
+   ändert nichts am Ergebnis der Anfrage.
    ============================================================ */
 const guard = require('../form-guard.js');
 const { getStore } = require('./_lib/store');
+const { notifyNeueAnfrage } = require('./_lib/notify');
 const { readBody, clientIp, noStore } = require('./_lib/http');
 
 const WINDOW_MS = 60 * 1000;
@@ -117,6 +120,20 @@ function toRow(b) {
   return row;
 }
 
+/* E-Mail an die Kanzlei + Verlaufseintrag; darf die Anfrage nie scheitern lassen. */
+async function notify(saved, store) {
+  try {
+    const r = await notifyNeueAnfrage(saved);
+    if (r.reason === 'not_configured') return;
+    await store.addEreignis({
+      anfrage_id: saved.id, benutzer: 'system', art: r.sent ? 'benachrichtigung' : 'benachrichtigung_fehler',
+      details: r.sent ? { mail_id: r.id || '' } : { grund: r.reason }
+    });
+  } catch (e) {
+    console.error('[lead] Benachrichtigung fehlgeschlagen:', e.message);
+  }
+}
+
 module.exports = async (req, res) => {
   noStore(res);
   if (req.method !== 'POST') {
@@ -169,6 +186,8 @@ module.exports = async (req, res) => {
   try {
     const saved = await store.insertAnfrage(toRow(b));
     await store.addEreignis({ anfrage_id: saved.id, benutzer: 'website', art: 'eingang', details: { typ: saved.typ, quelle: saved.quelle } });
+    // Vor der Antwort abwarten — nach res.json() kann die Function beendet werden.
+    await notify(saved, store);
     res.status(200).json({ ok: true, nummer: saved.nummer });
   } catch (e) {
     console.error('[lead] Speichern fehlgeschlagen:', e.message);

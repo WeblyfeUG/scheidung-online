@@ -13,6 +13,12 @@ const antrag = require('../_lib/antrag');
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
+/* "JJJJ-MM-TT" muss ein echtes Kalenderdatum sein (V8 würde 2026-02-30 still zu 2026-03-02 machen). */
+function datumGueltig(s) {
+  const d = new Date(s + 'T00:00:00Z');
+  return !isNaN(d) && d.toISOString().slice(0, 10) === s;
+}
+
 function detailAntwort(a, verlauf) {
   const e = antrag.effektiv(a);
   return { ok: true, anfrage: a, verlauf, antragsfelder: antrag.FELDER, antragswerte: e.werte, vorbelegt: e.vorbelegt, nichtZutreffend: e.nichtZutreffend, hinweise: e.hinweise };
@@ -83,7 +89,7 @@ module.exports = async (req, res) => {
       }
       if (Object.prototype.hasOwnProperty.call(b, 'wiedervorlage')) {
         const wv = b.wiedervorlage;
-        if (wv !== null && wv !== '' && !(typeof wv === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(wv) && !isNaN(Date.parse(wv)))) {
+        if (wv !== null && wv !== '' && !(typeof wv === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(wv) && datumGueltig(wv))) {
           res.status(400).json({ ok: false, error: 'invalid_wiedervorlage' }); return;
         }
         const neu = wv || null;
@@ -116,7 +122,8 @@ module.exports = async (req, res) => {
       await store.deleteAnfrage(id);
       console.log(`[hq] ${user} hat Anfrage ${a.nummer} gelöscht`);
       try {
-        const grund = String(((readBody(req) || {}).grund) || '').slice(0, 300);
+        const g = (readBody(req) || {}).grund;
+        const grund = typeof g === 'string' ? g.slice(0, 300) : '';
         await store.addLoeschung({ nummer: a.nummer, typ: a.typ, benutzer: user, grund });
       } catch (e) {
         console.error('[hq/anfragen] Löschnachweis fehlgeschlagen:', e.message);

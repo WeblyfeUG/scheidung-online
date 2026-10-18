@@ -61,13 +61,13 @@ function uebersichtAusZeilen({ offene, letzte30, letzte5, zaehler, now, speicher
     if (d.getTime() >= vor7d) tage7++;
     if (nachTyp[r.typ] !== undefined) nachTyp[r.typ]++;
   });
+  // 30 Kalendertage rückwärts ab dem Berliner Heute-Datum (kalendarisch, nicht in 24-h-Schritten → stabil über die Zeitumstellung)
+  const [hy, hm, hd] = heuteTag.split('-').map(Number);
   const jeTag = [];
   for (let i = 29; i >= 0; i--) {
-    const tag = tagBerlin(new Date(now.getTime() - i * 864e5));
-    if (jeTag.length && jeTag[jeTag.length - 1].tag === tag) continue; // Zeitumstellung
+    const tag = new Date(Date.UTC(hy, hm - 1, hd - i)).toISOString().slice(0, 10);
     jeTag.push({ tag, n: proTag[tag] || 0 });
   }
-  while (jeTag.length < 30) jeTag.unshift({ tag: '', n: 0 });
 
   /* Handlungsbedarf */
   const hb = [];

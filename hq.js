@@ -226,10 +226,10 @@
         var v = obj[k], path = prefix ? prefix + '.' + k : k;
         if (v && typeof v === 'object' && !Array.isArray(v)) {
           if (depth >= 3) return;
-          out.push({ group: GROUPS[k] || k });
+          out.push({ group: (own(GROUPS, k) ? GROUPS[k] : k) });
           walk(v, path, depth + 1);
         } else {
-          out.push({ label: LABELS[path] || LABELS[k] || k, value: fmtVal(Array.isArray(v) ? v.join(', ') : v) });
+          out.push({ label: (own(LABELS, path) ? LABELS[path] : (own(LABELS, k) ? LABELS[k] : k)), value: fmtVal(Array.isArray(v) ? v.join(', ') : v) });
         }
       });
     }

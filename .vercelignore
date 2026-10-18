@@ -1,0 +1,3 @@
+# Nicht ausliefern: interne Doku und Werkzeugordner
+*.md
+.claude

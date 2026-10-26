@@ -63,6 +63,8 @@ const STANDARD = [
     text: 'Wir verarbeiten Ihre Daten ausschließlich zur Bearbeitung Ihres Mandats. Die vollständigen Datenschutzhinweise finden Sie unter scheidung-online.de/datenschutz.' }
 ];
 const MANDAT_DOKUMENTE = ['DOK.auftrag', 'DOK.widerruf', 'DOK.gebuehren', 'DOK.datenschutz'];
+/* Ersatztext im Testmodus (einstellungen.test.mandat_ohne_texte) für noch fehlende Mandatstexte */
+const TESTTEXT = 'TESTDOKUMENT – nicht rechtsverbindlich.\n\nDieser Text wird von der Kanzlei noch hinterlegt. Das Mandat wurde im Testmodus angeboten.';
 
 /* Standard + gespeicherte Änderungen */
 function zusammenfuehren(zeilen) {
@@ -116,4 +118,4 @@ function bloecke(text, werte) {
   return out;
 }
 
-module.exports = { STANDARD, PLATZHALTER, MANDAT_DOKUMENTE, laden, zusammenfuehren, unbekanntePlatzhalter, fuellen, bloecke };
+module.exports = { STANDARD, PLATZHALTER, MANDAT_DOKUMENTE, TESTTEXT, laden, zusammenfuehren, unbekanntePlatzhalter, fuellen, bloecke };

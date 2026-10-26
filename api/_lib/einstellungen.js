@@ -8,6 +8,8 @@ const STANDARD = {
   mail: { absender: process.env.MAIL_FROM || 'Kanzlei Janine D. Wagner <kanzlei@scheidung-online.de>', empfaenger_intern: process.env.MAIL_INTERN || '', termin_link: '' },
   ki: { aktiv: true, pseudonymisiert: true },
   erinnerungen: { erste_tage: 3, zweite_tage: 7 },
+  // Testbetrieb: Mandat ohne Widerrufsbelehrung/Gebührenhinweis anbieten (fehlende Texte werden als TESTDOKUMENT markiert)
+  test: { mandat_ohne_texte: false },
   kanzlei: {
     name: 'Rechtsanwältin Janine D. Wagner',
     anschrift: 'Schiffgraben 17 · 30159 Hannover',

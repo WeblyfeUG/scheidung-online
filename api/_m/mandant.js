@@ -52,6 +52,7 @@ async function mandatsTexte(store, a, req) {
   const dokumente = vorlagenLib.MANDAT_DOKUMENTE.map((id) => {
     const v = vorlagen.find((x) => x.id === id) || {};
     const text = vorlagenLib.fuellen(v.text || '', werte).trim();
+    if (!text && e.test.mandat_ohne_texte === true) return { id, titel: v.name, text: vorlagenLib.TESTTEXT, platzhalter: false, test: true };
     return { id, titel: v.name, text, platzhalter: !text };
   });
   const version = crypto.createHash('sha256').update(dokumente.map((d) => d.id + '\n' + d.text).join('\n\n')).digest('hex').slice(0, 12);

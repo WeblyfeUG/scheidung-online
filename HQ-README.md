@@ -53,7 +53,7 @@ Nebenzweige `erstgespraech`, `abgesagt`, `widerrufen`. Ab `unterschrieben` gilt 
 Ist bei einer Vorlage „automatisch“ ausgeschaltet (B5), entsteht nur ein Entwurf (`so_mails.status = geplant`), freizugeben in „Kommunikation“.
 Mailfehler blockieren nie den Statuswechsel (Status `fehler`, „Erneut senden“). Persönliche Links werden nach dem Versand im Protokoll maskiert.
 
-„Mandat anbieten“ bleibt gesperrt, bis **Widerrufsbelehrung** (`DOK.widerruf`) und **Gebührenhinweis** (`DOK.gebuehren`) in B5 gepflegt sind.
+„Mandat anbieten“ bleibt gesperrt, bis **Widerrufsbelehrung** (`DOK.widerruf`) und **Gebührenhinweis** (`DOK.gebuehren`) in B5 gepflegt sind. Zum Ausprobieren gibt es in B6 den **Testbetrieb** (`einstellungen.test.mandat_ohne_texte`, Standard aus): Dann ist „Mandat anbieten“ trotzdem möglich, fehlende Texte erscheinen im Mandat und im PDF als „TESTDOKUMENT – nicht rechtsverbindlich“, und das HQ zeigt an jeder Anfrage einen roten Hinweis. Vor echten Mandaten wieder ausschalten.
 
 ## API-Vertrag (alle Antworten JSON `{ ok, … }` bzw. `{ ok:false, error:'snake_case' }`)
 
@@ -129,6 +129,7 @@ CRON_SECRET=cron-geheimnis-1234567890 node tools/devserver.js 8742
 TEST_PORT=8742 TEST_MAILS=/tmp/mails TEST_STORE=/tmp/hq.json node tools/tests/api-test.js   # kompletter Ablauf über die API
 node tools/tests/unit.js                                                                   # KI (simuliert) + Erinnerungen
 TEST_PORT=8742 TEST_MAILS=/tmp/mails node tools/tests/einladung-test.js                    # Einladung, Anmeldung, Rechte, Sperren
+TEST_PORT=8742 TEST_MAILS=/tmp/mails node tools/tests/testmodus-test.js                    # Testbetrieb: Mandat ohne Pflichttexte
 ```
 
 `devserver.js` spielt Vercel nach (cleanUrls, Rewrites und Header inkl. CSP aus `vercel.json`, dynamische Routen `[route].js`).

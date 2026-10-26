@@ -506,6 +506,7 @@
           a.email ? h('span', null, ['· ', h('a', { href: 'mailto:' + a.email, text: a.email })]) : null, a.telefon ? h('span', null, ['· ', h('a', { href: 'tel:' + a.telefon.replace(/[^\d+]/g, ''), text: a.telefon })]) : null])]),
         aktionen
       ]),
+      d.mandat_freigabe.test ? h('div', { class: 'hinweis-rot', text: 'Testbetrieb aktiv: „' + d.mandat_freigabe.fehlend.join('“ und „') + '“ fehlen noch und werden im Mandat als TESTDOKUMENT angezeigt. Nur mit eigener Test-Adresse verwenden.' }) : null,
       gesperrt ? h('div', { class: 'hinweis' }, ['Mandat anbieten ist erst möglich, wenn die Texte „' + d.mandat_freigabe.fehlend.join('“ und „') + '“ gepflegt sind. ', h('a', { href: '#/vorlagen', text: 'Zu den Vorlagen' })]) : null,
       h('div', { class: 'zwei-spalten' }, [
         h('div', null, [
@@ -1162,6 +1163,7 @@
     ['antwortzeiten', 'Antwortzeiten', 'Zusagen in der Eingangsbestätigung (Platzhalter {{antwortzeit}}).', [['anfrage', 'Anfragen'], ['kosten', 'Kostenübersicht']]],
     ['mail', 'E-Mail', 'Absender der Mandanten-E-Mails, Empfänger interner Benachrichtigungen, Link für Terminbuchung (A1.3).', [['absender', 'Absender'], ['empfaenger_intern', 'Interner Empfänger'], ['termin_link', 'Link Terminbuchung']]],
     ['ki', 'KI-Einordnung', 'Neue Anfragen werden automatisch eingeordnet. Pseudonymisiert: Namen, E-Mail, Telefon, Straße werden vorher entfernt.', [['aktiv', 'KI-Einordnung aktiv', 'bool'], ['pseudonymisiert', 'Nur pseudonymisierte Daten', 'bool']]],
+    ['test', 'Testbetrieb', 'Nur zum Ausprobieren: „Mandat anbieten“ ist dann auch ohne Widerrufsbelehrung und Gebührenhinweis möglich. Fehlende Texte erscheinen im Mandat als „TESTDOKUMENT – nicht rechtsverbindlich“. Vor echten Mandaten wieder ausschalten.', [['mandat_ohne_texte', 'Mandat ohne Pflichttexte anbieten (Test)', 'bool']]],
     ['erinnerungen', 'Erinnerungen', 'Automatische Erinnerung (A1.4), wenn Unterschrift oder Fragebogen fehlen.', [['erste_tage', 'Erste Erinnerung nach … Tagen', 'zahl'], ['zweite_tage', 'Zweite Erinnerung nach … Tagen', 'zahl']]],
     ['kanzlei', 'Kanzlei', 'Fußzeile der E-Mails und Kontaktkarte im Mandanten-Bereich.', [['name', 'Name'], ['anschrift', 'Anschrift'], ['telefon', 'Telefon'], ['email', 'E-Mail'], ['ort', 'Ort']]]
   ];

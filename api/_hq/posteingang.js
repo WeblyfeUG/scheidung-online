@@ -11,6 +11,7 @@ const { STATUS, TYPEN, LISTE_LIMIT, tagBerlin, wochentagBerlin, plusTage } = req
 const { readBody, saeubern } = require('../_lib/http');
 const ablauf = require('../_lib/ablauf');
 const vorlagenLib = require('../_lib/vorlagen');
+const einstLib = require('../_lib/einstellungen');
 const kiLib = require('../_lib/ki');
 const uploadLib = require('../_lib/upload');
 
@@ -23,9 +24,10 @@ function datumGueltig(s) {
 
 /* Mandat darf erst angeboten werden, wenn Widerrufsbelehrung und Gebührenhinweis gepflegt sind */
 async function mandatFreigegeben(store) {
-  const v = await vorlagenLib.laden(store);
+  const [v, e] = await Promise.all([vorlagenLib.laden(store), einstLib.laden(store)]);
   const fehlend = vorlagenLib.MANDAT_DOKUMENTE.filter((id) => !String((v.find((x) => x.id === id) || {}).text || '').trim());
-  return { frei: !fehlend.length, fehlend: fehlend.map((id) => (v.find((x) => x.id === id) || {}).name || id) };
+  const test = !!fehlend.length && e.test.mandat_ohne_texte === true;
+  return { frei: !fehlend.length || test, test, fehlend: fehlend.map((id) => (v.find((x) => x.id === id) || {}).name || id) };
 }
 
 function zeile(a) {

@@ -1,4 +1,6 @@
-# Nicht ausliefern: interne Doku, Werkzeugordner, interne Prüflisten
+# Nicht ausliefern: interne Doku, Werkzeugordner, interne Prüflisten, Migrationen
 *.md
 .claude
 pruefliste-*.html
+tools
+supabase

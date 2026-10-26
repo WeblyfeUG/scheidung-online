@@ -7,6 +7,7 @@
    ============================================================ */
 const { readBody, saeubern } = require('../_lib/http');
 const auth = require('../_lib/auth');
+const benutzerLib = require('../_lib/benutzer');
 const vorlagenLib = require('../_lib/vorlagen');
 const einstLib = require('../_lib/einstellungen');
 const fs = require('fs');
@@ -28,13 +29,13 @@ function dokumentvorlagen() {
 }
 
 async function vorlagen(req, res, ctx) {
-  const { store, user } = ctx;
+  const { store, user, admin } = ctx;
   if (req.method === 'GET') {
-    res.status(200).json({ ok: true, vorlagen: await vorlagenLib.laden(store), platzhalter: vorlagenLib.PLATZHALTER, dokumentvorlagen: dokumentvorlagen(), admin: auth.istAdmin(user) });
+    res.status(200).json({ ok: true, vorlagen: await vorlagenLib.laden(store), platzhalter: vorlagenLib.PLATZHALTER, dokumentvorlagen: dokumentvorlagen(), admin });
     return;
   }
   if (req.method !== 'PUT') { fehler(res, 405, 'method_not_allowed'); return; }
-  if (!auth.istAdmin(user)) { fehler(res, 403, 'forbidden'); return; }
+  if (!admin) { fehler(res, 403, 'forbidden'); return; }
   const b = readBody(req);
   const std = b && vorlagenLib.STANDARD.find((v) => v.id === b.id);
   if (!std) { fehler(res, 400, 'invalid_template'); return; }
@@ -57,9 +58,13 @@ async function vorlagen(req, res, ctx) {
   res.status(200).json({ ok: true, vorlagen: await vorlagenLib.laden(store) });
 }
 
-function benutzerListe() {
-  return String(process.env.HQ_USERS || '').split(';').map((p) => p.split(':')[0].trim().toLowerCase()).filter(Boolean)
-    .map((name) => ({ name, rolle: auth.istAdmin(name) ? 'Admin' : 'Mitarbeit', zwei_faktor: auth.braucht2fa(name) }));
+/* Feste Zugänge (HQ_USERS) + eingeladene Benutzer (so_benutzer) */
+async function benutzerListe(store) {
+  const fest = String(process.env.HQ_USERS || '').split(';').map((p) => p.split(':')[0].trim().toLowerCase()).filter(Boolean)
+    .map((name) => ({ name, rolle: auth.istAdmin(name) ? 'Admin' : 'Mitarbeit', zwei_faktor: auth.braucht2fa(name), quelle: 'fest', status: 'aktiv' }));
+  let db = [];
+  try { db = await store.rows('so_benutzer', { order: 'created_at.asc', limit: 200 }); } catch (e) { console.error('[hq] Benutzerliste:', e.message); }
+  return fest.concat(db.map((b) => Object.assign(benutzerLib.oeffentlich(b), { name: b.name || b.email, quelle: 'einladung', zwei_faktor: false, rolle: b.rolle === 'admin' ? 'Admin' : 'Mitarbeit' })));
 }
 
 function integration() {
@@ -73,15 +78,15 @@ function integration() {
 }
 
 async function einstellungen(req, res, ctx) {
-  const { store, user } = ctx;
+  const { store, user, admin } = ctx;
   if (req.method === 'GET') {
     const rows = await store.rows('so_einstellungen', { limit: 50 }).catch(() => []);
     const stand = rows.map((r) => r.aktualisiert_am).filter(Boolean).sort().pop() || null;
-    res.status(200).json({ ok: true, einstellungen: einstLib.zusammenfuehren(rows), stand, benutzer: benutzerListe(), integration: integration(), admin: auth.istAdmin(user) });
+    res.status(200).json({ ok: true, einstellungen: einstLib.zusammenfuehren(rows), stand, benutzer: await benutzerListe(store), integration: integration(), admin });
     return;
   }
   if (req.method !== 'PUT') { fehler(res, 405, 'method_not_allowed'); return; }
-  if (!auth.istAdmin(user)) { fehler(res, 403, 'forbidden'); return; }
+  if (!admin) { fehler(res, 403, 'forbidden'); return; }
   const neu = einstLib.bereinigen(readBody(req));
   if (!Object.keys(neu).length) { fehler(res, 400, 'invalid_body'); return; }
   const zeit = new Date().toISOString();
@@ -95,4 +100,92 @@ async function einstellungen(req, res, ctx) {
   res.status(200).json({ ok: true, einstellungen: einstLib.zusammenfuehren(rows), stand: zeit });
 }
 
-module.exports = { vorlagen, einstellungen };
+/* ---------- Benutzer einladen und verwalten (nur Admin) ----------
+   GET    /api/hq/benutzer                 Liste
+   POST   /api/hq/benutzer                 {email, name, rolle}  → Einladung (Mail) · liefert link, falls Versand scheitert
+   PATCH  /api/hq/benutzer?id=             {aktiv?, rolle?, erneut_einladen?}
+   DELETE /api/hq/benutzer?id=             Zugang entfernen */
+async function benutzer(req, res, ctx) {
+  const { store, user, admin, url } = ctx;
+  if (req.method === 'GET') { res.status(200).json({ ok: true, benutzer: await benutzerListe(store), admin }); return; }
+  if (!admin) { fehler(res, 403, 'forbidden'); return; }
+  if (req.method === 'POST') {
+    const b = readBody(req) || {};
+    const email = benutzerLib.normalEmail(b.email);
+    if (!benutzerLib.emailOk(email)) { fehler(res, 400, 'invalid_email'); return; }
+    const rolle = benutzerLib.ROLLEN.includes(b.rolle) ? b.rolle : 'mitarbeit';
+    const name = saeubern(b.name || '').trim().slice(0, 80);
+    const vorhanden = await benutzerLib.finden(store, email);
+    if (vorhanden && vorhanden.passwort_hash && vorhanden.aktiv) { fehler(res, 409, 'already_exists'); return; }
+    const r = await benutzerLib.einladen(store, { email, name, rolle, von: user, req });
+    console.log(`[hq] ${user} hat ${email.replace(/^(.).*@/, '$1…@')} eingeladen (${rolle})`);
+    // Link nur zurückgeben, wenn die Mail nicht zugestellt werden konnte (zum manuellen Weitergeben)
+    res.status(200).json({ ok: true, benutzer: benutzerLib.oeffentlich(r.benutzer), mail: r.mail, link: r.mail.ok ? undefined : r.link });
+    return;
+  }
+  const id = url.searchParams.get('id') || '';
+  if (!/^\d{1,15}$/.test(id)) { fehler(res, 400, 'invalid_id'); return; }
+  const [b] = await store.rows('so_benutzer', { where: { id: Number(id) }, limit: 1 });
+  if (!b) { fehler(res, 404, 'not_found'); return; }
+  if (b.email === user && req.method !== 'PATCH') { fehler(res, 409, 'not_yourself'); return; }
+  if (req.method === 'PATCH') {
+    const body = readBody(req) || {};
+    if (body.erneut_einladen) {
+      const r = await benutzerLib.einladen(store, { email: b.email, von: user, req });
+      res.status(200).json({ ok: true, benutzer: benutzerLib.oeffentlich(r.benutzer), mail: r.mail, link: r.mail.ok ? undefined : r.link });
+      return;
+    }
+    if (b.email === user) { fehler(res, 409, 'not_yourself'); return; }
+    const patch = {};
+    if (typeof body.aktiv === 'boolean') patch.aktiv = body.aktiv;
+    if (benutzerLib.ROLLEN.includes(body.rolle)) patch.rolle = body.rolle;
+    if (!Object.keys(patch).length) { fehler(res, 400, 'invalid_body'); return; }
+    const [neu] = await store.update('so_benutzer', { id: b.id }, patch);
+    console.log(`[hq] ${user} hat Benutzer ${b.id} geändert: ${Object.keys(patch).join(', ')}`);
+    res.status(200).json({ ok: true, benutzer: benutzerLib.oeffentlich(neu) });
+    return;
+  }
+  if (req.method === 'DELETE') {
+    await store.remove('so_benutzer', { id: b.id });
+    console.log(`[hq] ${user} hat Benutzer ${b.id} entfernt`);
+    res.status(200).json({ ok: true });
+    return;
+  }
+  fehler(res, 405, 'method_not_allowed');
+}
+
+/* Öffentlich (ohne Sitzung): Einladung prüfen / Passwort festlegen
+   GET  /api/hq/einladung?token=   → {email, name}
+   POST /api/hq/einladung          {token, passwort} */
+const einladungVersuche = new Map();
+async function einladung(req, res, ctx) {
+  const { store } = ctx;
+  if (!store) { fehler(res, 503, 'store_not_configured'); return; }
+  const ip = require('../_lib/http').clientIp(req);
+  const jetzt = Date.now();
+  const v = (einladungVersuche.get(ip) || []).filter((t) => jetzt - t < 60000);
+  v.push(jetzt); einladungVersuche.set(ip, v);
+  if (v.length > 20) { fehler(res, 429, 'rate_limited'); return; }
+  try {
+    if (req.method === 'GET') {
+      const r = await benutzerLib.einladungPruefen(store, ctx.url.searchParams.get('token') || '');
+      if (r.fehler) { fehler(res, r.fehler === 'link_expired' ? 410 : 404, r.fehler); return; }
+      res.status(200).json({ ok: true, email: r.benutzer.email, name: r.benutzer.name, passwort_min: benutzerLib.PW_MIN });
+      return;
+    }
+    if (req.method === 'POST') {
+      const b = readBody(req) || {};
+      const r = await benutzerLib.einladungAnnehmen(store, b.token, b.passwort);
+      if (r.fehler) { fehler(res, /^link_/.test(r.fehler) ? (r.fehler === 'link_expired' ? 410 : 404) : 400, r.fehler); return; }
+      console.log('[hq] Einladung angenommen: ' + r.benutzer.email.replace(/^(.).*@/, '$1…@'));
+      res.status(200).json({ ok: true, email: r.benutzer.email });
+      return;
+    }
+    fehler(res, 405, 'method_not_allowed');
+  } catch (e) {
+    console.error('[hq/einladung]', e.message);
+    fehler(res, 502, 'store_failed');
+  }
+}
+
+module.exports = { vorlagen, einstellungen, benutzer, einladung };

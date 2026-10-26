@@ -385,3 +385,6 @@ button.ph:hover { background: var(--warm); }
 .karte > label + label, .karte > .feld-raster + p { margin-top: 12px; }
 @media (max-width: 860px) { .liste-zeile .ki-leer { display: none; } .filter select { flex: 1 1 140px; min-width: 0; } }
 .vorschau-box + p { margin-top: 8px; }
+.team-aktionen { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: 13px; }
+.h3.abstand-oben, .karte h3.abstand-oben { margin-top: 22px; }
+.karte .hinweis input { margin: 6px 0; }

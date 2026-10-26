@@ -198,20 +198,38 @@
   }
 
   /* ===================== 7 Login (B1) ===================== */
-  var loginSchritt = 1;
-  function loginZeigen(schritt) {
+  var loginSchritt = 1, einladungToken = '';
+  function loginZeigen(schritt, opts) {
     loginSchritt = schritt || 1;
+    opts = opts || {};
     $('boot').hidden = true;
     $('app').hidden = true;
     $('login').hidden = false;
     $('login-schritt1').hidden = loginSchritt !== 1;
     $('login-schritt2').hidden = loginSchritt !== 2;
+    $('login-schritt3').hidden = loginSchritt !== 3;
     $('login-zurueck').hidden = loginSchritt !== 2;
-    $('login-titel').textContent = loginSchritt === 1 ? 'Anmelden' : 'Zwei-Faktor-Code';
-    $('login-text').textContent = loginSchritt === 1 ? 'Interner Bereich der Kanzlei Janine D. Wagner. Zugang nur für berechtigte Personen.' : 'Bitte geben Sie den sechsstelligen Code aus Ihrer Authenticator-App ein.';
-    $('login-btn').textContent = loginSchritt === 1 ? 'Weiter' : 'Anmelden';
+    $('login-titel').textContent = { 1: 'Anmelden', 2: 'Zwei-Faktor-Code', 3: 'Passwort festlegen' }[loginSchritt];
+    $('login-text').textContent = opts.text || { 1: 'Interner Bereich der Kanzlei Janine D. Wagner. Zugang nur für berechtigte Personen.', 2: 'Bitte geben Sie den sechsstelligen Code aus Ihrer Authenticator-App ein.', 3: '' }[loginSchritt];
+    $('login-btn').textContent = { 1: 'Weiter', 2: 'Anmelden', 3: 'Passwort speichern' }[loginSchritt];
+    $('login-btn').hidden = !!opts.ohneButton;
     $('login-err').hidden = true;
-    (loginSchritt === 1 ? $('login-name') : $('login-code')).focus();
+    $('login-ok').hidden = !opts.ok;
+    $('login-ok').textContent = opts.ok || '';
+    if (opts.email) $('login-name').value = opts.email;
+    (loginSchritt === 1 ? (opts.email ? $('login-pw') : $('login-name')) : loginSchritt === 2 ? $('login-code') : $('einl-pw1')).focus();
+  }
+  /* Einladungslink #/einladung/<token>: Passwort selbst festlegen */
+  function einladungZeigen(token) {
+    einladungToken = token;
+    history.replaceState(null, '', location.pathname);
+    api('GET', 'einladung', 'token=' + encodeURIComponent(token)).then(function (r) {
+      if (r.ok) { loginZeigen(3, { text: 'Willkommen' + (r.name ? ', ' + r.name : '') + '! Legen Sie hier Ihr persönliches Passwort für ' + r.email + ' fest.' }); return; }
+      loginZeigen(3, { ohneButton: true, text: r.error === 'link_expired' ? 'Dieser Einladungslink ist abgelaufen. Bitte lassen Sie sich von der Kanzlei erneut einladen.' : 'Dieser Einladungslink ist ungültig oder wurde bereits verwendet. Falls Sie Ihr Passwort schon festgelegt haben, melden Sie sich einfach an.' });
+      $('login-schritt3').hidden = true;
+      $('login-zurueck').hidden = false;
+      $('login-neu').textContent = 'Zur Anmeldung';
+    });
   }
   function sitzungAbgelaufen() { if (!$('login').hidden) return; loginZeigen(1); $('login-err').hidden = false; $('login-err').textContent = 'Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an.'; }
   $('pw-toggle').addEventListener('click', function () {
@@ -220,10 +238,23 @@
     this.setAttribute('aria-pressed', String(an));
     this.setAttribute('aria-label', an ? 'Passwort verbergen' : 'Passwort anzeigen');
   });
-  $('login-neu').addEventListener('click', function () { loginZeigen(1); });
+  $('login-neu').addEventListener('click', function () { $('login-neu').textContent = 'Anderes Konto verwenden'; loginZeigen(1); });
   $('login-form').addEventListener('submit', function (e) {
     e.preventDefault();
     var err = $('login-err'), btn = $('login-btn');
+    if (loginSchritt === 3) {
+      var p1 = $('einl-pw1').value, p2 = $('einl-pw2').value;
+      if (p1.length < 10) { err.hidden = false; err.textContent = 'Das Passwort muss mindestens 10 Zeichen lang sein.'; return; }
+      if (p1 !== p2) { err.hidden = false; err.textContent = 'Die beiden Passwörter stimmen nicht überein.'; return; }
+      btn.disabled = true;
+      api('POST', 'einladung', '', { token: einladungToken, passwort: p1 }).then(function (r) {
+        btn.disabled = false;
+        if (r.ok) { $('einl-pw1').value = ''; $('einl-pw2').value = ''; loginZeigen(1, { email: r.email, ok: 'Passwort gespeichert. Sie können sich jetzt mit Ihrer E-Mail-Adresse anmelden.' }); return; }
+        err.hidden = false;
+        err.textContent = { link_expired: 'Der Einladungslink ist abgelaufen. Bitte erneut einladen lassen.', link_invalid: 'Der Einladungslink ist ungültig oder wurde bereits verwendet.', password_too_short: 'Das Passwort muss mindestens 10 Zeichen lang sein.', rate_limited: 'Zu viele Versuche. Bitte kurz warten.' }[r.error] || 'Speichern fehlgeschlagen. Bitte erneut versuchen.';
+      });
+      return;
+    }
     var body = loginSchritt === 1 ? { name: $('login-name').value.trim(), passwort: $('login-pw').value } : { code: $('login-code').value.replace(/\s/g, '') };
     if (loginSchritt === 1 && (!body.name || !body.passwort)) { err.hidden = false; err.textContent = 'Bitte E-Mail bzw. Benutzername und Passwort eingeben.'; return; }
     if (loginSchritt === 2 && !/^\d{6}$/.test(body.code)) { err.hidden = false; err.textContent = 'Bitte den sechsstelligen Code eingeben.'; return; }
@@ -244,7 +275,7 @@
 
   function start(r) {
     S.user = r.user; S.admin = !!r.admin;
-    $('user-name').textContent = r.user;
+    $('user-name').textContent = r.name || r.user;
     $('boot').hidden = true; $('login').hidden = true; $('app').hidden = false;
     route();
   }
@@ -264,6 +295,8 @@
   function navigiere(hash) { if (location.hash === hash) route(); else location.hash = hash; }
 
   function route() {
+    var einl = /^#\/einladung\/([A-Za-z0-9_-]{40,60})$/.exec(location.hash);
+    if (einl) { clearInterval(S.timer); einladungZeigen(einl[1]); return; }
     letzterHash = location.hash;
     var teile = (location.hash || '#/posteingang').replace(/^#\/?/, '').split('/');
     var modul = teile[0] || 'posteingang';
@@ -1132,6 +1165,85 @@
     ['erinnerungen', 'Erinnerungen', 'Automatische Erinnerung (A1.4), wenn Unterschrift oder Fragebogen fehlen.', [['erste_tage', 'Erste Erinnerung nach … Tagen', 'zahl'], ['zweite_tage', 'Zweite Erinnerung nach … Tagen', 'zahl']]],
     ['kanzlei', 'Kanzlei', 'Fußzeile der E-Mails und Kontaktkarte im Mandanten-Bereich.', [['name', 'Name'], ['anschrift', 'Anschrift'], ['telefon', 'Telefon'], ['email', 'E-Mail'], ['ort', 'Ort']]]
   ];
+  /* B6 · Nutzer und Team: feste Zugänge (Vercel) + eingeladene Personen */
+  var STATUS_BENUTZER = { aktiv: ['aktiv', 'int-aktiv'], eingeladen: ['eingeladen – Passwort noch nicht gesetzt', 'int-test'], gesperrt: ['gesperrt', 'int-aus'] };
+  function teamKarte(r) {
+    var box = h('section', { class: 'karte' });
+    var linkBox = h('div');
+    function linkAnzeigen(x, email) {
+      leeren(linkBox);
+      if (x.mail && x.mail.ok) { linkBox.appendChild(h('p', { class: 'hinweis-ok', text: 'Einladung an ' + email + ' gesendet.' })); return; }
+      var feld = h('input', { readonly: true, value: x.link || '', 'aria-label': 'Einladungslink' });
+      linkBox.appendChild(h('div', { class: 'hinweis' }, [
+        h('p', { text: 'Die E-Mail an ' + email + ' konnte nicht zugestellt werden (' + ((x.mail && x.mail.fehler) || 'unbekannt') + '). Solange in Resend keine eigene Domain bestätigt ist, gehen Mails nur an die Konto-Adresse. Bitte den Link selbst an ' + email + ' weitergeben (7 Tage gültig):' }),
+        feld,
+        h('div', { class: 'zeile' }, h('button', { type: 'button', class: 'btn btn-zweit btn-klein', text: 'Link kopieren', onclick: function () {
+          feld.select();
+          (navigator.clipboard ? navigator.clipboard.writeText(feld.value) : Promise.reject()).then(function () { toast('Link kopiert.'); }, function () { document.execCommand('copy'); toast('Link kopiert.'); });
+        } }))
+      ]));
+    }
+    function aktion(b, body, okText) {
+      api('PATCH', 'benutzer', 'id=' + b.id, body).then(function (x) {
+        if (!x.ok) { toast(x.error === 'not_yourself' ? 'Den eigenen Zugang kann man nicht ändern.' : fehlerText(x), 'fehler'); return; }
+        if (body.erneut_einladen) { linkAnzeigen(x, b.email); toast('Neue Einladung erstellt.'); } else toast(okText);
+        teamLaden();
+      });
+    }
+    var tbody = h('tbody');
+    function zeilen(liste) {
+      leeren(tbody);
+      liste.forEach(function (b) {
+        var st = STATUS_BENUTZER[b.status] || [b.status, ''];
+        var knoepfe = [];
+        if (r.admin && b.quelle === 'einladung' && b.email !== S.user) {
+          if (b.status !== 'aktiv') knoepfe.push(h('button', { type: 'button', class: 'link', text: 'Einladung erneut senden', onclick: function () { aktion(b, { erneut_einladen: true }); } }));
+          if (b.status === 'aktiv') knoepfe.push(h('button', { type: 'button', class: 'link', text: 'Passwort zurücksetzen', onclick: function () { aktion(b, { erneut_einladen: true }); } }));
+          knoepfe.push(h('button', { type: 'button', class: 'link', text: b.status === 'gesperrt' ? 'Entsperren' : 'Sperren', onclick: function () { aktion(b, { aktiv: b.status === 'gesperrt' }, b.status === 'gesperrt' ? 'Zugang entsperrt.' : 'Zugang gesperrt.'); } }));
+          knoepfe.push(h('button', { type: 'button', class: 'link', text: b.rolle === 'Admin' ? 'zu Mitarbeit' : 'zu Admin', onclick: function () { aktion(b, { rolle: b.rolle === 'Admin' ? 'mitarbeit' : 'admin' }, 'Rolle geändert.'); } }));
+          knoepfe.push(h('button', { type: 'button', class: 'link rot', text: 'Entfernen', onclick: function () {
+            modalOeffnen({ titel: 'Zugang entfernen?', sub: b.email + ' kann sich danach nicht mehr anmelden.', okText: 'Entfernen', gefahr: true, onOk: function () {
+              return api('DELETE', 'benutzer', 'id=' + b.id).then(function (x) { if (!x.ok) { toast(fehlerText(x), 'fehler'); return false; } toast('Zugang entfernt.'); teamLaden(); });
+            } });
+          } }));
+        }
+        tbody.appendChild(h('tr', null, [
+          h('td', null, [h('b', { text: b.name }), b.email && b.email !== b.name ? h('div', { class: 'muted small', text: b.email }) : null, b.quelle === 'fest' ? h('div', { class: 'muted small', text: 'fester Zugang (Vercel)' }) : null]),
+          h('td', { text: b.rolle }),
+          h('td', { class: st[1], text: st[0] + (b.quelle === 'fest' ? (b.zwei_faktor ? ' · 2FA' : '') : '') }),
+          h('td', null, knoepfe.length ? h('div', { class: 'team-aktionen' }, knoepfe) : null)
+        ]));
+      });
+    }
+    function teamLaden() { api('GET', 'benutzer').then(function (x) { if (x.ok) zeilen(x.benutzer); }); }
+    zeilen(r.benutzer);
+    var email = h('input', { type: 'email', placeholder: 'name@kanzlei.de', autocomplete: 'off', 'aria-label': 'E-Mail-Adresse' });
+    var name = h('input', { placeholder: 'z. B. Janine D. Wagner', maxlength: '80', 'aria-label': 'Name' });
+    var rolle = h('select', { 'aria-label': 'Rolle' }, [h('option', { value: 'mitarbeit', text: 'Mitarbeit' }), h('option', { value: 'admin', text: 'Admin (Vorlagen, Einstellungen, Team)' })]);
+    var senden = h('button', { type: 'button', class: 'btn btn-primaer', text: 'Einladung senden', onclick: function () {
+      var e = email.value.trim();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(e)) { toast('Bitte eine gültige E-Mail-Adresse eingeben.', 'fehler'); email.focus(); return; }
+      senden.disabled = true;
+      api('POST', 'benutzer', '', { email: e, name: name.value.trim(), rolle: rolle.value }).then(function (x) {
+        senden.disabled = false;
+        if (!x.ok) { toast(x.error === 'already_exists' ? 'Diese Person hat bereits einen aktiven Zugang.' : fehlerText(x), 'fehler'); return; }
+        linkAnzeigen(x, e);
+        email.value = ''; name.value = '';
+        teamLaden();
+      });
+    } });
+    box.appendChild(h('h3', { text: 'Nutzer und Team' }));
+    box.appendChild(h('table', { class: 'tabelle' }, [h('thead', null, h('tr', null, [h('th', { text: 'Person' }), h('th', { text: 'Rolle' }), h('th', { text: 'Status' }), h('th', { text: '' })])), tbody]));
+    if (r.admin) {
+      box.appendChild(h('h3', { class: 'abstand-oben', text: 'Person einladen' }));
+      box.appendChild(h('p', { class: 'muted small', text: 'Die Person erhält eine E-Mail mit einem persönlichen Link (7 Tage gültig), legt ihr Passwort selbst fest und meldet sich danach mit ihrer E-Mail-Adresse an.' }));
+      box.appendChild(h('div', { class: 'einst-raster' }, [h('label', null, ['E-Mail-Adresse', email]), h('label', null, ['Name (optional)', name]), h('label', null, ['Rolle', rolle])]));
+      box.appendChild(h('div', { class: 'zeile' }, senden));
+      box.appendChild(linkBox);
+    } else box.appendChild(h('p', { class: 'muted small', text: 'Einladen und Verwalten nur für Admins.' }));
+    return box;
+  }
+
   function einstellungenZeigen() {
     leeren(main);
     main.appendChild(skeleton());
@@ -1154,8 +1266,7 @@
       var INT = { aktiv: ['aktiv', 'int-aktiv'], testmodus: ['Testmodus (nur Protokoll)', 'int-test'], nicht_eingerichtet: ['nicht eingerichtet', 'int-aus'], lokal: ['lokale Datei', 'int-test'], supabase: ['Supabase', 'int-aktiv'] };
       main.appendChild(h('section', { class: 'einst', 'aria-label': 'Einstellungen' }, [h('h1', { class: 'vh', text: 'Einstellungen' }),
         r.admin ? null : h('div', { class: 'hinweis', text: 'Nur Admins können Einstellungen ändern.' })].concat(gruppen).concat([
-        h('section', { class: 'karte' }, [h('h3', { text: 'Nutzer und Team' }), h('p', { class: 'muted small', text: 'Benutzer, Passwörter und Zwei-Faktor-Geheimnisse werden in Vercel gepflegt (HQ_USERS = name:passwort:BASE32-Geheimnis; HQ_ADMINS = Admin-Namen). Das Geheimnis in einer Authenticator-App (z. B. Google Authenticator) als „Schlüssel eingeben“ hinterlegen.' }),
-          h('table', { class: 'tabelle' }, [h('thead', null, h('tr', null, [h('th', { text: 'Benutzer' }), h('th', { text: 'Rolle' }), h('th', { text: 'Zwei-Faktor' })])), h('tbody', null, r.benutzer.map(function (b) { return h('tr', null, [h('td', { text: b.name }), h('td', { text: b.rolle }), h('td', { class: b.zwei_faktor ? 'int-aktiv' : 'int-aus', text: b.zwei_faktor ? 'eingerichtet' : 'nicht eingerichtet' })]); }))])]),
+        teamKarte(r),
         h('section', { class: 'karte' }, [h('h3', { text: 'Anbindungen' }), h('table', { class: 'tabelle' }, h('tbody', null, [['E-Mail-Versand', r.integration.mail], ['KI (Anthropic)', r.integration.ki], ['Tägliche Erinnerungen', r.integration.cron], ['Datenbank', r.integration.speicher]].map(function (x) {
           var s = INT[x[1]] || [x[1], ''];
           return h('tr', null, [h('td', { text: x[0] }), h('td', { class: s[1], text: s[0] })]);
@@ -1172,6 +1283,8 @@
 
   /* ===================== 15 Start ===================== */
   function boot() {
+    var einl = /^#\/einladung\/([A-Za-z0-9_-]{40,60})$/.exec(location.hash);
+    if (einl) { einladungZeigen(einl[1]); return; }
     api('GET', 'login').then(function (r) {
       if (r.ok) { start(r); return; }
       if (r.status === 401) { loginZeigen(1); return; }

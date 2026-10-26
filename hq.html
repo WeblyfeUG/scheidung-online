@@ -41,6 +41,13 @@
         </button>
       </div>
     </div>
+    <div id="login-schritt3" hidden>
+      <label for="einl-pw1">Neues Passwort (mindestens 10 Zeichen)</label>
+      <input id="einl-pw1" type="password" autocomplete="new-password" minlength="10" />
+      <label for="einl-pw2">Passwort wiederholen</label>
+      <input id="einl-pw2" type="password" autocomplete="new-password" minlength="10" />
+    </div>
+    <p id="login-ok" class="ok-text" role="status" hidden></p>
     <div id="login-schritt2" hidden>
       <label for="login-code">Sechsstelliger Code</label>
       <input id="login-code" class="code-feld" inputmode="numeric" autocomplete="one-time-code" maxlength="7" placeholder="000 000" />

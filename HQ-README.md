@@ -25,6 +25,7 @@ Abschluss — mit E-Mails an die Mandantin/den Mandanten an jeder Stufe.
 | `api/_lib/pdf.js` | PDF der unterschriebenen Mandatsdokumente (`pdf-lib`, einzige npm-Abhängigkeit). |
 | `api/_lib/ki.js` | KI-Einordnung über die Anthropic Messages API (JSON-Schema, pseudonymisiert, abschaltbar). |
 | `api/_lib/upload.js` | Uploads in Teilen ≤ 3 MB (Vercel-Limit 4,5 MB je Request), max. 10 MB, Typprüfung per Magic Bytes. |
+| `api/_lib/benutzer.js` | Eingeladene HQ-Benutzer (`so_benutzer`): Einladung per E-Mail (Link 7 Tage, nur Hash gespeichert), Passwort selbst festlegen (scrypt), Anmeldung mit E-Mail, Sperren/Entfernen wirkt sofort. |
 | `api/_lib/auth.js` | `HQ_USERS`, HMAC-Sitzung (`HQ_SECRET`, Cookie `so_hq`, 12 h), TOTP (RFC 6238) mit Vor-Cookie (5 Min), Rolle Admin (`HQ_ADMINS`). |
 | `supabase/migrations/2026-10-automatisierung.sql` | Migration (idempotent). Nicht deployt (`.vercelignore`). |
 | `tools/devserver.js`, `tools/tests/` | Lokaler Vercel-Nachbau und Tests. Nicht deployt. |
@@ -72,6 +73,8 @@ HQ (`/api/hq/*`, Cookie-Sitzung; Änderungen an Vorlagen/Einstellungen nur Admin
 | `GET antrag?id=` · `GET dokument?id=&typ=scheidungsantrag\|vollmacht` | Vorschau + Warnungen · Word (`X-Offene-Felder`) |
 | `POST/DELETE termine?id=` | `{datum, uhrzeit, ort, art}` · `&termin=` |
 | `GET/POST mails?id=` · `POST mails-erneut?mail=` | Liste · `{vorlage, text?, an?, anhaenge?, persoenlicher_text?, vorschau?}` · Entwurf/Fehler erneut senden |
+| `GET/POST/PATCH/DELETE benutzer` | Team: Liste · einladen `{email, name, rolle}` (liefert `link`, falls die Mail nicht zugestellt werden konnte) · `{aktiv, rolle, erneut_einladen}` · entfernen (nur Admin) |
+| `GET/POST einladung` (ohne Sitzung) | Einladung prüfen `?token=` · Passwort festlegen `{token, passwort}` (min. 10 Zeichen) |
 | `GET/PUT vorlagen` · `GET/PUT einstellungen` | B5 (unbekannte Platzhalter → `400 unknown_placeholders`) · B6 |
 
 Mandant (`/api/m/*?token=`): `GET/POST mandat` (409 `already_signed`), `GET/PATCH/POST fragebogen` (`{schritt, daten, pruefen?}`),
@@ -98,6 +101,14 @@ Zwei-Faktor einrichten: Geheimnis erzeugen mit
 `node -e "const a='ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';console.log(Array.from(require('crypto').randomBytes(32),b=>a[b%32]).join(''))"`,
 als drittes Feld in `HQ_USERS` eintragen und in der Authenticator-App unter „Schlüssel eingeben“ (zeitbasiert) hinterlegen.
 
+## Team einladen
+
+HQ → Einstellungen → „Nutzer und Team“ → E-Mail, Name, Rolle → „Einladung senden“. Die Person bekommt eine E-Mail mit einem Link
+(`/hq#/einladung/<token>`, 7 Tage gültig), legt ihr Passwort selbst fest und meldet sich mit ihrer E-Mail-Adresse an.
+Kann die Mail nicht zugestellt werden (z. B. Resend ohne bestätigte Domain → nur Zustellung an die Konto-Adresse), zeigt das HQ
+den Link zum Kopieren an. „Passwort zurücksetzen“ = neue Einladung. Admins: Vorlagen, Einstellungen, Team; Mitarbeit: alles andere.
+Feste Zugänge aus `HQ_USERS` bleiben zusätzlich bestehen. Migration: `supabase/migrations/2026-10-benutzer.sql`.
+
 ## Migration
 
 `supabase/migrations/2026-10-automatisierung.sql` (idempotent, lokal gegen eine Kopie des Produktions-Schemas zweimal erfolgreich ausgeführt):
@@ -117,6 +128,7 @@ CRON_SECRET=cron-geheimnis-1234567890 node tools/devserver.js 8742
 # zweites Terminal
 TEST_PORT=8742 TEST_MAILS=/tmp/mails TEST_STORE=/tmp/hq.json node tools/tests/api-test.js   # kompletter Ablauf über die API
 node tools/tests/unit.js                                                                   # KI (simuliert) + Erinnerungen
+TEST_PORT=8742 TEST_MAILS=/tmp/mails node tools/tests/einladung-test.js                    # Einladung, Anmeldung, Rechte, Sperren
 ```
 
 `devserver.js` spielt Vercel nach (cleanUrls, Rewrites und Header inkl. CSP aus `vercel.json`, dynamische Routen `[route].js`).

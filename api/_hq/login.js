@@ -6,7 +6,8 @@
    In Produktion persistent in Supabase (so_login_versuche), lokal nur im Speicher der Instanz. */
 const auth = require('../_lib/auth');
 const { getStore } = require('../_lib/store');
-const { readBody, clientIp, cookies } = require('../_lib/http');
+const { readBody, clientIp } = require('../_lib/http');
+const benutzerLib = require('../_lib/benutzer');
 
 const fails = new Map();
 const MAX_FAILS = 6;
@@ -16,8 +17,9 @@ module.exports = async (req, res) => {
   if (!auth.configured()) { res.status(503).json({ ok: false, error: 'hq_not_configured' }); return; }
 
   if (req.method === 'GET') {
-    const s = auth.verifyToken(cookies(req)[auth.COOKIE]);
-    res.status(s ? 200 : 401).json(s ? { ok: true, user: s.user, exp: s.exp, admin: auth.istAdmin(s.user) } : { ok: false, error: 'unauthorized' });
+    let s = null;
+    try { s = await auth.sitzung(req, getStore()); } catch (e) { console.error('[hq/login] Sitzung:', e.message); }
+    res.status(s ? 200 : 401).json(s ? { ok: true, user: s.user, name: s.name || '', exp: s.exp, admin: s.admin } : { ok: false, error: 'unauthorized' });
     return;
   }
   if (req.method === 'DELETE') { auth.clearSession(res); res.status(200).json({ ok: true }); return; }
@@ -45,11 +47,11 @@ module.exports = async (req, res) => {
     await new Promise((r) => setTimeout(r, 600));
     res.status(status).json({ ok: false, error });
   };
-  const erfolg = async (user) => {
+  const erfolg = async (user, admin, anzeigename) => {
     fails.delete(ip);
     if (persistent) { try { await store.loginErfolg(ip); } catch (e) { console.error('[hq/login] Zähler nicht zurückgesetzt:', e.message); } }
     auth.setSessionOhnePre(res, user);
-    res.status(200).json({ ok: true, user, admin: auth.istAdmin(user) });
+    res.status(200).json({ ok: true, user, name: anzeigename || '', admin: admin === undefined ? auth.istAdmin(user) : admin });
   };
 
   if (codeSchritt) {
@@ -59,7 +61,13 @@ module.exports = async (req, res) => {
     return;
   }
 
-  // Login-Name: Benutzername oder E-Mail-Adresse (Teil vor dem @ als Name, wenn so konfiguriert)
+  // Eingeladene Benutzer (so_benutzer) melden sich mit ihrer E-Mail-Adresse an
+  if (name.includes('@') && store) {
+    let db = null;
+    try { db = await benutzerLib.anmelden(store, name, b.passwort); } catch (e) { console.error('[hq/login] Benutzer:', e.message); }
+    if (db) { await erfolg(db.email, db.rolle === 'admin', db.name); return; }
+  }
+  // Feste Zugänge (HQ_USERS): Benutzername oder E-Mail-Adresse (Teil vor dem @ als Name)
   let user = auth.login(name, b.passwort);
   if (!user && name.includes('@')) user = auth.login(name.split('@')[0], b.passwort);
   if (!user) { await fehlschlag('invalid_login'); return; }

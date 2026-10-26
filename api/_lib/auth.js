@@ -107,6 +107,8 @@ function verifyToken(token, art = 's') {
   try {
     const data = JSON.parse(Buffer.from(payload, 'base64url').toString('utf8'));
     if (!data.u || !data.exp || data.exp < Date.now() || (data.t || 's') !== art) return null;
+    // DB-Benutzer (E-Mail) werden asynchron in sitzung() gegen so_benutzer geprüft
+    if (String(data.u).includes('@')) return { user: data.u, exp: data.exp, db: true };
     if (!users().has(data.u)) return null;
     return { user: data.u, exp: data.exp };
   } catch (e) {
@@ -154,6 +156,16 @@ function setSessionOhnePre(res, user) {
   res.setHeader('Set-Cookie', [cookieHeader(issueToken(user), Math.floor(SESSION_MS / 1000)), preCookieHeader('', 0)]);
 }
 
+/* Sitzung inkl. DB-Benutzer: { user, admin, exp } oder null (gesperrt/entfernt → null) */
+async function sitzung(req, store) {
+  const s = verifyToken(cookies(req)[COOKIE]);
+  if (!s) return null;
+  if (!s.db) return { user: s.user, exp: s.exp, admin: istAdmin(s.user) };
+  if (!store) return null;
+  const b = await require('./benutzer').sitzungsBenutzer(store, s.user);
+  return b ? { user: b.email, exp: s.exp, admin: b.rolle === 'admin', name: b.name } : null;
+}
+
 /* Liefert den eingeloggten Benutzer oder beantwortet die Anfrage mit 401. */
 function requireUser(req, res) {
   if (!configured()) {
@@ -168,4 +180,4 @@ function requireUser(req, res) {
   return session.user;
 }
 
-module.exports = { configured, login, setSession, setSessionOhnePre, clearSession, requireUser, verifyToken, COOKIE, istAdmin, braucht2fa, totpPruefen, totp, setPre, preUser };
+module.exports = { sitzung, configured, login, setSession, setSessionOhnePre, clearSession, requireUser, verifyToken, COOKIE, istAdmin, braucht2fa, totpPruefen, totp, setPre, preUser };

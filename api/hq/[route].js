@@ -4,7 +4,7 @@
    Handler: api/_hq/*.js · API-Vertrag: HQ-README.md
    ============================================================ */
 const { getStore } = require('../_lib/store');
-const { requireUser } = require('../_lib/auth');
+const auth = require('../_lib/auth');
 const { noStore } = require('../_lib/http');
 const login = require('../_hq/login');
 const posteingang = require('../_hq/posteingang');
@@ -26,7 +26,8 @@ const ROUTEN = {
   mails: akte.mails,
   'mails-erneut': akte.mailsErneut,
   vorlagen: admin.vorlagen,
-  einstellungen: admin.einstellungen
+  einstellungen: admin.einstellungen,
+  benutzer: admin.benutzer
 };
 
 module.exports = async (req, res) => {
@@ -34,14 +35,18 @@ module.exports = async (req, res) => {
   const url = new URL(req.url, 'http://x');
   const route = (req.query && req.query.route) || url.pathname.split('/').filter(Boolean).pop();
   if (route === 'login') { await login(req, res); return; }
+  if (route === 'einladung') { await admin.einladung(req, res, { store: getStore(), url, req }); return; }
   const handler = Object.prototype.hasOwnProperty.call(ROUTEN, route) ? ROUTEN[route] : null;
   if (!handler) { res.status(404).json({ ok: false, error: 'not_found' }); return; }
-  const user = requireUser(req, res);
-  if (!user) return;
+  if (!auth.configured()) { res.status(503).json({ ok: false, error: 'hq_not_configured' }); return; }
   const store = getStore();
   if (!store) { res.status(503).json({ ok: false, error: 'store_not_configured' }); return; }
+  let s = null;
+  try { s = await auth.sitzung(req, store); } catch (e) { console.error('[hq] Sitzung:', e.message); }
+  if (!s) { res.status(401).json({ ok: false, error: 'unauthorized' }); return; }
+  const user = s.user;
   try {
-    await handler(req, res, { store, user, url, req });
+    await handler(req, res, { store, user, admin: s.admin, url, req });
   } catch (e) {
     console.error('[hq/' + route + ']', e.message);
     if (!res.headersSent) res.status(502).json({ ok: false, error: 'store_failed' });

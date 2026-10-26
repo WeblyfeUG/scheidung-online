@@ -29,7 +29,8 @@ const TABELLEN = {
   so_termine: { key: 'id', serial: true },
   so_vorlagen: { key: 'id' },
   so_einstellungen: { key: 'key' },
-  so_loeschungen: { key: 'id', serial: true }
+  so_loeschungen: { key: 'id', serial: true },
+  so_benutzer: { key: 'id', serial: true, unique: 'email' }
 };
 
 /* ---------- Zeit (Europe/Berlin) ---------- */

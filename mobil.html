@@ -10,6 +10,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="v2-mobile.css?v=20261013a" />
+<link rel="stylesheet" href="v2-1.css">
 </head>
 <body class="has-stickybar">
 <a href="#start" class="skip-link">Zum Inhalt springen</a>
@@ -17,7 +18,7 @@
 <header class="m-header" data-screen-label="Header">
     <div class="m-header-inner">
       <a href="#start" class="m-brand" aria-label="Zur Startseite — Scheidung Online Direkt">
-        <img src="assets/logo-scheidung-online.png" alt="Scheidung Online Direkt · Fachanwältin für Familienrecht" class="m-brand-logo" />
+        <img src="assets/logo-scheidung-online.png" width="1878" height="368" alt="Scheidung Online Direkt · Fachanwältin für Familienrecht" class="m-brand-logo" >
         <span class="m-brand-mark" aria-hidden="true" style="display:none">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
             <path d="M3 9.5 12 4l9 5.5"></path>
@@ -90,30 +91,20 @@
   <!-- ============ Hero ============ -->
   
 <div id="view-start" class="m-view">
-<section class="m-hero" data-screen-label="Hero" id="start">
+<section class="m-hero m-hero--photo" data-screen-label="Hero" id="start">
+    <figure class="m-hero-photo">
+      <img src="assets/hero-janine-wagner.jpg" width="1264" height="797" fetchpriority="high" alt="Janine D. Wagner, Fachanwältin für Familienrecht, an ihrem Schreibtisch in der Kanzlei">
+      <figcaption class="m-hero-badge"><strong>Janine D. Wagner</strong><span>Fachanwältin für Familienrecht</span></figcaption>
+    </figure>
     <div class="m-container">
       <span class="eyebrow">Begleitet durch Ihre Fachanwältin für Familienrecht</span>
-      <h1 style="margin-top:12px;">Ihre Scheidung.<br /> <em>Klar vorbereitet,</em><br /> menschlich begleitet.</h1>
-
-      <p class="m-hero-sub">
-        In Ruhe online vorbereiten, persönlich von einer Fachanwältin
-        geprüft — Sie wissen bei jedem Schritt, wie es weitergeht.
-      </p>
-
+      <h1>Ihre Scheidung.<br><em>Klar vorbereitet,</em><br>menschlich begleitet.</h1>
+      <p class="m-hero-sub">In Ruhe online vorbereiten, persönlich von einer Fachanwältin geprüft — Sie wissen bei jedem Schritt, wie es weitergeht.</p>
       <div class="m-hero-cta">
         <a href="#vorbereiten" class="btn btn-primary btn-block btn-arrow">Unverbindlich online starten</a>
-        <a href="#rechner" class="btn btn-secondary btn-block">Kostenübersicht</a>
+        <a href="#rechner" class="m-hero-link">Kostenübersicht <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></a>
       </div>
-      <p class="m-hero-note">In Ruhe ausfüllen · kein Konto nötig · persönlich geprüft</p>
-
-      <div class="m-lawyer-card">
-        <img src="assets/janine-wagner.png" alt="Janine D. Wagner, Fachanwältin für Familienrecht" class="m-lawyer-photo" />
-        <div class="m-lawyer-body">
-          <strong>Janine D. Wagner</strong>
-          <span class="role">Fachanwältin für Familienrecht</span>
-        </div>
-      </div>
-
+      <p class="m-hero-micro">In Ruhe ausfüllen · kein Konto nötig · persönlich geprüft</p>
     </div>
   </section>
   <div id="m-sticky-sentinel"></div>
@@ -308,7 +299,7 @@
   <!-- ============ Persönliche Fachanwältin ============ -->
   <section class="m-section" style="background:linear-gradient(180deg, var(--c-primary) 0%, var(--c-primary-deep) 100%);color:#fff;" data-screen-label="Persönlich">
     <div class="m-container">
-      <img src="assets/janine-wagner.png" alt="Janine D. Wagner, Fachanwältin für Familienrecht" style="width:100%;max-width:220px;margin:0 auto 20px;border-radius:18px;object-fit:cover;aspect-ratio:3/4;display:block;" />
+      <img src="assets/buch-regal.jpg" width="1200" height="800" loading="lazy" alt="Formularbuch des Fachanwalts Familienrecht im Kanzleiregal" style="width:100%;height:auto;margin:0 0 20px;border-radius:18px;object-fit:cover;aspect-ratio:3/2;display:block;" >
       <span class="eyebrow" style="color:var(--c-accent);">Ihre Ansprechpartnerin</span>
       <hr class="gold-line left" />
       <h2 style="color:#fff;">Digital, ohne distanziert zu sein.</h2>
@@ -328,54 +319,7 @@
     </div>
   </section>
 
-  <!-- ============ Bewertungen ============ -->
-  <section class="m-section" data-screen-label="Bewertungen" id="bewertungen">
-    <div class="m-container">
-      <div class="center">
-        <span class="eyebrow">Mandantenstimmen</span>
-        <hr class="gold-line" />
-        <h2>Ruhige Begleitung in einer unruhigen Zeit.</h2>
-      </div>
-    </div>
 
-    <div class="m-review-scroll m-container">
-      <article class="m-review-card">
-        <div class="m-review-stars">★★★★★</div>
-        <p class="m-review-quote">„Die Online-Abwicklung war für mich der entscheidende Punkt. Alle Fragen wurden schnell und persönlich beantwortet.“</p>
-        <div class="m-review-meta">
-          <div class="m-review-avatar">SK</div>
-          <div class="m-review-meta-text">
-            <strong>S. K.</strong>
-            München · Mandantenstimme
-          </div>
-        </div>
-      </article>
-      <article class="m-review-card">
-        <div class="m-review-stars">★★★★★</div>
-        <p class="m-review-quote">„Sehr klare Kommunikation von Anfang an. Ich wusste immer, in welchem Schritt das Verfahren steht.“</p>
-        <div class="m-review-meta">
-          <div class="m-review-avatar">MB</div>
-          <div class="m-review-meta-text">
-            <strong>M. B.</strong>
-            Hamburg · Mandantenstimme
-          </div>
-        </div>
-      </article>
-      <article class="m-review-card">
-        <div class="m-review-stars">★★★★★</div>
-        <p class="m-review-quote">„Trotz Online-Verfahren hatte ich nie das Gefühl, allein zu sein. Wirklich empfehlenswert in einer schwierigen Zeit.“</p>
-        <div class="m-review-meta">
-          <div class="m-review-avatar">JF</div>
-          <div class="m-review-meta-text">
-            <strong>J. F.</strong>
-            Köln · Mandantenstimme
-          </div>
-        </div>
-      </article>
-    </div>
-    <div class="m-review-dots" id="review-dots" aria-hidden="true"><i class="on"></i><i></i><i></i></div>
-
-  </section>
 
   <!-- ============ Sicherheit ============ -->
   <section class="m-section m-security" data-screen-label="Sicherheit">
@@ -513,7 +457,7 @@
   <!-- ============ Footer ============ -->
   <footer class="m-footer" data-screen-label="Footer" id="kontakt">
     <div class="m-container">
-      <img src="assets/logo-scheidung-online-light.png" alt="Scheidung Online Direkt · Fachanwältin für Familienrecht" class="m-footer-logo" />
+      <img src="assets/logo-scheidung-online-light.png" width="1878" height="368" loading="lazy" alt="Scheidung Online Direkt · Fachanwältin für Familienrecht" class="m-footer-logo" >
       <p class="m-footer-desc">
         Digital organisiert. Persönlich begleitet. Deutschlandweite Vertretung möglich.
         Mitglied der Rechtsanwaltskammer Celle.
@@ -604,46 +548,10 @@
               <span id="feedback-text"></span>
             </div>
 
-            <!-- Schritt 1 — Kontakt -->
+            <!-- Schritt 1 — Situation -->
             <div class="wz-step active" data-step="1">
               <div class="wz-step-head">
-                <div class="wz-step-num">Schritt 1 · Kontakt</div>
-                <h2>Wie können wir Sie erreichen?</h2>
-                <p class="wz-step-desc">Ihre Angaben werden persönlich geprüft — wir melden uns, wenn für Ihren Antrag noch etwas fehlt.</p>
-              </div>
-              <div class="wz-fields">
-                <div class="wz-field">
-                  <label class="wz-label" for="a_vorname">Vorname <span class="req">*</span></label>
-                  <input class="wz-input" id="a_vorname" name="a_vorname" type="text" autocomplete="given-name" data-check="name" required />
-                  <span class="wz-err">Bitte geben Sie Ihren Vornamen an.</span>
-                </div>
-                <div class="wz-field">
-                  <label class="wz-label" for="a_nachname">Nachname <span class="req">*</span></label>
-                  <input class="wz-input" id="a_nachname" name="a_nachname" type="text" autocomplete="family-name" data-check="name" required />
-                  <span class="wz-err">Bitte geben Sie Ihren Nachnamen an.</span>
-                </div>
-                <div class="wz-field">
-                  <label class="wz-label" for="a_email">E-Mail-Adresse <span class="req">*</span></label>
-                  <input class="wz-input" id="a_email" name="a_email" type="email" autocomplete="email" required />
-                  <span class="wz-err">Bitte geben Sie eine gültige E-Mail-Adresse an.</span>
-                </div>
-                <div class="wz-field">
-                  <label class="wz-label" for="a_telefon">Telefonnummer <span class="req">*</span></label>
-                  <input class="wz-input" id="a_telefon" name="a_telefon" type="tel" inputmode="tel" autocomplete="tel" data-check="phone" required />
-                  <span class="wz-err">Bitte geben Sie eine Telefonnummer an.</span>
-                </div>
-                <div class="wz-field full">
-                  <label class="wz-label" for="a_anschrift">Ihre Anschrift <span class="opt">(optional)</span></label>
-                  <input class="wz-input" id="a_anschrift" name="a_anschrift" type="text" autocomplete="street-address" placeholder="Straße, PLZ Ort" data-check="address" />
-                  <span class="wz-err">Bitte prüfen Sie die Anschrift (Straße, PLZ, Ort).</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Schritt 2 — Situation -->
-            <div class="wz-step" data-step="2">
-              <div class="wz-step-head">
-                <div class="wz-step-num">Schritt 2 · Ihre Situation</div>
+                <div class="wz-step-num">Schritt 1 · Ihre Situation</div>
                 <h2>Ein paar Angaben zu Ihrer Situation</h2>
                 <p class="wz-step-desc">Diese Eckdaten brauchen wir, um Ihren Antrag vorzubereiten. Beim Datum genügt eine ungefähre Angabe. Für die Zuständigkeit des Gerichts brauchen wir PLZ und Ort Ihrer letzten gemeinsamen Ehewohnung — die genaue Anschrift ist nicht nötig.</p>
               </div>
@@ -702,6 +610,57 @@
                 <div class="wz-field full">
                   <label class="wz-label" for="e_staat">Staatsangehörigkeit (beide Ehegatten) <span class="opt">(optional)</span></label>
                   <input class="wz-input" id="e_staat" name="e_staat" type="text" autocomplete="off" maxlength="120" placeholder="z. B. deutsch / deutsch" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Schritt 2 — Einvernehmlichkeit -->
+            <div class="wz-step" data-step="2">
+              <div class="wz-step-head">
+                <div class="wz-step-num">Schritt 2 · Ihre Scheidung</div>
+                <h2>Ihre Scheidung</h2>
+                <p class="wz-step-desc">Kein Problem, wenn Sie sich noch nicht sicher sind — wir besprechen alles persönlich mit Ihnen.</p>
+              </div>
+              <div class="wz-fields">
+                <div class="wz-field full">
+                  <label class="wz-label">Ist die Scheidung einvernehmlich? <span class="req">*</span></label>
+                  <div class="wz-choice">
+                    <label class="wz-opt">
+                      <input type="radio" name="s_einvernehmlich" value="Ja" required />
+                      <span class="tick"></span><span>Ja</span>
+                    </label>
+                    <label class="wz-opt">
+                      <input type="radio" name="s_einvernehmlich" value="Nein" />
+                      <span class="tick"></span><span>Nein</span>
+                    </label>
+                    <label class="wz-opt">
+                      <input type="radio" name="s_einvernehmlich" value="Noch nicht sicher" />
+                      <span class="tick"></span><span>Noch nicht sicher</span>
+                    </label>
+                  </div>
+                <div class="wz-field">
+                  <label class="wz-label" for="s_netto_a">Ihr monatliches Nettoeinkommen <span class="opt">(optional)</span></label>
+                  <select class="wz-select" id="s_netto_a" name="s_netto_a">
+                    <option value="">Bitte wählen</option>
+                    <option value="unter 1.500 €">unter 1.500 €</option>
+                    <option value="1.500–2.500 €">1.500–2.500 €</option>
+                    <option value="2.500–4.000 €">2.500–4.000 €</option>
+                    <option value="über 4.000 €">über 4.000 €</option>
+                    <option value="keine Angabe">keine Angabe</option>
+                  </select>
+                </div>
+                <div class="wz-field">
+                  <label class="wz-label" for="s_netto_p">Nettoeinkommen des Ehepartners <span class="opt">(optional)</span></label>
+                  <select class="wz-select" id="s_netto_p" name="s_netto_p">
+                    <option value="">Bitte wählen</option>
+                    <option value="unter 1.500 €">unter 1.500 €</option>
+                    <option value="1.500–2.500 €">1.500–2.500 €</option>
+                    <option value="2.500–4.000 €">2.500–4.000 €</option>
+                    <option value="über 4.000 €">über 4.000 €</option>
+                    <option value="keine Angabe">keine Angabe</option>
+                  </select>
+                </div>
+                  <span class="wz-err">Bitte wählen Sie eine Option.</span>
                 </div>
               </div>
             </div>
@@ -828,53 +787,38 @@
               </div>
             </div>
 
-            <!-- Schritt 5 — Einvernehmlichkeit -->
+            <!-- Schritt 5 — Kontakt -->
             <div class="wz-step" data-step="5">
               <div class="wz-step-head">
-                <div class="wz-step-num">Schritt 5 · Ihre Scheidung</div>
-                <h2>Ihre Scheidung</h2>
-                <p class="wz-step-desc">Kein Problem, wenn Sie sich noch nicht sicher sind — wir besprechen alles persönlich mit Ihnen.</p>
+                <div class="wz-step-num">Schritt 5 · Kontakt</div>
+                <h2>Wie können wir Sie erreichen?</h2>
+                <p class="wz-step-desc">Ihre Angaben werden persönlich geprüft — wir melden uns, wenn für Ihren Antrag noch etwas fehlt.</p>
               </div>
               <div class="wz-fields">
+                <div class="wz-field">
+                  <label class="wz-label" for="a_vorname">Vorname <span class="req">*</span></label>
+                  <input class="wz-input" id="a_vorname" name="a_vorname" type="text" autocomplete="given-name" data-check="name" required />
+                  <span class="wz-err">Bitte geben Sie Ihren Vornamen an.</span>
+                </div>
+                <div class="wz-field">
+                  <label class="wz-label" for="a_nachname">Nachname <span class="req">*</span></label>
+                  <input class="wz-input" id="a_nachname" name="a_nachname" type="text" autocomplete="family-name" data-check="name" required />
+                  <span class="wz-err">Bitte geben Sie Ihren Nachnamen an.</span>
+                </div>
+                <div class="wz-field">
+                  <label class="wz-label" for="a_email">E-Mail-Adresse <span class="req">*</span></label>
+                  <input class="wz-input" id="a_email" name="a_email" type="email" autocomplete="email" required />
+                  <span class="wz-err">Bitte geben Sie eine gültige E-Mail-Adresse an.</span>
+                </div>
+                <div class="wz-field">
+                  <label class="wz-label" for="a_telefon">Telefonnummer <span class="req">*</span></label>
+                  <input class="wz-input" id="a_telefon" name="a_telefon" type="tel" inputmode="tel" autocomplete="tel" data-check="phone" required />
+                  <span class="wz-err">Bitte geben Sie eine Telefonnummer an.</span>
+                </div>
                 <div class="wz-field full">
-                  <label class="wz-label">Ist die Scheidung einvernehmlich? <span class="req">*</span></label>
-                  <div class="wz-choice">
-                    <label class="wz-opt">
-                      <input type="radio" name="s_einvernehmlich" value="Ja" required />
-                      <span class="tick"></span><span>Ja</span>
-                    </label>
-                    <label class="wz-opt">
-                      <input type="radio" name="s_einvernehmlich" value="Nein" />
-                      <span class="tick"></span><span>Nein</span>
-                    </label>
-                    <label class="wz-opt">
-                      <input type="radio" name="s_einvernehmlich" value="Noch nicht sicher" />
-                      <span class="tick"></span><span>Noch nicht sicher</span>
-                    </label>
-                  </div>
-                <div class="wz-field">
-                  <label class="wz-label" for="s_netto_a">Ihr monatliches Nettoeinkommen <span class="opt">(optional)</span></label>
-                  <select class="wz-select" id="s_netto_a" name="s_netto_a">
-                    <option value="">Bitte wählen</option>
-                    <option value="unter 1.500 €">unter 1.500 €</option>
-                    <option value="1.500–2.500 €">1.500–2.500 €</option>
-                    <option value="2.500–4.000 €">2.500–4.000 €</option>
-                    <option value="über 4.000 €">über 4.000 €</option>
-                    <option value="keine Angabe">keine Angabe</option>
-                  </select>
-                </div>
-                <div class="wz-field">
-                  <label class="wz-label" for="s_netto_p">Nettoeinkommen des Ehepartners <span class="opt">(optional)</span></label>
-                  <select class="wz-select" id="s_netto_p" name="s_netto_p">
-                    <option value="">Bitte wählen</option>
-                    <option value="unter 1.500 €">unter 1.500 €</option>
-                    <option value="1.500–2.500 €">1.500–2.500 €</option>
-                    <option value="2.500–4.000 €">2.500–4.000 €</option>
-                    <option value="über 4.000 €">über 4.000 €</option>
-                    <option value="keine Angabe">keine Angabe</option>
-                  </select>
-                </div>
-                  <span class="wz-err">Bitte wählen Sie eine Option.</span>
+                  <label class="wz-label" for="a_anschrift">Ihre Anschrift <span class="opt">(optional)</span></label>
+                  <input class="wz-input" id="a_anschrift" name="a_anschrift" type="text" autocomplete="street-address" placeholder="Straße, PLZ Ort" data-check="address" />
+                  <span class="wz-err">Bitte prüfen Sie die Anschrift (Straße, PLZ, Ort).</span>
                 </div>
               </div>
             </div>
@@ -892,7 +836,8 @@
                   <textarea class="wz-textarea" id="m_nachricht" name="m_nachricht" maxlength="500" placeholder="Hier können Sie uns Besonderheiten zu Ihrer Situation mitteilen."></textarea>
                   <span class="wz-charcount" id="msg-count">0 / 500</span>
                 </div>
-                <div class="wz-field full">
+                <div class="wz-field full"><div class="wz-legal-note"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg><div><strong>Hinweis zu den Kosten (§ 49b Abs. 5 BRAO):</strong> Die anwaltlichen Gebühren richten sich nach dem Gegenstandswert, den das Familiengericht festsetzt. Eine ehrliche Spanne zeigt Ihnen vorab unser <a href="#rechner">Kostenrechner</a>.</div></div></div>
+                  <div class="wz-field full">
                   <label class="wz-consent" id="consent">
                     <input type="checkbox" id="dsgvo" name="dsgvo" required />
                     <span class="wz-consent-box">
@@ -1026,7 +971,7 @@
 <section class="wz-hero" data-screen-label="Hero">
     <div class="m-container">
       <a href="#start" class="wz-home-link"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg> Zur Startseite</a>
-      <h1>Die Kosten Ihrer Scheidung</h1>
+      <h1>Was kostet Ihre Scheidung? Die Spanne in 30 Sekunden.</h1>
       <p class="wz-sub">
         Die gesetzlichen Anwalts- und Gerichtskosten richten sich nach dem
         Gegenstands- bzw. Verfahrenswert, den das Gericht festsetzt. Ändert er
@@ -1036,7 +981,7 @@
       </p>
       <div class="wz-hero-trust">
         <span class="wz-hero-trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Nach RVG &amp; FamGKG</span>
-        <span class="wz-hero-trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Keine Scheinpräzision</span>
+        <span class="wz-hero-trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Ehrliche Spanne statt Lockpreis</span>
         <span class="wz-hero-trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Persönlich geprüft</span>
       </div>
     </div>
@@ -1045,24 +990,12 @@
   <section class="wz-section" id="rechner" data-screen-label="Rechner">
     <div class="m-container">
       <div class="wz-card">
-        <div class="wz-body">
-          <div class="wz-step-head" style="margin-bottom:6px;">
-            <div class="wz-step-num">Ihre Kostenorientierung</div>
-            <h2>Wovon der Kostenrahmen abhängt</h2>
-          </div>
-          <div class="m-cost-factors" style="margin-top:18px;">
-            <div class="m-cost-factor"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> Verfahrenswert — Einkommen &amp; Vermögen</div>
-            <div class="m-cost-factor"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Gerichtskosten — nach Verfahrenswert</div>
-            <div class="m-cost-factor"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/></svg> Anwaltskosten — gesetzlich nach RVG (Rechtsanwaltsvergütungsgesetz)</div>
-            <div class="m-cost-factor"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Versorgungsausgleich &amp; ggf. Folgesachen</div>
-          </div>
-          
-        </div>
+        <div class="wz-body"><div data-kostenspanne data-ctahref="#vorbereiten" data-vkhhref="scheidungskosten-mobil.html#vkh"></div></div>
 
         <div class="wz-body" style="padding-top:0;border-top:1px solid var(--c-border);">
           <div class="wz-step-head">
-            <div class="wz-step-num">Die Kosten Ihrer Ehescheidung</div>
-            <h2>Wir melden uns mit einer Kostenübersicht</h2>
+            <div class="wz-step-num">Genauer wissen?</div>
+            <h2>Persönliche Kostenübersicht anfragen</h2>
             <p class="wz-step-desc">Sie erhalten Ihre Kostenübersicht schriftlich per E-Mail — in der Regel innerhalb von zwei Werktagen.</p>
           </div>
           <form id="cost-contact-form" novalidate>
@@ -1164,7 +1097,8 @@
   </nav>
 
 <script src="form-guard.js?v=20261013a"></script>
-<script src="v2-mobile.js?v=20261013a"></script>
+<script src="v2-mobile.js?v=20261026a"></script>
 <script src="consent.js?v=20260903a"></script>
+<script src="kostenspanne.js" defer></script>
 </body>
 </html>

@@ -68,7 +68,7 @@ var __RM = window.matchMedia && window.matchMedia('(prefers-reduced-motion: redu
   const LEAD_ENDPOINT = '/api/lead'; /* Serverseitige Same-Origin-Route — validiert, rate-limitet, leitet weiter. Kein Webhook im Frontend. */
 
   const TOTAL = 6;
-  const STORAGE_KEY = "scheidung-wizard-v2";
+  const STORAGE_KEY = "scheidung-wizard-v21";
 
   const form         = document.getElementById('wz-form');
   const steps        = Array.from(document.querySelectorAll('#view-vorbereiten .wz-step'));
@@ -88,11 +88,11 @@ var __RM = window.matchMedia && window.matchMedia('(prefers-reduced-motion: redu
   let current = 1;
 
   const FEEDBACK = {
-    1: "Danke — so können wir Sie persönlich erreichen.",
-    2: "Perfekt. Das hilft uns, Ihre Situation einzuschätzen.",
+    1: "Danke. Das hilft uns, Ihre Situation einzuschätzen.",
+    2: "Gut. So können wir den passenden Weg für Sie einordnen.",
     3: "Gut gemacht. Die wichtigsten Personen sind erfasst.",
     4: "Vielen Dank. Wir sind fast fertig.",
-    5: "Nur noch ein letzter Schritt."
+    5: "Danke — so können wir Sie persönlich erreichen. Nur noch ein letzter Schritt."
   };
 
   function updateProgress() {

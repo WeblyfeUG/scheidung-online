@@ -1,0 +1,91 @@
+/* v2.1 — Maßnahmenkatalog 25.10.2026 (Design) */
+.hero-reassure-list{list-style:none;margin:2px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:8px 18px}
+.hero-reassure-list li{display:inline-flex;align-items:center;gap:7px;font-size:15px;font-weight:600;color:#172332}
+.hero-reassure-list svg{color:#34604A;flex:0 0 16px}
+.hero-floating-card.kanzlei{top:28px;left:-30px;display:flex;align-items:center;gap:12px;max-width:310px;padding:14px 18px}
+.hero-floating-card.kanzlei svg{color:#AD7F3D;flex-shrink:0}
+.hero-floating-card.kanzlei strong{display:block;font-size:14px;line-height:1.3;color:#1F3D57}
+.hero-floating-card.kanzlei span{display:block;font-size:12.5px;line-height:1.35;color:#49545F;margin-top:3px}
+.hero-floating-card.time .lbl{color:#49545F}
+.m-hero-ticks{list-style:none;margin:14px 0 0;padding:0;display:flex;flex-direction:column;gap:8px}
+.m-hero-ticks li{display:flex;align-items:center;gap:9px;font-size:14.5px;font-weight:600;color:#172332}
+.m-hero-ticks svg{color:#34604A;flex:0 0 16px}
+.m-kanzlei{margin-top:12px;display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border-radius:12px;background:#E8F0EB;color:#34604A}
+.m-kanzlei svg{flex:0 0 20px;margin-top:1px}
+.m-kanzlei strong{display:block;font-size:14px;line-height:1.3}
+.m-kanzlei span{display:block;font-size:12.5px;margin-top:2px;color:#2E5040}
+.wz-legal-note{display:flex;gap:11px;align-items:flex-start;padding:14px 16px;border-radius:12px;background:#F4F6F9;border:1px solid #DBE3E8;font-size:13.5px;line-height:1.55;color:#172332}
+.wz-legal-note svg{flex:0 0 18px;color:#1F3D57;margin-top:2px}
+.wz-legal-note strong{color:#1F3D57}
+.wz-legal-note a{color:#1F3D57}
+@media (max-width:767px){.wz-progress{position:sticky;top:56px;z-index:5;background:#fff}.wz-input,.wz-select,.wz-textarea,.fld input,.fld textarea{font-size:16px}}
+.ks{background:#fff;border:1px solid #DBE3E8;border-radius:16px;box-shadow:0 4px 14px rgba(20,40,80,.08);padding:26px 24px}
+.ks-tag{display:inline-block;font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#34604A;background:#E8F0EB;padding:5px 11px;border-radius:999px}
+.ks h2{font-size:24px;line-height:1.2;letter-spacing:-.02em;color:#1F3D57;margin:12px 0 0}
+.ks-intro{font-size:15px;line-height:1.6;color:#49545F;margin:8px 0 0}
+.ks-grid{display:grid;grid-template-columns:1fr;gap:22px;margin-top:22px}
+@media (min-width:900px){.ks{padding:34px 36px}.ks-grid{grid-template-columns:1fr 1.1fr;gap:34px;align-items:start}.ks h2{font-size:28px}}
+.ks-field{display:flex;flex-direction:column;gap:7px;margin-top:16px}
+.ks-field:first-child{margin-top:0}
+.ks-field label,.ks-field .ks-lbl{font-size:13.5px;font-weight:600;color:#172332}
+.ks-field small{font-weight:500;color:#49545F}
+.ks-money{position:relative}
+.ks-money input{width:100%;min-height:50px;border:1.5px solid #DBE3E8;border-radius:11px;padding:12px 44px 12px 14px;font:600 16px 'Inter',Arial,sans-serif;color:#172332;background:#fff}
+.ks-money input:focus{outline:none;border-color:#1F3D57;box-shadow:0 0 0 4px rgba(31,61,87,.12)}
+.ks-money i{position:absolute;right:14px;top:50%;transform:translateY(-50%);font-style:normal;font-weight:600;color:#49545F}
+.ks-chips{display:flex;gap:8px}
+.ks-chips button{flex:1;min-height:44px;border:1.5px solid #DBE3E8;background:#fff;border-radius:11px;font:600 14px 'Inter',Arial,sans-serif;color:#49545F;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.ks-chips button.on{border-color:#1F3D57;background:#1F3D57;color:#fff}
+.ks-result{background:linear-gradient(180deg,#1F3D57,#142D42);border-radius:14px;padding:22px 22px 20px;color:#fff}
+.ks-result-label{display:block;font-size:12.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.65)}
+.ks-range{font-size:34px;font-weight:800;letter-spacing:-.02em;line-height:1.1;margin-top:8px;font-variant-numeric:tabular-nums}
+.ks-range.muted{font-size:17px;font-weight:600;color:rgba(255,255,255,.78);line-height:1.45}
+.ks-sub{display:block;font-size:13px;color:rgba(255,255,255,.72);margin-top:8px;line-height:1.5}
+.ks-break{margin:16px 0 0;padding:14px 0 0;border-top:1px solid rgba(255,255,255,.16);display:grid;gap:8px}
+.ks-break div{display:flex;justify-content:space-between;gap:12px;font-size:14px}
+.ks-break dt{color:rgba(255,255,255,.75)}.ks-break dd{margin:0;font-weight:700;font-variant-numeric:tabular-nums}
+.ks-why{font-size:13px;line-height:1.55;color:rgba(255,255,255,.75);margin:14px 0 0}
+.ks-why strong{color:#fff}
+.ks-vkh{margin-top:12px;padding:11px 13px;border-radius:10px;background:rgba(201,154,81,.16);border:1px solid rgba(201,154,81,.45);font-size:13px;line-height:1.5;color:#fff}
+.ks-vkh a{color:#fff}
+.ks-cta{display:flex;align-items:center;justify-content:center;gap:9px;margin-top:16px;min-height:50px;padding:13px 20px;border-radius:11px;background:#C99A51;color:#142D42;font:700 15.5px 'Inter',Arial,sans-serif;text-decoration:none;box-shadow:0 8px 20px rgba(201,154,81,.28)}
+.ks-cta:hover{background:#D3A75F;color:#142D42}
+.ks-foot{font-size:12.5px;line-height:1.6;color:#49545F;margin:18px 0 0}
+@media (min-width:900px) and (max-width:1279px){.hero-floating-card.kanzlei{left:14px;top:18px;max-width:250px;padding:12px 14px}.hero-floating-card.kanzlei strong{font-size:13px}.hero-floating-card.kanzlei span{font-size:12px}.hero-floating-card.time{display:none}}
+
+/* ---- Hero mit Kanzlei-Foto (Mobil) ---- */
+.m-hero--photo{padding:0 0 28px;background:#FBFAF7}
+.m-hero-photo{position:relative;margin:0;aspect-ratio:948/598;overflow:hidden;background:#D9E0E8}
+.m-hero-photo img{display:block;width:100%;height:100%;object-fit:cover}
+.m-hero-badge{position:absolute;left:3.5%;bottom:5.5%;min-width:40%;min-height:18%;display:flex;flex-direction:column;justify-content:center;padding:10px 14px;border-radius:10px;background:rgba(27,53,83,.9);color:#fff;line-height:1.25}
+.m-hero-badge strong{display:block;font-size:17px;font-weight:700;letter-spacing:-.01em}
+.m-hero-badge span{display:block;font-size:13.5px;margin-top:3px;color:rgba(255,255,255,.95)}
+#start.m-hero--photo .m-container{display:block;min-height:0;padding-top:22px}
+.m-hero--photo .eyebrow{color:#49545F;letter-spacing:.14em;line-height:1.5}
+.m-hero--photo h1{margin-top:12px;line-height:1.1;letter-spacing:-.025em}
+.m-hero--photo h1 em{color:#AD7F3D}
+.m-hero--photo .m-hero-sub{margin-top:16px;font-size:16.5px;line-height:1.55;color:#3C4651}
+#start.m-hero--photo .m-hero-cta{margin-top:24px;padding-top:0;gap:12px;align-items:center}
+.m-hero--photo .btn-primary{min-height:58px;font-size:17.5px;border-radius:14px}
+.m-hero-link{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:4px 8px;font-size:17px;font-weight:700;color:#1F3D57;text-decoration:none}
+.m-hero-link:hover{color:#142D42;text-decoration:underline}
+.m-hero-micro{margin:4px 0 0;text-align:center;font-size:13.5px;line-height:1.5;color:#49545F}
+/* ---- Hero mit Kanzlei-Foto (Desktop) ---- */
+.hero--photo .hero-grid{grid-template-columns:1.05fr .95fr;gap:56px}
+.hero--photo h1 em{color:#AD7F3D}
+.hero--photo h1 em::after{display:none}
+.hero--photo .hero-sub{font-size:19px;color:#3C4651;max-width:520px}
+.hero-cta-row{align-items:center;gap:14px 28px;margin-top:28px}
+.hero-btn-main{font-size:17px;padding:16px 30px}
+.hero--photo .hero-cta-link{font-size:16px;font-weight:700;text-decoration:none}
+.hero--photo .hero-cta-link:hover{text-decoration:underline}
+.hero-micro{margin:16px 0 0;font-size:14px;line-height:1.5;color:#49545F}
+.hero--photo .hero-image{aspect-ratio:538/456;border:0;border-radius:22px;background:#D9E0E8}
+.hero--photo .hero-photo{object-position:50% 50%}
+.hero--photo .hero-namebadge{left:18px;bottom:18px;padding:12px 18px;border-radius:12px;background:rgba(27,53,83,.9);color:rgba(255,255,255,.95);font-size:14px;line-height:1.3;box-shadow:none;backdrop-filter:none}
+.hero--photo .hero-namebadge strong{color:#fff;font-size:18px;letter-spacing:-.01em;margin-bottom:2px}
+@media (max-width:980px){.hero--photo .hero-grid{grid-template-columns:1fr;gap:28px}.hero--photo .hero-visual{order:-1;max-width:520px;margin:0 auto}.hero--photo .hero-image{border:0}.hero--photo .hero-cta-row{flex-direction:column;align-items:stretch}.hero--photo .hero-cta-link{justify-content:center}.hero-micro{text-align:center}}
+
+/* Mobil: Die Servicebar lag unter dem fixen Header (verdeckt) und schob den Inhalt um 48 px nach unten → ausblenden.
+   Telefon bleibt über den Button im Header erreichbar. */
+.m-servicebar{display:none}

@@ -9,6 +9,9 @@
 const guard = require('../form-guard.js');
 const { getStore } = require('./_lib/store');
 const { readBody, clientIp, noStore, saeubern } = require('./_lib/http');
+const mailLib = require('./_lib/mail');
+const kiLib = require('./_lib/ki');
+const ablauf = require('./_lib/ablauf');
 
 const WINDOW_MS = 60 * 1000;
 const MAX_PER_WINDOW = 8;
@@ -175,6 +178,32 @@ function toRow(b) {
   return row;
 }
 
+/* Vercel waitUntil (Fluid Compute): Arbeit läuft nach der Antwort weiter. Ohne waitUntil null. */
+function waitUntil() {
+  const ctx = globalThis[Symbol.for('@vercel/request-context')];
+  const wu = ctx && typeof ctx.get === 'function' && ctx.get() && ctx.get().waitUntil;
+  return typeof wu === 'function' ? wu : null;
+}
+
+/* Automatik nach dem Eingang (6.3): A1.1 mit Checkliste; Checkliste-Anfragen sind damit erledigt */
+async function eingangsmail(store, saved, req) {
+  try {
+    const r = await mailLib.senden(store, { anfrage: saved, vorlageId: 'A1.1', benutzer: 'system', req });
+    if (saved.typ === 'checkliste_pdf' && r.gesendet) {
+      await store.addEreignis({ anfrage_id: saved.id, benutzer: 'system', art: 'checkliste_gesendet', details: {} });
+      await ablauf.setStatus(store, saved, 'abgeschlossen', 'system');
+    }
+  } catch (e) { console.error('[lead] Eingangsbestätigung fehlgeschlagen:', e.message); }
+}
+
+/* KI-Einordnung (darf dauern, Fehler nur im Log) */
+async function einordnung(store, saved) {
+  if (saved.typ !== 'checkliste_pdf') {
+    try { const k = await kiLib.einordnen(store, saved); if (k.fehler && k.fehler !== 'ki_not_configured' && k.fehler !== 'ki_inaktiv') console.error('[lead] KI:', k.fehler); }
+    catch (e) { console.error('[lead] KI fehlgeschlagen:', e.message); }
+  }
+}
+
 module.exports = async (req, res) => {
   noStore(res);
   if (req.method !== 'POST') {
@@ -234,7 +263,12 @@ module.exports = async (req, res) => {
   try {
     const saved = await store.insertAnfrage(toRow(b));
     await store.addEreignis({ anfrage_id: saved.id, benutzer: 'website', art: 'eingang', details: { typ: saved.typ, quelle: saved.quelle } });
+    const wu = waitUntil();
+    // Ohne waitUntil könnte die Instanz nach der Antwort einfrieren → Eingangsbestätigung vorher senden
+    if (wu) wu(eingangsmail(store, saved, req).then(() => einordnung(store, saved)));
+    else await eingangsmail(store, saved, req);
     res.status(200).json({ ok: true, nummer: saved.nummer });
+    if (!wu) await einordnung(store, saved);
   } catch (e) {
     console.error('[lead] Speichern fehlgeschlagen:', e.message);
     res.status(502).json({ ok: false, error: 'store_failed' });

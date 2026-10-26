@@ -4,315 +4,84 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="robots" content="noindex, nofollow" />
+<meta name="referrer" content="no-referrer" />
 <meta name="theme-color" content="#1F3D57" />
 <title>HQ · Scheidung-Online</title>
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="hq.css?v=2" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="hq.css?v=3" />
+<script src="hq.js?v=3" defer></script>
 </head>
 <body>
 
 <!-- Boot: sichtbar, bis die Sitzung geprüft ist -->
 <div id="boot" class="boot" role="status" aria-live="polite">
   <img src="assets/logo-scheidung-online.png" alt="Scheidung-Online" class="boot-logo" />
-  <div class="spinner" id="boot-spinner" aria-hidden="true"></div>
-  <p class="boot-text" id="boot-text">HQ wird geladen …</p>
-  <p class="boot-sub muted small" id="boot-sub" hidden></p>
-  <button type="button" class="btn btn-secondary" id="boot-retry" hidden>Erneut versuchen</button>
+  <div class="spinner" aria-hidden="true"></div>
+  <p id="boot-text">HQ wird geladen …</p>
+  <button type="button" class="btn btn-zweit" id="boot-retry" hidden>Erneut versuchen</button>
 </div>
 
-<!-- Anmeldung (auch als Overlay bei abgelaufener Sitzung) -->
+<!-- B1 Anmeldung -->
 <section id="login" class="login" hidden>
   <form id="login-form" class="login-card" novalidate>
     <img src="assets/logo-scheidung-online.png" alt="Scheidung-Online" class="login-logo" />
-    <h1>HQ-Anmeldung</h1>
-    <p class="muted">Rechtsanwältin Janine D. Wagner · Hannover — interner Bereich, Zugang nur für berechtigte Personen.</p>
-    <label for="login-name">Benutzername</label>
-    <input id="login-name" name="name" autocomplete="username" autocapitalize="none" spellcheck="false" required />
-    <label for="login-pw">Passwort</label>
-    <div class="pw-wrap">
-      <input id="login-pw" name="passwort" type="password" autocomplete="current-password" required />
-      <button type="button" class="pw-toggle" id="pw-toggle" aria-label="Passwort anzeigen" aria-pressed="false" title="Passwort anzeigen">
-        <svg class="eye" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>
-        <svg class="eye-off" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
-      </button>
+    <h1 id="login-titel">Anmelden</h1>
+    <p class="muted" id="login-text">Interner Bereich der Kanzlei Janine D. Wagner. Zugang nur für berechtigte Personen.</p>
+    <div id="login-schritt1">
+      <label for="login-name">E-Mail oder Benutzername</label>
+      <input id="login-name" name="name" autocomplete="username" autocapitalize="none" spellcheck="false" />
+      <label for="login-pw">Passwort</label>
+      <div class="pw-wrap">
+        <input id="login-pw" name="passwort" type="password" autocomplete="current-password" />
+        <button type="button" class="pw-toggle" id="pw-toggle" aria-label="Passwort anzeigen" aria-pressed="false">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
+      </div>
     </div>
-    <p id="login-err" class="err" role="alert" hidden></p>
-    <button type="submit" class="btn btn-primary btn-block" id="login-btn">Anmelden</button>
+    <div id="login-schritt2" hidden>
+      <label for="login-code">Sechsstelliger Code</label>
+      <input id="login-code" class="code-feld" inputmode="numeric" autocomplete="one-time-code" maxlength="7" placeholder="000 000" />
+    </div>
+    <p id="login-err" class="fehler-text" role="alert" hidden></p>
+    <button type="submit" class="btn btn-primaer btn-voll" id="login-btn">Weiter</button>
+    <p class="muted small center" id="login-zurueck" hidden><button type="button" class="link" id="login-neu">Anderes Konto verwenden</button></p>
   </form>
 </section>
 
-<!-- Anwendung -->
+<!-- App -->
 <div id="app" class="app" hidden>
   <header class="topbar">
-    <div class="brand">
-      <img src="assets/logo-scheidung-online.png" alt="Scheidung-Online" />
-      <span>HQ</span>
-    </div>
-    <nav class="modules" aria-label="Module">
-      <button type="button" class="mod" data-mod="uebersicht">Übersicht</button>
-      <button type="button" class="mod" data-mod="anfragen">Anfragen</button>
-      <button type="button" class="mod" data-mod="antrag">Antragsentwurf</button>
+    <a class="marke" href="#/posteingang"><img src="assets/logo-scheidung-online.png" alt="Scheidung-Online" /><span class="hq-badge">HQ</span></a>
+    <nav class="module" aria-label="Module">
+      <a href="#/posteingang" data-modul="posteingang">Posteingang<span class="zahl" id="nav-neu" hidden></span></a>
+      <a href="#/akten" data-modul="akten">Akten</a>
+      <a href="#/vorlagen" data-modul="vorlagen">Vorlagen</a>
+      <a href="#/einstellungen" data-modul="einstellungen">Einstellungen</a>
     </nav>
-    <div class="user">
-      <span id="user-name"></span>
-      <button type="button" id="logout" class="btn btn-ghost btn-sm">Abmelden</button>
-    </div>
+    <div class="topbar-rechts"><span id="user-name"></span><button type="button" class="btn btn-ghost btn-klein" id="logout">Abmelden</button></div>
   </header>
-
-  <main class="layout" id="layout">
-
-    <!-- Modul Übersicht -->
-    <section class="uebersicht-pane" id="uebersicht" hidden aria-busy="false" aria-label="Übersicht">
-      <div class="banner err" id="ue-err" hidden>
-        <span id="ue-err-text"></span>
-        <button type="button" class="btn btn-secondary btn-sm" id="ue-retry">Erneut versuchen</button>
-      </div>
-
-      <div id="ue-sk" class="ue-sk" hidden aria-hidden="true">
-        <div class="kpis"><div class="kpi sk-card"><i class="sk w40"></i><i class="sk w30 tall"></i></div><div class="kpi sk-card"><i class="sk w40"></i><i class="sk w30 tall"></i></div><div class="kpi sk-card"><i class="sk w40"></i><i class="sk w30 tall"></i></div><div class="kpi sk-card"><i class="sk w40"></i><i class="sk w30 tall"></i></div><div class="kpi sk-card"><i class="sk w40"></i><i class="sk w30 tall"></i></div></div>
-        <div class="card sk-card"><i class="sk w30"></i><i class="sk w90"></i><i class="sk w70"></i></div>
-        <div class="card sk-card"><i class="sk w30"></i><i class="sk w90"></i><i class="sk w80"></i><i class="sk w60"></i></div>
-      </div>
-
-      <div id="ue-body" hidden>
-        <div class="kpis" id="kpis">
-          <button type="button" class="kpi neu" data-status="neu"><span class="label">Neu</span><span class="num" id="k-neu">0</span><span class="sub" id="k-neu-sub">Anfragen</span></button>
-          <button type="button" class="kpi bearb" data-status="in_bearbeitung"><span class="label">In Bearbeitung</span><span class="num" id="k-bearb">0</span><span class="sub">Anfragen</span></button>
-          <button type="button" class="kpi rueck" data-status="rueckfrage"><span class="label">Rückfrage offen</span><span class="num" id="k-rueck">0</span><span class="sub">Anfragen</span></button>
-          <button type="button" class="kpi mandat" data-status="mandat"><span class="label">Mandate</span><span class="num" id="k-mandat">0</span><span class="sub">erteilt</span></button>
-          <button type="button" class="kpi ueber" id="k-ueber-kpi" data-status="neu"><span class="label">Überfällig</span><span class="num" id="k-ueber">0</span><span class="sub" id="k-ueber-sub">keine Wiedervorlage fällig</span></button>
-        </div>
-
-        <section class="card eingaenge" aria-labelledby="h-eingaenge">
-          <h3 id="h-eingaenge">Eingänge</h3>
-          <div class="ue-nums">
-            <div><b id="e-heute">0</b><span>Heute</span></div>
-            <div><b id="e-7">0</b><span>7 Tage</span></div>
-            <div><b id="e-30">0</b><span>30 Tage</span></div>
-          </div>
-          <div class="bars" id="e-bars" role="img" aria-label="Eingänge je Tag der letzten 30 Tage"></div>
-          <div class="bars-axis"><span id="e-bars-von"></span><span>Heute</span></div>
-          <h4 class="sub-h">Nach Formulartyp (30 Tage)</h4>
-          <div class="hbars" id="e-typen"></div>
-        </section>
-
-        <div class="ue-grid">
-          <section class="card" id="hb" aria-labelledby="h-hb">
-            <h3 id="h-hb">Handlungsbedarf <span class="count" id="hb-count"></span></h3>
-            <ul class="hb-list" id="hb-list"></ul>
-            <p class="empty-ok" id="hb-empty" hidden><span class="check" aria-hidden="true">✓</span> Nichts offen — alles erledigt.</p>
-            <p class="muted small" id="hb-more" hidden></p>
-          </section>
-          <section class="card" id="letzte" aria-labelledby="h-letzte">
-            <h3 id="h-letzte">Letzte Eingänge</h3>
-            <ul class="hb-list" id="letzte-list"></ul>
-            <p class="muted small" id="letzte-empty" hidden>Noch keine Anfragen eingegangen.</p>
-          </section>
-        </div>
-
-        <div class="foot">
-          <span id="ue-stand"></span>
-          <button type="button" class="btn btn-ghost btn-sm" id="ue-refresh">Aktualisieren</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- Liste -->
-    <aside class="list-pane" id="list-pane" aria-busy="false" aria-label="Anfragenliste">
-      <div class="filters">
-        <label for="q" class="vh">Suche</label>
-        <input id="q" type="search" placeholder="Suche: Nummer, Name, E-Mail, Telefon" autocomplete="off" />
-        <div class="filter-label" id="status-label">Status</div>
-        <div class="chips" id="status-chips" role="group" aria-labelledby="status-label"></div>
-        <div class="typ-wrap" id="typ-wrap">
-          <label for="typ" class="filter-label">Formular</label>
-          <select id="typ">
-            <option value="">Alle Formulare</option>
-            <option value="antrag">Online-Antrag</option>
-            <option value="kostenrahmen">Kosteneinschätzung</option>
-            <option value="nachricht">Nachricht</option>
-            <option value="checkliste_pdf">Checkliste (PDF)</option>
-          </select>
-        </div>
-        <div class="result-line" id="result">
-          <span id="result-text"></span>
-          <button type="button" class="link" id="reset-filter" hidden>Filter zurücksetzen</button>
-        </div>
-        <div class="list-stand" id="list-stand">
-          <span id="list-stand-text"></span>
-          <button type="button" class="icon-btn" id="list-refresh" aria-label="Liste aktualisieren" title="Aktualisieren">↻</button>
-        </div>
-      </div>
-      <div class="banner err" id="list-err" hidden>
-        <span id="list-err-text"></span>
-        <button type="button" class="btn btn-secondary btn-sm" id="list-retry">Erneut versuchen</button>
-      </div>
-      <div class="list-scroll" id="list-scroll">
-        <ul id="list" class="list" role="list"></ul>
-        <div id="list-sk" class="list-sk" hidden aria-hidden="true">
-          <div class="sk-row"><i class="sk w30"></i><i class="sk w70"></i><i class="sk w50"></i></div>
-          <div class="sk-row"><i class="sk w30"></i><i class="sk w60"></i><i class="sk w40"></i></div>
-          <div class="sk-row"><i class="sk w30"></i><i class="sk w80"></i><i class="sk w50"></i></div>
-        </div>
-        <div id="list-empty" class="list-empty" hidden>
-          <p id="list-empty-text"></p>
-          <button type="button" class="btn btn-secondary btn-sm" id="list-empty-reset" hidden>Filter zurücksetzen</button>
-        </div>
-        <div class="more-wrap"><button type="button" class="btn btn-secondary btn-sm" id="more" hidden>Weitere 200 laden</button></div>
-      </div>
-    </aside>
-
-    <!-- Detail -->
-    <section class="detail-pane" id="detail" aria-busy="false">
-      <div class="mobile-bar" id="mobile-bar">
-        <button type="button" class="back" id="mobile-back">← Anfragen</button>
-        <span class="nummer" id="mobile-nummer"></span>
-      </div>
-
-      <div class="placeholder" id="detail-empty">
-        <h2 id="detail-empty-h">Anfrage auswählen</h2>
-        <p class="muted" id="detail-empty-p">Links eine Anfrage auswählen. Rechts erscheinen Angaben, Status, Notizen und die Reiter „Antragsentwurf“ und „Verlauf“.</p>
-      </div>
-
-      <article id="detail-card" hidden>
-        <div class="print-head">
-          <img src="assets/logo-scheidung-online.png" alt="Scheidung-Online" />
-          <span id="print-info"></span>
-        </div>
-
-        <header class="detail-head">
-          <div class="detail-title">
-            <div class="nummer" id="d-nummer"></div>
-            <h2 id="d-name"></h2>
-            <div class="meta" id="d-meta"></div>
-          </div>
-          <div class="detail-actions">
-            <label class="field">Status
-              <select id="d-status"></select>
-            </label>
-            <label class="field">Wiedervorlage
-              <input id="d-wiedervorlage" type="date" />
-            </label>
-            <div class="action-btns">
-              <button type="button" class="btn btn-secondary btn-sm" id="btn-mail">E-Mail</button>
-              <button type="button" class="btn btn-secondary btn-sm" id="btn-print">Drucken</button>
-              <button type="button" class="btn btn-ghost btn-sm" id="btn-copy">Nummer kopieren</button>
-            </div>
-          </div>
-        </header>
-
-        <div class="tabs" role="tablist" aria-label="Bereiche der Anfrage">
-          <button type="button" role="tab" class="tab" id="tab-anfrage" data-tab="anfrage" aria-selected="true" aria-controls="view-anfrage">Anfrage</button>
-          <button type="button" role="tab" class="tab" id="tab-antrag" data-tab="antrag" aria-selected="false" aria-controls="view-antrag" tabindex="-1">Antragsentwurf</button>
-          <button type="button" role="tab" class="tab" id="tab-verlauf" data-tab="verlauf" aria-selected="false" aria-controls="view-verlauf" tabindex="-1">Verlauf</button>
-        </div>
-
-        <!-- Reiter Anfrage -->
-        <div class="view" data-view="anfrage" id="view-anfrage" role="tabpanel" aria-labelledby="tab-anfrage">
-          <section class="card nachricht" id="d-nachricht" hidden>
-            <h3>Nachricht der Person</h3>
-            <p class="nachricht-text" id="d-nachricht-text"></p>
-          </section>
-          <section class="card">
-            <h3>Kontakt</h3>
-            <dl class="kv" id="d-kontakt"></dl>
-            <p class="dsgvo" id="d-dsgvo"></p>
-            <div class="row">
-              <button type="button" class="btn btn-ghost btn-sm" id="copy-mail">E-Mail kopieren</button>
-              <button type="button" class="btn btn-ghost btn-sm" id="copy-tel">Telefon kopieren</button>
-            </div>
-          </section>
-          <section class="card">
-            <h3>Angaben aus dem Formular</h3>
-            <dl class="kv" id="d-daten"></dl>
-            <details class="tech" id="d-tech">
-              <summary>Technische Angaben</summary>
-              <dl class="kv" id="d-meta-kv"></dl>
-            </details>
-          </section>
-          <section class="card checkliste" id="checkliste-card" hidden>
-            <h3>Checkliste senden</h3>
-            <p class="muted">Die Person hat die Checkliste „Scheidungsunterlagen“ als PDF angefordert. Der Button öffnet das Mailprogramm mit vorbereitetem Text und Link; danach den Versand hier markieren.</p>
-            <div class="row">
-              <button type="button" class="btn btn-primary btn-sm" id="btn-checkliste-mail">Checkliste per E-Mail senden</button>
-              <button type="button" class="btn btn-secondary btn-sm" id="btn-checkliste-done">Als gesendet markieren</button>
-            </div>
-          </section>
-          <section class="card">
-            <h3>Notizen der Kanzlei</h3>
-            <label for="d-notizen" class="vh">Notizen</label>
-            <textarea id="d-notizen" rows="5" placeholder="Interne Notizen, Telefonate, Rückfragen …"></textarea>
-            <div class="notizen-print" id="notizen-print"></div>
-            <div class="row">
-              <button type="button" class="btn btn-primary btn-sm" id="save-notizen">Notizen speichern</button>
-              <span class="saved" id="notizen-saved" hidden></span>
-            </div>
-          </section>
-        </div>
-
-        <!-- Reiter Antragsentwurf -->
-        <div class="view" data-view="antrag" id="view-antrag" role="tabpanel" aria-labelledby="tab-antrag" hidden>
-          <section class="card">
-            <div class="antrag-head">
-              <div>
-                <h3>Antragsentwurf</h3>
-                <p class="muted">Vorbelegt aus der Anfrage. Angaben aus Urkunden (Standesamt, Registernummer, Geburtsdaten, Gegenstandswerte) bitte hier ergänzen — leere Felder erscheinen im Word-Dokument als Lücke <code>________</code>.</p>
-              </div>
-              <div class="progress-wrap">
-                <span class="progress-text" id="antrag-progress-text"></span>
-                <div class="progress" aria-hidden="true"><i id="antrag-progress"></i></div>
-              </div>
-            </div>
-            <div class="banner info" id="antrag-hint" hidden>Diese Anfrage ist kein Online-Antrag — die Vorbelegung ist entsprechend leer. Für die Bearbeitung zunächst den Status „Mandat erteilt“ setzen.</div>
-            <p class="legend"><span class="pre-badge">aus Anfrage</span> übernommen · <span class="legend-open">gestrichelt</span> = noch offen · nicht zutreffende Felder sind ausgeblendet</p>
-            <form id="antrag-form" novalidate autocomplete="off"></form>
-            <div class="row">
-              <button type="button" class="btn btn-primary btn-sm" id="save-antrag">Felder speichern</button>
-              <span class="saved" id="antrag-saved" hidden></span>
-            </div>
-          </section>
-          <section class="card">
-            <h3>Dokumente erzeugen</h3>
-            <p class="muted">Word-Dateien auf Basis der Kanzlei-Vorlagen. Ungespeicherte Änderungen werden vor dem Erzeugen automatisch gespeichert.</p>
-            <div class="row">
-              <button type="button" class="btn btn-primary" id="dl-antrag">Antragsentwurf (.docx)</button>
-              <button type="button" class="btn btn-secondary" id="dl-vollmacht">Vollmacht (.docx)</button>
-            </div>
-            <p class="muted small offene-label" id="offene-label"></p>
-            <div class="field-chips" id="offene-felder"></div>
-          </section>
-        </div>
-
-        <!-- Reiter Verlauf -->
-        <div class="view" data-view="verlauf" id="view-verlauf" role="tabpanel" aria-labelledby="tab-verlauf" hidden>
-          <section class="card">
-            <h3>Verlauf</h3>
-            <ol class="verlauf" id="d-verlauf"></ol>
-          </section>
-          <section class="card danger">
-            <h3>Daten löschen</h3>
-            <p class="muted">Entfernt die Anfrage samt Verlauf endgültig (z. B. auf Wunsch der betroffenen Person oder nach Ablauf der Aufbewahrung). Ein Löschnachweis ohne Personendaten bleibt erhalten.</p>
-            <label class="field" for="del-grund">Grund (optional)</label>
-            <input id="del-grund" maxlength="300" placeholder="z. B. Wunsch der betroffenen Person" />
-            <div class="row">
-              <button type="button" class="btn btn-danger btn-sm" id="delete">Anfrage endgültig löschen</button>
-            </div>
-          </section>
-        </div>
-
-        <div class="mobile-actions" id="mobile-actions">
-          <button type="button" class="btn btn-primary" id="mobile-save">Notizen speichern</button>
-        </div>
-      </article>
-    </section>
-  </main>
+  <div id="banner" class="banner" role="alert" hidden><span id="banner-text"></span><button type="button" class="btn btn-zweit btn-klein" id="banner-retry">Erneut versuchen</button></div>
+  <main id="main" class="main" tabindex="-1"></main>
 </div>
 
-<div id="toast" class="toast" role="status" aria-live="polite"></div>
-<div id="toast-alert" class="toast" role="alert"></div>
-<script src="hq.js?v=2"></script>
+<!-- Modal -->
+<div id="modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-titel" hidden>
+  <div class="modal-box">
+    <div class="modal-kopf">
+      <div><h2 id="modal-titel"></h2><p class="muted small" id="modal-sub"></p></div>
+      <button type="button" class="modal-x" id="modal-x" aria-label="Schließen">×</button>
+    </div>
+    <div id="modal-inhalt"></div>
+    <div class="modal-fuss"><button type="button" class="btn btn-zweit" id="modal-abbrechen">Abbrechen</button><button type="button" class="btn btn-primaer" id="modal-ok">Senden</button></div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="toast" role="status" aria-live="polite"><span class="toast-icon" aria-hidden="true"></span><span id="toast-text"></span><button type="button" class="toast-btn" id="toast-btn" hidden></button></div>
+
+<noscript><p class="center">Bitte JavaScript aktivieren.</p></noscript>
 </body>
 </html>
